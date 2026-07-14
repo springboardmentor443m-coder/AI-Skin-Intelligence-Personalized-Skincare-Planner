@@ -18,6 +18,30 @@ try:
 except Exception as e:
     logger.error(f"Error creating database tables: {e}")
 
+# Seed default admin user on startup if tables are empty
+try:
+    from app.core.database import SessionLocal
+    from app.models.user import User
+    from app.core.security import get_password_hash
+    
+    db = SessionLocal()
+    if db.query(User).count() == 0:
+        logger.info("Database is empty. Seeding default admin account...")
+        admin_user = User(
+            email="admin@example.com",
+            hashed_password=get_password_hash("password123"),
+            first_name="Default",
+            last_name="Admin",
+            role="admin",
+            is_active=True
+        )
+        db.add(admin_user)
+        db.commit()
+        logger.info("Default admin account seeded successfully (admin@example.com / password123).")
+    db.close()
+except Exception as e:
+    logger.error(f"Error seeding database: {e}")
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
