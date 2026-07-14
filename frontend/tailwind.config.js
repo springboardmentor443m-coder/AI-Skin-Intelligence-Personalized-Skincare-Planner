@@ -12,8 +12,8 @@ export default {
         darkCard: 'rgba(17, 24, 39, 0.7)',
         lightBg: '#f8fafc',
         lightCard: 'rgba(255, 255, 255, 0.7)',
-        accentColor: '#ec4899', # Pink accent for skin care theme
-        accentCyan: '#06b6d4', # Cyan accent for technical diagnostics
+        accentColor: '#ec4899', // Pink accent for skin care theme
+        accentCyan: '#06b6d4', // Cyan accent for technical diagnostics
       },
       backdropBlur: {
         xs: '2px',
