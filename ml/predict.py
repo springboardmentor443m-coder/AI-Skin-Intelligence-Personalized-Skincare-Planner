@@ -46,7 +46,7 @@ def analyze_skin(image_path, type_model_path, concern_model_path):
     
     # Define classes exactly as they appear in the training folders (alphabetical)
     type_classes = ['Combination', 'Dry', 'Normal', 'Oily', 'Sensitive']
-    concern_classes = ['Redness', 'dark spots', 'inflammatory acne', 'non inflammatory acne black heads', 
+    concern_classes = ['Normal', 'Redness', 'dark spots', 'inflammatory acne', 'non inflammatory acne black heads', 
                        'non inflammatory acne white heads', 'pigmentation', 'pores', 'wrinkles']
     
     results = {}
