@@ -25,3 +25,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Large review datasets
+ml/dataset/reviews_*.csv
