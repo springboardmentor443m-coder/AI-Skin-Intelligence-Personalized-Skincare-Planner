@@ -1,0 +1,80 @@
+[
+  {
+    "sku": "CLNS-001",
+    "name": "Gentle Gel Cleanser",
+    "brand": "DermaPure",
+    "category": "cleanser",
+    "skin_types": ["oily", "combination", "normal"],
+    "key_ingredients": ["salicylic_acid", "niacinamide"],
+    "price_usd": 18.50,
+    "size_ml": 150,
+    "fragrance_free": true,
+    "pregnancy_safe": false,
+    "rating": 4.5
+  },
+  {
+    "sku": "SRUM-014",
+    "name": "10% Vitamin C Brightening Serum",
+    "brand": "LumaGlow",
+    "category": "serum",
+    "skin_types": ["dry", "normal", "combination"],
+    "key_ingredients": ["vitamin_c", "vitamin_e", "ferulic_acid"],
+    "price_usd": 32.00,
+    "size_ml": 30,
+    "fragrance_free": true,
+    "pregnancy_safe": true,
+    "rating": 4.7
+  },
+  {
+    "sku": "SRUM-027",
+    "name": "Retinol 0.3% Night Serum",
+    "brand": "NightRenew",
+    "category": "serum",
+    "skin_types": ["normal", "combination", "dry"],
+    "key_ingredients": ["retinol", "hyaluronic_acid"],
+    "price_usd": 28.75,
+    "size_ml": 30,
+    "fragrance_free": true,
+    "pregnancy_safe": false,
+    "rating": 4.3
+  },
+  {
+    "sku": "MOIST-009",
+    "name": "Daily Barrier Repair Moisturizer",
+    "brand": "DermaPure",
+    "category": "moisturizer",
+    "skin_types": ["dry", "sensitive", "normal"],
+    "key_ingredients": ["niacinamide", "hyaluronic_acid", "ceramides"],
+    "price_usd": 24.00,
+    "size_ml": 50,
+    "fragrance_free": true,
+    "pregnancy_safe": true,
+    "rating": 4.8
+  },
+  {
+    "sku": "SPF-005",
+    "name": "Broad Spectrum SPF 50 Fluid",
+    "brand": "SunShield",
+    "category": "sunscreen",
+    "skin_types": ["oily", "combination", "normal", "dry", "sensitive"],
+    "key_ingredients": ["zinc_oxide", "niacinamide"],
+    "price_usd": 21.00,
+    "size_ml": 50,
+    "fragrance_free": true,
+    "pregnancy_safe": true,
+    "rating": 4.6
+  },
+  {
+    "sku": "TREAT-033",
+    "name": "Acne Spot Treatment 2.5%",
+    "brand": "ClearSkin Co.",
+    "category": "spot_treatment",
+    "skin_types": ["oily", "combination"],
+    "key_ingredients": ["benzoyl_peroxide"],
+    "price_usd": 12.50,
+    "size_ml": 15,
+    "fragrance_free": true,
+    "pregnancy_safe": false,
+    "rating": 4.1
+  }
+]

@@ -1,0 +1,102 @@
+[
+  {
+    "product_id": "prod_001",
+    "name": "Gentle Foaming Cleanser",
+    "brand": "DermaPure",
+    "category": "cleanser",
+    "price": 14.99,
+    "ingredients": ["glycerin", "niacinamide", "coco-glucoside"],
+    "suitable_skin_types": ["oily", "combination", "normal"],
+    "targets_concerns": ["acne", "large_pores"]
+  },
+  {
+    "product_id": "prod_002",
+    "name": "Hydrating Cream Cleanser",
+    "brand": "DermaPure",
+    "category": "cleanser",
+    "price": 16.99,
+    "ingredients": ["glycerin", "ceramides", "hyaluronic acid"],
+    "suitable_skin_types": ["dry", "sensitive", "normal"],
+    "targets_concerns": ["dehydration", "redness"]
+  },
+  {
+    "product_id": "prod_003",
+    "name": "Vitamin C Brightening Serum",
+    "brand": "GlowLab",
+    "category": "serum",
+    "price": 32.5,
+    "ingredients": ["vitamin c", "ferulic acid", "vitamin e"],
+    "suitable_skin_types": ["normal", "combination", "oily"],
+    "targets_concerns": ["hyperpigmentation"]
+  },
+  {
+    "product_id": "prod_004",
+    "name": "Retinol Renewal Serum 0.3%",
+    "brand": "GlowLab",
+    "category": "serum",
+    "price": 28.0,
+    "ingredients": ["retinol", "squalane"],
+    "suitable_skin_types": ["normal", "combination"],
+    "targets_concerns": ["wrinkles", "acne"]
+  },
+  {
+    "product_id": "prod_005",
+    "name": "Niacinamide 10% + Zinc Serum",
+    "brand": "GlowLab",
+    "category": "serum",
+    "price": 12.0,
+    "ingredients": ["niacinamide", "zinc pca"],
+    "suitable_skin_types": ["oily", "combination"],
+    "targets_concerns": ["large_pores", "acne"]
+  },
+  {
+    "product_id": "prod_006",
+    "name": "Barrier Repair Moisturizer",
+    "brand": "DermaPure",
+    "category": "moisturizer",
+    "price": 22.0,
+    "ingredients": ["ceramides", "cholesterol", "fatty acids"],
+    "suitable_skin_types": ["dry", "sensitive", "normal"],
+    "targets_concerns": ["dehydration", "redness"]
+  },
+  {
+    "product_id": "prod_007",
+    "name": "Oil-Free Gel Moisturizer",
+    "brand": "GlowLab",
+    "category": "moisturizer",
+    "price": 18.5,
+    "ingredients": ["hyaluronic acid", "niacinamide"],
+    "suitable_skin_types": ["oily", "combination"],
+    "targets_concerns": ["large_pores"]
+  },
+  {
+    "product_id": "prod_008",
+    "name": "Broad Spectrum SPF 50 Fluid",
+    "brand": "SunGuard",
+    "category": "sunscreen",
+    "price": 19.99,
+    "ingredients": ["zinc oxide", "niacinamide"],
+    "suitable_skin_types": ["oily", "combination", "normal", "dry", "sensitive"],
+    "targets_concerns": ["hyperpigmentation", "wrinkles"]
+  },
+  {
+    "product_id": "prod_009",
+    "name": "AHA/BHA Exfoliating Toner",
+    "brand": "GlowLab",
+    "category": "exfoliant",
+    "price": 21.0,
+    "ingredients": ["aha", "bha"],
+    "suitable_skin_types": ["oily", "combination", "normal"],
+    "targets_concerns": ["acne", "large_pores"]
+  },
+  {
+    "product_id": "prod_010",
+    "name": "Calming Redness Relief Cream",
+    "brand": "DermaPure",
+    "category": "moisturizer",
+    "price": 26.0,
+    "ingredients": ["centella asiatica", "ceramides"],
+    "suitable_skin_types": ["sensitive", "dry"],
+    "targets_concerns": ["redness"]
+  }
+]

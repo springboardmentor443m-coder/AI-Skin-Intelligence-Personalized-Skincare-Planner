@@ -1,0 +1,50 @@
+{
+  "interactions": [
+    {
+      "ingredient_a": "retinol",
+      "ingredient_b": "vitamin c",
+      "interaction_type": "conflicting",
+      "explanation": "Both are potent actives that can destabilize each other and increase irritation when applied together; best used at different times of day."
+    },
+    {
+      "ingredient_a": "retinol",
+      "ingredient_b": "benzoyl peroxide",
+      "interaction_type": "hazardous",
+      "explanation": "Benzoyl peroxide can oxidize and deactivate retinol, and combined use significantly increases risk of dryness and irritation."
+    },
+    {
+      "ingredient_a": "aha",
+      "ingredient_b": "bha",
+      "interaction_type": "conflicting",
+      "explanation": "Layering multiple exfoliating acids increases the risk of over-exfoliation and barrier damage."
+    },
+    {
+      "ingredient_a": "niacinamide",
+      "ingredient_b": "vitamin c",
+      "interaction_type": "neutral",
+      "explanation": "Older concerns about incompatibility are largely unsubstantiated at typical cosmetic concentrations; generally safe to combine."
+    },
+    {
+      "ingredient_a": "retinol",
+      "ingredient_b": "aha",
+      "interaction_type": "conflicting",
+      "explanation": "Combining retinol with alpha hydroxy acids can compound irritation and dryness; alternate nights are recommended."
+    },
+    {
+      "ingredient_a": "hyaluronic acid",
+      "ingredient_b": "retinol",
+      "interaction_type": "synergistic",
+      "explanation": "Hyaluronic acid helps offset the dryness commonly caused by retinol use."
+    }
+  ],
+  "hazards": [
+    {
+      "ingredient": "hydroquinone",
+      "note": "Restricted or prohibited concentration in some regions; requires professional guidance for prolonged use."
+    },
+    {
+      "ingredient": "essential oils (concentrated)",
+      "note": "Common source of contact sensitization, especially for sensitive or compromised skin barriers."
+    }
+  ]
+}

@@ -1,0 +1,217 @@
+name: ML Training & Evaluation Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "backend/app/ml/**"
+      - "backend/app/ml/dataset/**"
+  schedule:
+    # Retrain weekly, every Monday at 03:00 UTC
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+    inputs:
+      model_target:
+        description: "Which model pipeline to run"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - classifier
+          - recommender
+
+env:
+  PYTHON_VERSION: "3.11"
+  ML_DIR: backend/app/ml
+
+jobs:
+  # ---------------------------------------------------------------------
+  # Data validation
+  # ---------------------------------------------------------------------
+  validate-dataset:
+    name: Validate Dataset & Schemas
+    runs-on: ubuntu-latest
+    outputs:
+      dataset_hash: ${{ steps.hash.outputs.value }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install validation dependencies
+        run: pip install jsonschema pandas
+
+      - name: Validate ingredient & product JSON schemas
+        run: |
+          python -c "
+          import json
+          for f in ['ingredient_rules.json', 'product_catalog.json']:
+              path = f'${{ env.ML_DIR }}/dataset/{f}'
+              with open(path) as fh:
+                  json.load(fh)
+              print(f'{f}: valid JSON')
+          "
+
+      - name: Compute dataset hash (for cache/versioning)
+        id: hash
+        run: |
+          HASH=$(find ${{ env.ML_DIR }}/dataset -type f | sort | xargs sha256sum | sha256sum | cut -d ' ' -f1)
+          echo "value=$HASH" >> "$GITHUB_OUTPUT"
+
+  # ---------------------------------------------------------------------
+  # Train skin condition classifier
+  # ---------------------------------------------------------------------
+  train-classifier:
+    name: Train Skin Classifier
+    needs: validate-dataset
+    if: ${{ github.event.inputs.model_target == 'classifier' || github.event.inputs.model_target == 'all' || github.event.inputs.model_target == '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        working-directory: backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run preprocessing
+        working-directory: ${{ env.ML_DIR }}
+        run: python pipelines/preprocess.py --target classifier
+
+      - name: Train classifier
+        working-directory: ${{ env.ML_DIR }}
+        run: python pipelines/train_classifier.py --output artifacts/skin_classifier
+
+      - name: Upload classifier artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: skin-classifier-model
+          path: ${{ env.ML_DIR }}/artifacts/skin_classifier
+
+  # ---------------------------------------------------------------------
+  # Train recommendation model
+  # ---------------------------------------------------------------------
+  train-recommender:
+    name: Train Recommendation Model
+    needs: validate-dataset
+    if: ${{ github.event.inputs.model_target == 'recommender' || github.event.inputs.model_target == 'all' || github.event.inputs.model_target == '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        working-directory: backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run preprocessing
+        working-directory: ${{ env.ML_DIR }}
+        run: python pipelines/preprocess.py --target recommender
+
+      - name: Train recommender
+        working-directory: ${{ env.ML_DIR }}
+        run: python pipelines/train_recommender.py --output artifacts/recommendation
+
+      - name: Upload recommender artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: recommendation-model
+          path: ${{ env.ML_DIR }}/artifacts/recommendation
+
+  # ---------------------------------------------------------------------
+  # Evaluate models against regression test suite
+  # ---------------------------------------------------------------------
+  evaluate-models:
+    name: Evaluate & Regression Test
+    needs: [ train-classifier, train-recommender ]
+    if: always() && (needs.train-classifier.result == 'success' || needs.train-recommender.result == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        working-directory: backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Download classifier artifact
+        if: needs.train-classifier.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: skin-classifier-model
+          path: ${{ env.ML_DIR }}/artifacts/skin_classifier
+
+      - name: Download recommender artifact
+        if: needs.train-recommender.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: recommendation-model
+          path: ${{ env.ML_DIR }}/artifacts/recommendation
+
+      - name: Run inference regression tests
+        working-directory: backend
+        run: pytest tests/test_ml_inference.py -v
+
+      - name: Run inference engine smoke test
+        working-directory: ${{ env.ML_DIR }}
+        run: python pipelines/inference_engine.py --smoke-test
+
+  # ---------------------------------------------------------------------
+  # Publish approved models back to repository (main branch only)
+  # ---------------------------------------------------------------------
+  publish-artifacts:
+    name: Publish Model Artifacts
+    needs: evaluate-models
+    if: github.ref == 'refs/heads/main' && needs.evaluate-models.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download all model artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ env.ML_DIR }}/artifacts
+
+      - name: Commit updated model artifacts
+        run: |
+          git config user.name "ml-pipeline-bot"
+          git config user.email "ml-pipeline-bot@users.noreply.github.com"
+          git add ${{ env.ML_DIR }}/artifacts
+          git diff --cached --quiet || git commit -m "chore(ml): update trained model artifacts [skip ci]"
+          git push

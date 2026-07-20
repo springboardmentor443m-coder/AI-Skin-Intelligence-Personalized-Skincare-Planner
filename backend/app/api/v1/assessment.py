@@ -1,102 +1,75 @@
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+"""
+Assessment endpoints: trigger the ML inference pipeline against a user's
+skin profile (and optional image), persist results, and expose history.
+"""
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.core.security import get_current_user
-from app.db.session import get_db
+from app.api.deps import get_current_active_user, get_db
+from app.ml.pipelines.inference_engine import InferenceEngine
 from app.models.skin_profile import SkinProfile
 from app.models.user import User
-from app.schemas.assessment import QuestionnaireSubmission, SkinProfileRead
-from app.services.vision_service import analyze_skin_image
+from app.schemas.assessment_schema import AssessmentRequest, AssessmentResult
+from app.services.scoring_service import compute_skin_health_score
 
-router = APIRouter(prefix="/assessment", tags=["assessment"])
-
-ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
-MAX_IMAGE_SIZE_BYTES = 8 * 1024 * 1024  # 8 MB
+router = APIRouter()
+_engine = InferenceEngine()
 
 
-def _get_or_create_profile(db: Session, user: User) -> SkinProfile:
-    profile = (
-        db.query(SkinProfile)
-        .filter(SkinProfile.user_id == user.id)
-        .order_by(SkinProfile.created_at.desc())
-        .first()
-    )
-    if profile is None:
-        profile = SkinProfile(user_id=user.id)
-        db.add(profile)
-        db.commit()
-        db.refresh(profile)
-    return profile
-
-
-@router.post("/questionnaire", response_model=SkinProfileRead)
-def submit_questionnaire(
-    submission: QuestionnaireSubmission,
+@router.post("/", response_model=AssessmentResult, status_code=status.HTTP_201_CREATED)
+def run_assessment(
+    request: AssessmentRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_active_user),
 ):
-    profile = _get_or_create_profile(db, current_user)
-    profile.questionnaire_answers = submission.answers
-
-    # Pull a coarse skin_type/concerns guess out of the answers if provided,
-    # so the profile is useful even before a photo is analyzed.
-    if "skin_type" in submission.answers:
-        profile.skin_type = submission.answers["skin_type"]
-    if "concerns" in submission.answers:
-        profile.concerns = submission.answers["concerns"]
-
-    db.commit()
-    db.refresh(profile)
-    return profile
-
-
-@router.post("/image", response_model=SkinProfileRead)
-async def submit_image(
-    file: UploadFile = File(...),
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    if file.content_type not in ALLOWED_IMAGE_TYPES:
+    profile = db.query(SkinProfile).filter(SkinProfile.user_id == current_user.id).first()
+    if not profile:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Unsupported image type. Use JPEG, PNG, or WEBP.",
+            detail="Create a skin profile before running an assessment",
         )
 
-    image_bytes = await file.read()
-    if len(image_bytes) > MAX_IMAGE_SIZE_BYTES:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Image too large (max 8MB).",
-        )
-
-    analysis = analyze_skin_image(image_bytes, media_type=file.content_type)
-
-    profile = _get_or_create_profile(db, current_user)
-    profile.vision_analysis = analysis
-    profile.image_url = f"uploads/{current_user.id}/{file.filename}"
-    if analysis.get("skin_type") and analysis["skin_type"] != "unknown":
-        profile.skin_type = analysis["skin_type"]
-    if analysis.get("concerns"):
-        profile.concerns = analysis["concerns"]
-
-    db.commit()
-    db.refresh(profile)
-    return profile
-
-
-@router.get("/profile", response_model=SkinProfileRead)
-def get_profile(
-    db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
-):
-    profile = (
-        db.query(SkinProfile)
-        .filter(SkinProfile.user_id == current_user.id)
-        .order_by(SkinProfile.created_at.desc())
-        .first()
+    prediction = _engine.predict(
+        skin_profile={
+            "skin_type": profile.skin_type,
+            "fitzpatrick_scale": profile.fitzpatrick_scale,
+            "primary_concerns": profile.primary_concerns or [],
+            "known_allergies": profile.known_allergies or [],
+            "diagnosed_conditions": profile.diagnosed_conditions or [],
+            "avg_daily_water_intake_ml": profile.avg_daily_water_intake_ml,
+            "avg_sleep_hours": profile.avg_sleep_hours,
+            "sun_exposure_hours_per_day": profile.sun_exposure_hours_per_day,
+            "uses_sunscreen_daily": profile.uses_sunscreen_daily,
+            "stress_level": profile.stress_level,
+        },
+        image_base64=request.image_base64,
     )
-    if profile is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="No skin profile found. Submit a questionnaire or photo first.",
-        )
-    return profile
+
+    skin_health_score = compute_skin_health_score(
+        predicted_concerns=prediction["predicted_concerns"],
+        lifestyle_inputs={
+            "avg_daily_water_intake_ml": profile.avg_daily_water_intake_ml,
+            "avg_sleep_hours": profile.avg_sleep_hours,
+            "sun_exposure_hours_per_day": profile.sun_exposure_hours_per_day,
+            "uses_sunscreen_daily": profile.uses_sunscreen_daily,
+            "stress_level": profile.stress_level,
+        },
+    )
+
+    from datetime import datetime, timezone
+    import uuid
+
+    profile.latest_skin_health_score = skin_health_score
+    profile.latest_assessment_at = datetime.now(timezone.utc)
+    db.add(profile)
+    db.commit()
+
+    return AssessmentResult(
+        id=str(uuid.uuid4()),
+        user_id=current_user.id,
+        skin_health_score=skin_health_score,
+        predicted_concerns=prediction["predicted_concerns"],
+        feature_importance=prediction.get("feature_importance"),
+        model_version=prediction["model_version"],
+        created_at=profile.latest_assessment_at,
+    )

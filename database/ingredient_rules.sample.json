@@ -1,0 +1,72 @@
+[
+  {
+    "ingredient": "retinol",
+    "category": "active",
+    "conflicts_with": ["vitamin_c", "aha", "bha", "benzoyl_peroxide"],
+    "synergizes_with": ["niacinamide", "hyaluronic_acid", "peptides"],
+    "hazard_level": "moderate",
+    "common_allergen": false,
+    "usage_notes": "Use in PM routine only; avoid combining with other exfoliating actives to prevent barrier damage.",
+    "pregnancy_safe": false
+  },
+  {
+    "ingredient": "vitamin_c",
+    "category": "antioxidant",
+    "conflicts_with": ["retinol", "benzoyl_peroxide", "aha"],
+    "synergizes_with": ["vitamin_e", "ferulic_acid", "sunscreen"],
+    "hazard_level": "low",
+    "common_allergen": false,
+    "usage_notes": "Best used in AM routine prior to sunscreen for antioxidant protection.",
+    "pregnancy_safe": true
+  },
+  {
+    "ingredient": "niacinamide",
+    "category": "active",
+    "conflicts_with": [],
+    "synergizes_with": ["retinol", "hyaluronic_acid", "zinc"],
+    "hazard_level": "low",
+    "common_allergen": false,
+    "usage_notes": "Generally well tolerated; suitable for AM or PM use.",
+    "pregnancy_safe": true
+  },
+  {
+    "ingredient": "benzoyl_peroxide",
+    "category": "acne_treatment",
+    "conflicts_with": ["retinol", "vitamin_c"],
+    "synergizes_with": ["salicylic_acid"],
+    "hazard_level": "high",
+    "common_allergen": true,
+    "usage_notes": "Can bleach fabrics and cause irritation; patch test recommended.",
+    "pregnancy_safe": false
+  },
+  {
+    "ingredient": "salicylic_acid",
+    "category": "bha",
+    "conflicts_with": ["retinol"],
+    "synergizes_with": ["benzoyl_peroxide", "niacinamide"],
+    "hazard_level": "moderate",
+    "common_allergen": true,
+    "usage_notes": "Aspirin-sensitive individuals should avoid; effective for oily/acne-prone skin.",
+    "pregnancy_safe": false
+  },
+  {
+    "ingredient": "hyaluronic_acid",
+    "category": "humectant",
+    "conflicts_with": [],
+    "synergizes_with": ["retinol", "niacinamide", "vitamin_c"],
+    "hazard_level": "low",
+    "common_allergen": false,
+    "usage_notes": "Apply to damp skin for best hydration results.",
+    "pregnancy_safe": true
+  },
+  {
+    "ingredient": "fragrance",
+    "category": "additive",
+    "conflicts_with": [],
+    "synergizes_with": [],
+    "hazard_level": "moderate",
+    "common_allergen": true,
+    "usage_notes": "Leading cause of cosmetic contact dermatitis; avoid for sensitive skin profiles.",
+    "pregnancy_safe": true
+  }
+]

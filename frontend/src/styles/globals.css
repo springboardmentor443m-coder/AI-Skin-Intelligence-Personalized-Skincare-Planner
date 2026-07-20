@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ring-offset: 283;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-surface text-ink-800 font-body antialiased;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Visible keyboard focus, kept consistent across the app */
+:focus-visible {
+  outline: 2px solid #F6B17A;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: #F6B17A;
+  color: #2D3250;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.eyebrow {
+  @apply text-xs font-semibold tracking-[0.14em] uppercase text-slate-dark;
+}
+
+.card {
+  @apply bg-surface-card rounded-xl2 shadow-card border border-ink-100/60;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-full bg-ink-700 text-white font-display font-semibold px-6 py-3 text-sm hover:bg-ink-800 transition-colors duration-200;
+}
+
+.btn-accent {
+  @apply inline-flex items-center justify-center gap-2 rounded-full bg-amber text-ink-800 font-display font-semibold px-6 py-3 text-sm hover:bg-amber-dark hover:text-white transition-colors duration-200;
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-full border border-ink-200 text-ink-700 font-display font-semibold px-6 py-3 text-sm hover:border-ink-400 transition-colors duration-200;
+}
+
+.input-field {
+  @apply w-full rounded-lg border border-ink-100 bg-white px-4 py-3 text-sm font-body text-ink-800 placeholder:text-ink-300 focus:border-slate outline-none transition-colors duration-150;
+}

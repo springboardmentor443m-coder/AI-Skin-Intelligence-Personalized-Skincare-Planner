@@ -1,18 +1,33 @@
+"""
+Security primitives: password hashing, JWT creation/verification, and
+role-based permission checks used across the API layer.
+"""
 from datetime import datetime, timedelta, timezone
-from typing import Optional
+from enum import Enum
+from typing import Any, Optional
 
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.db.session import get_db
-from app.models.user import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_PREFIX}/auth/login")
+
+
+class Role(str, Enum):
+    USER = "user"
+    CONSULTANT = "consultant"
+    DERMATOLOGIST = "dermatologist"
+    ADMIN = "admin"
+
+
+# Roles hierarchy: which roles a given role is permitted to act as/view data for.
+ROLE_HIERARCHY = {
+    Role.ADMIN: {Role.ADMIN, Role.DERMATOLOGIST, Role.CONSULTANT, Role.USER},
+    Role.DERMATOLOGIST: {Role.DERMATOLOGIST, Role.USER},
+    Role.CONSULTANT: {Role.CONSULTANT, Role.USER},
+    Role.USER: {Role.USER},
+}
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -23,35 +38,36 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def create_access_token(subject: str, expires_delta: Optional[timedelta] = None) -> str:
-    expire = datetime.now(timezone.utc) + (
-        expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    )
-    to_encode = {"sub": subject, "exp": expire}
+def _create_token(subject: str, expires_delta: timedelta, extra_claims: Optional[dict] = None, token_type: str = "access") -> str:
+    now = datetime.now(timezone.utc)
+    to_encode: dict[str, Any] = {
+        "sub": str(subject),
+        "iat": now,
+        "exp": now + expires_delta,
+        "type": token_type,
+    }
+    if extra_claims:
+        to_encode.update(extra_claims)
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
-def decode_access_token(token: str) -> Optional[str]:
+def create_access_token(subject: str, role: str, expires_delta: Optional[timedelta] = None) -> str:
+    delta = expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    return _create_token(subject, delta, extra_claims={"role": role}, token_type="access")
+
+
+def create_refresh_token(subject: str, expires_delta: Optional[timedelta] = None) -> str:
+    delta = expires_delta or timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+    return _create_token(subject, delta, token_type="refresh")
+
+
+def decode_token(token: str) -> Optional[dict]:
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        return payload.get("sub")
+        return jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
     except JWTError:
         return None
 
 
-def get_current_user(
-    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
-) -> User:
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    user_id = decode_access_token(token)
-    if user_id is None:
-        raise credentials_exception
-
-    user = db.query(User).filter(User.id == int(user_id)).first()
-    if user is None:
-        raise credentials_exception
-    return user
+def has_permission(actor_role: Role, target_role: Role) -> bool:
+    """Return True if `actor_role` is permitted to access resources scoped to `target_role`."""
+    return target_role in ROLE_HIERARCHY.get(actor_role, set())

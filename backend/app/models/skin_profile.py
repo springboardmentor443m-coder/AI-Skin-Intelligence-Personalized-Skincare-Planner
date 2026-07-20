@@ -1,98 +1,51 @@
+"""
+Skin profile: baseline clinical/self-reported data used as ML feature input
+and as the reference point for scoring and routine generation.
+"""
+import uuid
 from datetime import datetime, timezone
+from typing import Optional
 
-from sqlalchemy import (
-    Boolean,
-    Column,
-    DateTime,
-    ForeignKey,
-    Integer,
-    JSON,
-    String,
-    Text,
-)
-from sqlalchemy.orm import relationship
+from sqlalchemy import JSON, DateTime, Float, ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.db.base import Base
+from app.core.database import Base
 
 
 class SkinProfile(Base):
-    """A snapshot of a user's skin: questionnaire answers plus the most
-    recent vision-model analysis of an uploaded photo.
-    """
-
     __tablename__ = "skin_profiles"
 
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id"), unique=True, nullable=False)
 
-    skin_type = Column(String(50), nullable=True)  # e.g. oily, dry, combination, normal
-    concerns = Column(JSON, default=list)  # e.g. ["acne", "hyperpigmentation"]
-    questionnaire_answers = Column(JSON, default=dict)
+    # --- Core skin classification ---
+    skin_type: Mapped[Optional[str]] = mapped_column(String(50))  # oily, dry, combination, normal, sensitive
+    fitzpatrick_scale: Mapped[Optional[int]] = mapped_column()  # 1-6
 
-    image_url = Column(String(500), nullable=True)
-    vision_analysis = Column(JSON, nullable=True)  # structured output from vision_service
+    # --- Concerns & clinical flags ---
+    primary_concerns: Mapped[Optional[list]] = mapped_column(JSON, default=list)  # e.g. ["acne", "hyperpigmentation"]
+    known_allergies: Mapped[Optional[list]] = mapped_column(JSON, default=list)  # ingredient names
+    diagnosed_conditions: Mapped[Optional[list]] = mapped_column(JSON, default=list)  # e.g. ["rosacea", "eczema"]
 
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(
-        DateTime,
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
+    # --- Lifestyle & environmental exposure inputs ---
+    avg_daily_water_intake_ml: Mapped[Optional[float]] = mapped_column(Float)
+    avg_sleep_hours: Mapped[Optional[float]] = mapped_column(Float)
+    sun_exposure_hours_per_day: Mapped[Optional[float]] = mapped_column(Float)
+    uses_sunscreen_daily: Mapped[Optional[bool]] = mapped_column()
+    stress_level: Mapped[Optional[int]] = mapped_column()  # 1-10 self-reported
+    diet_notes: Mapped[Optional[str]] = mapped_column(String(1000))
+    climate_zone: Mapped[Optional[str]] = mapped_column(String(100))  # e.g. humid, arid, temperate
+
+    # --- Derived / cached scoring ---
+    latest_skin_health_score: Mapped[Optional[float]] = mapped_column(Float)
+    latest_assessment_at: Mapped[Optional[datetime]] = mapped_column(DateTime)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
     )
 
-    owner = relationship("User", back_populates="skin_profiles")
+    user = relationship("User", back_populates="skin_profile")
 
-
-class Routine(Base):
-    """A generated skincare routine tied to a skin profile."""
-
-    __tablename__ = "routines"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    skin_profile_id = Column(Integer, ForeignKey("skin_profiles.id"), nullable=False)
-
-    summary = Column(Text, nullable=True)
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-
-    owner = relationship("User", back_populates="routines")
-    steps = relationship(
-        "RoutineStep", back_populates="routine", cascade="all, delete-orphan",
-        order_by="RoutineStep.order",
-    )
-
-
-class RoutineStep(Base):
-    """A single step (AM or PM) within a routine, e.g. 'Cleanse', 'Apply SPF'."""
-
-    __tablename__ = "routine_steps"
-
-    id = Column(Integer, primary_key=True, index=True)
-    routine_id = Column(Integer, ForeignKey("routines.id"), nullable=False)
-
-    time_of_day = Column(String(10), nullable=False)  # "AM" or "PM"
-    order = Column(Integer, nullable=False, default=0)
-    product_type = Column(String(100), nullable=False)  # e.g. "Cleanser"
-    instruction = Column(Text, nullable=False)
-    is_completed_today = Column(Boolean, default=False)
-
-    routine = relationship("Routine", back_populates="steps")
-
-
-class ProgressLog(Base):
-    """A daily/periodic check-in used for analytics: adherence + optional
-    follow-up photo and notes.
-    """
-
-    __tablename__ = "progress_logs"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-
-    routine_adherence_pct = Column(Integer, nullable=True)  # 0-100
-    notes = Column(Text, nullable=True)
-    image_url = Column(String(500), nullable=True)
-    vision_analysis = Column(JSON, nullable=True)
-
-    logged_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-
-    owner = relationship("User", back_populates="progress_logs")
+    def __repr__(self) -> str:
+        return f"<SkinProfile user_id={self.user_id} skin_type={self.skin_type}>"
