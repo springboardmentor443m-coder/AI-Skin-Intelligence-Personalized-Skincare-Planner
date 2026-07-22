@@ -1,72 +1,71 @@
-
-import os
 from pathlib import Path
-
 import cv2
-import numpy as np
+import os
+
+# ==========================
+# Dataset Paths
+# ==========================
+
+RAW_DATASET = Path("datasets/raw/mentor_dataset")
+PROCESSED_DATASET = Path("datasets/processed")
 
 IMAGE_SIZE = (224, 224)
 
-# Update this path after downloading the image dataset
-DATASET_PATH = Path(r"C:\PATH\TO\YOUR\IMAGE_DATASET")
+# Create processed folder
+PROCESSED_DATASET.mkdir(parents=True, exist_ok=True)
 
+total_images = 0
+processed_images = 0
+corrupt_images = 0
 
-def load_images(dataset_path):
-    """
-    Load images from dataset folders.
+print("=" * 60)
+print("Starting Image Preprocessing")
+print("=" * 60)
 
-    Expected folder structure:
+# Loop through each class folder
+for class_folder in RAW_DATASET.iterdir():
 
-    dataset/
-        Acne/
-        Blackheads/
-        Whiteheads/
-    """
+    if not class_folder.is_dir():
+        continue
 
-    images = []
-    labels = []
+    class_name = class_folder.name
+    print(f"\nProcessing Class: {class_name}")
 
-    if not dataset_path.exists():
-        print("Dataset path not found.")
-        return images, labels
+    output_folder = PROCESSED_DATASET / class_name
+    output_folder.mkdir(exist_ok=True)
 
-    classes = sorted(
-        [folder.name for folder in dataset_path.iterdir() if folder.is_dir()]
-    )
+    class_count = 0
 
-    print(f"Found Classes: {classes}")
+    for image_path in class_folder.iterdir():
 
-    for label, class_name in enumerate(classes):
+        if image_path.suffix.lower() not in [".jpg", ".jpeg", ".png"]:
+            continue
 
-        class_folder = dataset_path / class_name
+        total_images += 1
 
-        print(f"\nReading {class_name}...")
+        image = cv2.imread(str(image_path))
 
-        for image_file in class_folder.iterdir():
+        if image is None:
+            corrupt_images += 1
+            continue
 
-            image = cv2.imread(str(image_file))
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-            if image is None:
-                continue
+        image = cv2.resize(image, IMAGE_SIZE)
 
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            image = cv2.resize(image, IMAGE_SIZE)
+        save_path = output_folder / image_path.name
 
-            image = image / 255.0
+        cv2.imwrite(str(save_path), cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
 
-            images.append(image)
-            labels.append(label)
+        processed_images += 1
+        class_count += 1
 
-    return np.array(images), np.array(labels)
+    print(f"Images Processed: {class_count}")
 
+print("\n" + "=" * 60)
+print("Preprocessing Complete")
+print("=" * 60)
 
-if __name__ == "__main__":
-
-    X, y = load_images(DATASET_PATH)
-
-    print("\n------------------------")
-    print("Dataset Loaded")
-    print("------------------------")
-
-    print(f"Images : {len(X)}")
-    print(f"Labels : {len(y)}")
+print(f"Total Images Found     : {total_images}")
+print(f"Successfully Processed : {processed_images}")
+print(f"Corrupt Images         : {corrupt_images}")
