@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+
+# Database
+database/
+
+# ML assets
+datasets/
+models/
+
+# Uploaded images
+uploads/
+
+# Generated prediction files
+outputs/*.json
+
+# Virtual environments
+venv/
+.venv/
+
+# OS files
+.DS_Store
+Thumbs.db

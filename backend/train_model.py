@@ -103,7 +103,6 @@ from pathlib import Path
 Path("models").mkdir(exist_ok=True)
 
 model.save("models/skin_classifier.keras")
-
 print("\nModel Saved Successfully!")
 
 import matplotlib.pyplot as plt
