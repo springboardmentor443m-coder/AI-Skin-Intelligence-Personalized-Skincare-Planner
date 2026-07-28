@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Intelligence & Personalized Skincare Planner</title>
+    <meta name="description" content="Personalized skin health platform providing holistic skin assessments across 6 dermal concern areas and custom routine care planning.">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- Header Navigation & Role Switcher -->
+    <header class="navbar">
+        <a href="#" class="brand-logo">
+            <div class="logo-icon">🌸</div>
+            <div>
+                <div style="line-height: 1.1;">Skin Intelligence</div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 400;">Personalized Skincare Planner</div>
+            </div>
+        </a>
+
+        <!-- Role-Based Access Control Switcher -->
+        <div class="role-switcher-container">
+            <button class="role-btn active" data-role="user">
+                <span>👤 My Skin Profile</span>
+            </button>
+            <button class="role-btn" data-role="consultant">
+                <span>💼 Skincare Advisor</span>
+            </button>
+            <button class="role-btn" data-role="dermatologist">
+                <span>🩺 Dermatologist Care</span>
+            </button>
+            <button class="role-btn" data-role="admin">
+                <span>⚡ System Care</span>
+            </button>
+        </div>
+
+        <div>
+            <button id="btn-export-pdf" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.85rem;">
+                📄 Download Skin Care Plan
+            </button>
+        </div>
+    </header>
+
+    <main class="app-container">
+
+        <!-- ================= USER VIEW ================= -->
+        <section id="view-user" class="role-view">
+
+            <!-- Hero Section / Scanner Grid -->
+            <div class="scanner-section">
+
+                <!-- Left Column: Image Assessment Engine -->
+                <div class="glass-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 class="font-heading" style="font-size: 1.25rem;">📸 Digital Skin Assessment</h3>
+                        <span id="scan-status" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Ready for Photo</span>
+                    </div>
+
+                    <!-- Dropzone -->
+                    <div class="upload-dropzone" id="upload-dropzone">
+                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">✨</div>
+                        <div style="font-weight: 600; color: #fff; margin-bottom: 0.25rem;">Upload Your Skin Photo or Take a Selfie</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Gentle analysis across 6 dermal health zones (Acne, Tone, Texture, Redness, Sebum, Moisture)</div>
+                    </div>
+
+                    <!-- Quick Preset & Camera Actions -->
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;" class="preset-btns">
+                        <button class="btn btn-secondary btn-preset" style="padding: 6px 10px; font-size: 0.75rem;">Sample Profile A: Blemishes & Redness</button>
+                        <button class="btn btn-secondary btn-preset" style="padding: 6px 10px; font-size: 0.75rem;">Sample Profile B: Dark Spots</button>
+                        <button class="btn btn-secondary btn-preset" style="padding: 6px 10px; font-size: 0.75rem;">Sample Profile C: Fine Lines</button>
+                        <button id="btn-webcam" class="btn btn-secondary" style="padding: 6px 10px; font-size: 0.75rem; color: var(--accent-teal);">📷 Take Photo</button>
+                    </div>
+
+                    <!-- Image & Facial Feature Overlay Display -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.25rem;">
+                        <div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Original Photo</div>
+                            <div class="preview-wrapper">
+                                <img id="preview-img" src="" alt="Skin Input Preview" style="display: none;">
+                            </div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.75rem; color: var(--primary); margin-bottom: 4px; font-weight: 600;">Facial Health Zone Map (6 Areas)</div>
+                            <div class="preview-wrapper">
+                                <img id="annotated-canvas-img" src="" alt="Facial Zone Overlay" style="display: none;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Holistic Skin Health Score -->
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 class="font-heading" style="font-size: 1.25rem; margin-bottom: 1rem;">🌿 Holistic Skin Health Index</h3>
+
+                        <div class="score-circle-container">
+                            <div class="score-circle" id="score-circle">
+                                <span class="score-value" id="score-value">--</span>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.85rem; color: var(--text-muted);">Overall Vitality Score</div>
+                                <div id="score-grade" style="font-size: 1.1rem; font-weight: 700; color: var(--accent-teal);">Status: Assessing...</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
+                                    Calculated from 5 holistic factors: Skin Assessment (35%), Lifestyle (20%), Sleep (15%), Routine Care (20%), Hydration (10%).
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Score Contribution Breakdown Table -->
+                        <div style="margin-top: 1.25rem;">
+                            <h4 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Wellness Contribution Breakdown</h4>
+                            <div id="score-breakdown-list">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actionable Specialist Recommendations -->
+                    <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(99, 102, 241, 0.08); border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: var(--primary); margin-bottom: 4px;">💡 Specialist Care Suggestion</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Drink plenty of fresh water (>2.2L/day) and wear daily mineral SPF 50 to nourish your skin moisture barrier.</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 6 Target Skin Concern Classes Assessment Grid -->
+            <div class="glass-card" style="margin-bottom: 2rem;">
+                <h3 class="font-heading" style="font-size: 1.25rem; margin-bottom: 0.5rem;">🔎 6 Dermal Health Zone Breakdown</h3>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    Detailed observation across your 6 key skin health areas (Blemishes, Pigmentation, Lines & Wrinkles, Redness, Sebum Control, Moisture Barrier).
+                </p>
+
+                <div class="concern-grid" id="concern-grid">
+                    <!-- Populated dynamically by image_analyzer.js -->
+                </div>
+            </div>
+
+            <!-- Personalized Routine Generator & Ingredient Intelligence -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+
+                <!-- Personalized Skincare Routine -->
+                <div class="glass-card">
+                    <h3 class="font-heading" style="font-size: 1.25rem; margin-bottom: 1rem;">🗓️ Your Personalized Care Ritual</h3>
+                    
+                    <div class="tab-header">
+                        <button class="tab-btn active" onclick="this.parentNode.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active'); document.getElementById('morning-routine-list').style.display='block'; document.getElementById('evening-routine-list').style.display='none';">☀️ Morning Ritual</button>
+                        <button class="tab-btn" onclick="this.parentNode.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active'); document.getElementById('morning-routine-list').style.display='none'; document.getElementById('evening-routine-list').style.display='block';">🌙 Evening Ritual</button>
+                    </div>
+
+                    <div id="morning-routine-list">
+                        <!-- Populated by routine_generator.js -->
+                    </div>
+                    <div id="evening-routine-list" style="display: none;">
+                        <!-- Populated by routine_generator.js -->
+                    </div>
+                </div>
+
+                <!-- Ingredient Intelligence & Compatibility -->
+                <div class="glass-card">
+                    <h3 class="font-heading" style="font-size: 1.25rem; margin-bottom: 1rem;">🧪 Ingredient Care & Compatibility Guide</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                        Expert formulation guidance helping you pair gentle active ingredients safely without irritating your skin barrier.
+                    </p>
+
+                    <div id="ingredient-safety-box">
+                        <!-- Populated by routine_generator.js -->
+                    </div>
+
+                    <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted);">
+                        <strong>Key Active Ingredients Analyzed:</strong> Retinoids, Vitamin C, Salicylic Acid (BHA), Niacinamide, Ceramides, Peptides.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Product Recommendation Engine Catalog -->
+            <div class="glass-card" style="margin-bottom: 2rem;">
+                <h3 class="font-heading" style="font-size: 1.25rem; margin-bottom: 1rem;">🛍️ Thoughtfully Selected Products for You</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;" id="product-recommendations-grid">
+                    <!-- Populated by app.js -->
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= CONSULTANT VIEW ================= -->
+        <section id="view-consultant" class="role-view" style="display: none;">
+            <div class="glass-card">
+                <h3 class="font-heading" style="font-size: 1.35rem; margin-bottom: 0.5rem;">💼 Skincare Specialist & Advisor Dashboard</h3>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Review client skin profiles, examine zone assessments, and curate personalized product rituals.</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Client Name</th>
+                            <th>Health Index</th>
+                            <th>Primary Focus Areas</th>
+                            <th>Last Consultation</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="consultant-client-table">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ================= DERMATOLOGIST VIEW ================= -->
+        <section id="view-dermatologist" class="role-view" style="display: none;">
+            <div class="glass-card">
+                <h3 class="font-heading" style="font-size: 1.35rem; margin-bottom: 0.5rem;">🩺 Dermatologist Clinical Care Dashboard</h3>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Clinical observation notes, barrier health grading, and customized treatment recommendations.</p>
+
+                <div id="derm-patient-list">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ADMIN VIEW ================= -->
+        <section id="view-admin" class="role-view" style="display: none;">
+            <div class="glass-card">
+                <h3 class="font-heading" style="font-size: 1.35rem; margin-bottom: 1rem;">⚡ Platform Operations & Care Analytics</h3>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div style="padding: 1rem; background: rgba(99, 102, 241, 0.1); border-radius: var(--radius-md); border: 1px solid var(--primary-glow);">
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Active Members</div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: #fff;">1,420</div>
+                    </div>
+                    <div style="padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: var(--radius-md); border: 1px solid rgba(16, 185, 129, 0.3);">
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Dermal Scan Accuracy</div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-teal);">94.8%</div>
+                    </div>
+                    <div style="padding: 1rem; background: rgba(245, 158, 11, 0.1); border-radius: var(--radius-md); border: 1px solid rgba(245, 158, 11, 0.3);">
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Total Consultations</div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-amber);">12,850</div>
+                    </div>
+                    <div style="padding: 1rem; background: rgba(236, 72, 153, 0.1); border-radius: var(--radius-md); border: 1px solid rgba(236, 72, 153, 0.3);">
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Care Service Health</div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-pink);">Active & Smooth</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JS Scripts -->
+    <script src="js/sample_data.js"></script>
+    <script src="js/image_analyzer.js"></script>
+    <script src="js/scoring_engine.js"></script>
+    <script src="js/routine_generator.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
