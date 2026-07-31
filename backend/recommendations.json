@@ -1,0 +1,299 @@
+{
+  "Normal": {
+    "description": "Normal skin is generally balanced, comfortable, and not excessively oily or dry. It can still experience occasional sensitivity, dehydration, or sun damage.",
+    "causes": [
+      "Balanced oil and water production",
+      "Consistent, gentle skincare and sun protection",
+      "Genetic factors and a stable skin barrier"
+    ],
+    "symptoms": [
+      "Even texture and tone",
+      "Minimal breakouts",
+      "Little dryness, flaking, or excess oil"
+    ],
+    "dos": [
+      "Cleanse gently twice daily",
+      "Use a broad-spectrum sunscreen every morning",
+      "Moisturize regularly and maintain a consistent routine"
+    ],
+    "donts": [
+      "Do not over-exfoliate",
+      "Do not use harsh products when the skin feels comfortable",
+      "Do not skip sun protection"
+    ],
+    "recommended_ingredients": [
+      "Glycerin",
+      "Ceramides",
+      "Hyaluronic acid",
+      "Niacinamide",
+      "Broad-spectrum SPF 30 or higher"
+    ],
+    "skincare_routine": {
+      "morning": [
+        "Gentle cleanser",
+        "Lightweight moisturizer",
+        "Broad-spectrum sunscreen (SPF 30 or higher)"
+      ],
+      "night": [
+        "Gentle cleanser",
+        "Moisturizer",
+        "Optional gentle treatment based on individual concerns"
+      ]
+    },
+    "prevention": [
+      "Use sunscreen daily and reapply when outdoors",
+      "Avoid smoking and keep a balanced diet",
+      "Patch-test new products and avoid unnecessary product changes"
+    ],
+    "severity": "Usually low severity when the skin is comfortable and free of persistent symptoms.",
+    "when_to_consult_doctor": "Consult a dermatologist for persistent irritation, new or changing lesions, unusual pain, or changes that do not improve with gentle care."
+  },
+  "Acne": {
+    "description": "Acne is a common inflammatory skin condition caused by blocked pores, excess oil, bacteria, and inflammation. It can affect people of any age.",
+    "causes": [
+      "Excess oil production and blocked hair follicles",
+      "Hormonal changes, including puberty and menstrual cycles",
+      "Inflammation, certain medicines, and products that clog pores"
+    ],
+    "symptoms": [
+      "Blackheads and whiteheads",
+      "Red bumps, pustules, or tender deeper spots",
+      "Post-acne dark marks or scars in some people"
+    ],
+    "dos": [
+      "Wash gently twice daily and after heavy sweating",
+      "Choose non-comedogenic makeup and skincare",
+      "Introduce one acne treatment at a time and use it consistently"
+    ],
+    "donts": [
+      "Do not squeeze, pick, or scratch spots",
+      "Do not scrub aggressively or use many irritating treatments together",
+      "Do not stop treatment after only a few days if there is no irritation"
+    ],
+    "recommended_ingredients": [
+      "Salicylic acid",
+      "Benzoyl peroxide",
+      "Adapalene",
+      "Azelaic acid",
+      "Niacinamide"
+    ],
+    "skincare_routine": {
+      "morning": [
+        "Gentle cleanser",
+        "Optional salicylic acid product if tolerated",
+        "Non-comedogenic moisturizer",
+        "Broad-spectrum sunscreen (SPF 30 or higher)"
+      ],
+      "night": [
+        "Gentle cleanser",
+        "A thin layer of an appropriate acne treatment, such as adapalene or benzoyl peroxide",
+        "Non-comedogenic moisturizer"
+      ]
+    },
+    "prevention": [
+      "Keep hands, phones, and frequently touched surfaces clean",
+      "Remove makeup before sleeping",
+      "Use products labeled non-comedogenic and avoid picking lesions"
+    ],
+    "severity": "Severity ranges from occasional mild comedones to extensive, painful, or scarring acne.",
+    "when_to_consult_doctor": "Consult a dermatologist for painful deep acne, scarring, widespread breakouts, significant distress, or acne that does not improve after about 8 to 12 weeks of consistent care. Seek medical advice before using retinoids during pregnancy."
+  },
+  "Wrinkles": {
+    "description": "Wrinkles are lines and folds that become more visible as skin loses collagen, elastin, and moisture over time. They are a normal part of skin aging.",
+    "causes": [
+      "Natural aging and reduced collagen and elastin",
+      "Repeated facial movements",
+      "Ultraviolet radiation, smoking, pollution, and dry skin"
+    ],
+    "symptoms": [
+      "Fine lines around the eyes, forehead, or mouth",
+      "Deeper folds or creases over time",
+      "Reduced firmness and uneven texture"
+    ],
+    "dos": [
+      "Use broad-spectrum sunscreen every day",
+      "Moisturize to support skin comfort and reduce the appearance of dryness",
+      "Introduce active ingredients gradually and follow product directions"
+    ],
+    "donts": [
+      "Do not use tanning beds or intentionally tan",
+      "Do not smoke",
+      "Do not combine multiple strong anti-aging products without checking for irritation"
+    ],
+    "recommended_ingredients": [
+      "Broad-spectrum SPF 30 or higher",
+      "Retinoids",
+      "Vitamin C",
+      "Peptides",
+      "Hyaluronic acid"
+    ],
+    "skincare_routine": {
+      "morning": [
+        "Gentle cleanser",
+        "Vitamin C serum if tolerated",
+        "Moisturizer",
+        "Broad-spectrum sunscreen (SPF 30 or higher)"
+      ],
+      "night": [
+        "Gentle cleanser",
+        "Retinoid on selected nights if appropriate and tolerated",
+        "Moisturizer"
+      ]
+    },
+    "prevention": [
+      "Use sunscreen, protective clothing, and shade",
+      "Avoid smoking and maintain adequate hydration",
+      "Sleep well and use gentle products that do not chronically irritate the skin"
+    ],
+    "severity": "Usually low medical severity, although rapid or unusual skin changes should be assessed.",
+    "when_to_consult_doctor": "Consult a dermatologist for personalized anti-aging treatment, sudden changes, persistent irritation, or any spot that bleeds, changes, or does not heal."
+  },
+  "Eczema": {
+    "description": "Eczema, often called atopic dermatitis, causes itchy, dry, and inflamed skin. It can flare when the skin barrier is weakened or exposed to triggers.",
+    "causes": [
+      "A weakened skin barrier and inherited tendency",
+      "Irritants such as fragrances, harsh cleansers, and detergents",
+      "Allergens, dry weather, heat, stress, or infections"
+    ],
+    "symptoms": [
+      "Dry, itchy, scaly, or cracked skin",
+      "Red, darker, or inflamed patches depending on skin tone",
+      "Oozing, crusting, or thickened skin during some flares"
+    ],
+    "dos": [
+      "Apply a fragrance-free moisturizer frequently, especially after bathing",
+      "Use lukewarm water and gentle fragrance-free cleansers",
+      "Keep nails short and identify personal triggers"
+    ],
+    "donts": [
+      "Do not scratch or use rough scrubs on affected skin",
+      "Do not use fragranced products or very hot water",
+      "Do not apply prescription steroid treatment without following medical guidance"
+    ],
+    "recommended_ingredients": [
+      "Ceramides",
+      "Petrolatum",
+      "Glycerin",
+      "Colloidal oatmeal",
+      "Hyaluronic acid in a fragrance-free formula"
+    ],
+    "skincare_routine": {
+      "morning": [
+        "Rinse or use a gentle fragrance-free cleanser",
+        "Apply a rich fragrance-free moisturizer",
+        "Use sunscreen suitable for sensitive skin if tolerated"
+      ],
+      "night": [
+        "Short lukewarm cleanse or bath",
+        "Apply moisturizer while skin is still slightly damp",
+        "Use any prescribed treatment exactly as directed"
+      ]
+    },
+    "prevention": [
+      "Moisturize daily and after washing",
+      "Use fragrance-free laundry and skincare products",
+      "Protect skin from cold, dry air and known irritants"
+    ],
+    "severity": "Severity can range from mild dryness and itching to extensive, painful, or infected flares.",
+    "when_to_consult_doctor": "Consult a doctor for persistent or severe eczema, sleep-disrupting itch, spreading rash, signs of infection such as pus or fever, or symptoms near the eyes."
+  },
+  "Rosacea": {
+    "description": "Rosacea is a long-term condition that commonly causes facial flushing, persistent redness, visible small blood vessels, and sometimes acne-like bumps.",
+    "causes": [
+      "A tendency toward facial blood-vessel reactivity and inflammation",
+      "Sun exposure, heat, hot drinks, alcohol, spicy foods, or stress in some people",
+      "Genetic and environmental factors"
+    ],
+    "symptoms": [
+      "Frequent flushing or persistent central facial redness",
+      "Small visible blood vessels or acne-like bumps",
+      "Burning, stinging, dryness, or irritated eyes"
+    ],
+    "dos": [
+      "Use gentle fragrance-free products and mineral sunscreen",
+      "Track and reduce personal triggers",
+      "Cleanse gently with lukewarm water"
+    ],
+    "donts": [
+      "Do not use abrasive scrubs, astringents, or fragranced products",
+      "Do not expose the face to excessive heat or unprotected sun",
+      "Do not self-treat persistent redness with strong steroid creams"
+    ],
+    "recommended_ingredients": [
+      "Azelaic acid",
+      "Niacinamide at a low concentration if tolerated",
+      "Ceramides",
+      "Glycerin",
+      "Mineral sunscreen with zinc oxide or titanium dioxide"
+    ],
+    "skincare_routine": {
+      "morning": [
+        "Gentle cleanser",
+        "Fragrance-free moisturizer",
+        "Mineral broad-spectrum sunscreen (SPF 30 or higher)"
+      ],
+      "night": [
+        "Gentle cleanser",
+        "Prescribed or dermatologist-recommended treatment",
+        "Fragrance-free moisturizer"
+      ]
+    },
+    "prevention": [
+      "Wear a hat and seek shade in strong sunlight",
+      "Keep a trigger diary and manage heat and stress where possible",
+      "Patch-test products and introduce changes gradually"
+    ],
+    "severity": "Severity varies from occasional flushing to persistent redness, bumps, eye symptoms, or thickened skin.",
+    "when_to_consult_doctor": "Consult a dermatologist for persistent or worsening redness, eye pain or vision changes, frequent flares, or thickening of the skin. Eye pain or vision changes need prompt medical attention."
+  },
+  "Dark Spots": {
+    "description": "Dark spots are areas of increased skin pigment, often called hyperpigmentation. They can follow inflammation, sun exposure, hormonal changes, or injury.",
+    "causes": [
+      "Sun and visible-light exposure",
+      "Marks left after acne, eczema, or other inflammation",
+      "Hormonal changes, some medicines, or skin injury"
+    ],
+    "symptoms": [
+      "Flat brown, gray, or darker patches",
+      "Uneven skin tone in areas exposed to sun or previous inflammation",
+      "Spots that may darken after irritation or sun exposure"
+    ],
+    "dos": [
+      "Use broad-spectrum sunscreen daily and reapply outdoors",
+      "Treat the underlying inflammation gently",
+      "Introduce brightening ingredients slowly and stop if irritation occurs"
+    ],
+    "donts": [
+      "Do not pick at acne, bites, or rashes",
+      "Do not use unregulated bleaching products or household remedies",
+      "Do not over-exfoliate or skip sunscreen"
+    ],
+    "recommended_ingredients": [
+      "Broad-spectrum SPF 30 or higher",
+      "Azelaic acid",
+      "Vitamin C",
+      "Niacinamide",
+      "Retinoids"
+    ],
+    "skincare_routine": {
+      "morning": [
+        "Gentle cleanser",
+        "Vitamin C or niacinamide if tolerated",
+        "Moisturizer",
+        "Broad-spectrum sunscreen (SPF 30 or higher)"
+      ],
+      "night": [
+        "Gentle cleanser",
+        "Azelaic acid or another dermatologist-recommended treatment",
+        "Moisturizer"
+      ]
+    },
+    "prevention": [
+      "Use sunscreen and protective clothing consistently",
+      "Control acne, eczema, and other sources of inflammation",
+      "Avoid picking and patch-test new products"
+    ],
+    "severity": "Usually low medical severity, but the cause should be checked if spots are new, changing, or unusual.",
+    "when_to_consult_doctor": "Consult a dermatologist for rapidly changing, irregular, bleeding, painful, or non-healing spots, or for pigmentation that does not improve after several months of gentle care."
+  }
+}
