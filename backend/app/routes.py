@@ -5,6 +5,7 @@ from app.database import get_db
 from app import schemas, crud
 from ml.recommender import recommend_products
 from ml.profile_recommender import recommend_from_profile
+from ml.routine_generator import generate_routine
 
 router = APIRouter()
 
@@ -95,3 +96,32 @@ def create_lifestyle(
 ):
 
     return crud.create_lifestyle(db, lifestyle)
+
+@router.get("/routine/{user_id}")
+def get_routine(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+
+    profile = crud.get_skin_profile(db, user_id)
+
+    if not profile:
+        raise HTTPException(
+            status_code=404,
+            detail="Skin profile not found"
+        )
+
+    routine = generate_routine(profile)
+
+    return {
+        "user_id": user_id,
+        "routine": routine
+    }
+
+@router.post("/progress", response_model=schemas.ProgressResponse)
+def create_progress(
+    progress: schemas.ProgressCreate,
+    db: Session = Depends(get_db)
+):
+
+    return crud.create_progress(db, progress)

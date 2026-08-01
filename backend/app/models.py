@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, Float, TIMESTAMP, text
+from sqlalchemy import Column, Integer, String, Boolean, Float, TIMESTAMP, text, ForeignKey, Text
 from app.database import Base
 
 
@@ -35,3 +35,10 @@ class Lifestyle(Base):
     stress_level = Column(String(50))
     diet = Column(String(100))
 
+class Progress(Base):
+    __tablename__ = "progress"
+
+    progress_id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.user_id"))
+    image_path = Column(String)
+    notes = Column(Text)

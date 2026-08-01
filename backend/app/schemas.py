@@ -66,3 +66,18 @@ class LifestyleResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class ProgressCreate(BaseModel):
+    user_id: int
+    image_path: str
+    notes: str
+
+
+class ProgressResponse(BaseModel):
+    progress_id: int
+    user_id: int
+    image_path: str
+    notes: str
+
+    class Config:
+        from_attributes = True

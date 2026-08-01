@@ -83,3 +83,17 @@ def get_lifestyle(db: Session, user_id: int):
         .filter(models.Lifestyle.user_id == user_id)
         .first()
     )
+
+def create_progress(db: Session, progress: schemas.ProgressCreate):
+
+    db_progress = models.Progress(
+        user_id=progress.user_id,
+        image_path=progress.image_path,
+        notes=progress.notes
+    )
+
+    db.add(db_progress)
+    db.commit()
+    db.refresh(db_progress)
+
+    return db_progress
