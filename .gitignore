@@ -27,4 +27,6 @@ Thumbs.db
 *.log
 
 # Large review datasets
-ml/dataset/reviews_*.csv
+backend/ml/dataset/reviews_*.csv
+backend/ml/test.py
+backend/ml/__pycache__/
