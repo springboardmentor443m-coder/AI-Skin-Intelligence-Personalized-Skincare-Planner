@@ -133,12 +133,12 @@ window.SKIN_DATA = {
             category: 'Cleanser',
             price: 24.00,
             targetConcerns: ['acne', 'oily_pores'],
+            targetSkinTypes: ['Oily', 'Blemish-Prone', 'Combination'],
             targetAgeGroups: ['18-25', '26-39'],
-            ageNote: 'Perfect for young to adult skin managing sebum & pores',
+            ageNote: 'Deep pore cleanser dissolving sebum without stripping natural lipids',
             keyIngredients: ['Salicylic Acid (2%)', 'Niacinamide', 'Zinc PCA'],
-            baseMatch: 92,
-            tags: ['Cruelty-Free', 'Fragrance-Free', 'Non-Comedogenic'],
-            image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&auto=format&fit=crop&q=60'
+            baseMatch: 82,
+            tags: ['Cruelty-Free', 'Fragrance-Free', 'Non-Comedogenic']
         },
         {
             id: 'p2',
@@ -147,12 +147,12 @@ window.SKIN_DATA = {
             category: 'Moisturizer',
             price: 36.00,
             targetConcerns: ['dryness', 'redness'],
+            targetSkinTypes: ['Dry', 'Sensitive', 'Normal', 'Combination'],
             targetAgeGroups: ['26-39', '40-54', '55+'],
-            ageNote: 'Essential moisture lipid replenishment for adult & mature skin',
-            keyIngredients: ['Ceramides', 'Hyaluronic Acid', 'Squalane', 'Centella'],
-            baseMatch: 95,
-            tags: ['Barrier Repair', 'Dermatologist Tested', 'Hypoallergenic'],
-            image: 'https://images.unsplash.com/photo-1608248597260-244e45c7e14a?w=300&auto=format&fit=crop&q=60'
+            ageNote: 'Rich moisture barrier replenishment for dry & delicate skin',
+            keyIngredients: ['Ceramides NP/AP/EOP', 'Hyaluronic Acid', 'Squalane'],
+            baseMatch: 85,
+            tags: ['Barrier Repair', 'Dermatologist Tested', 'Hypoallergenic']
         },
         {
             id: 'p3',
@@ -161,12 +161,12 @@ window.SKIN_DATA = {
             category: 'Serum',
             price: 48.00,
             targetConcerns: ['hyperpigmentation', 'wrinkles'],
+            targetSkinTypes: ['Combination', 'Normal', 'Dry'],
             targetAgeGroups: ['18-25', '26-39', '40-54'],
-            ageNote: 'Brightening antioxidant protection against premature aging',
+            ageNote: 'Brightening 15% Vitamin C antioxidant serum for sun marks & radiant tone',
             keyIngredients: ['L-Ascorbic Acid (15%)', 'Ferulic Acid', 'Vitamin E'],
-            baseMatch: 91,
-            tags: ['Brightening', 'Antioxidant Defense'],
-            image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=300&auto=format&fit=crop&q=60'
+            baseMatch: 84,
+            tags: ['Brightening', 'Antioxidant Defense']
         },
         {
             id: 'p4',
@@ -175,12 +175,12 @@ window.SKIN_DATA = {
             category: 'Serum',
             price: 54.00,
             targetConcerns: ['wrinkles', 'hyperpigmentation', 'acne'],
+            targetSkinTypes: ['Mature', 'Combination', 'Normal'],
             targetAgeGroups: ['26-39', '40-54', '55+'],
-            ageNote: 'Targeted cell renewal & collagen support for 26+ skin',
+            ageNote: 'Targeted encapsulated retinol renewal & collagen support for 26+ skin',
             keyIngredients: ['Encapsulated Retinol (0.5%)', 'Peptides', 'Niacinamide'],
-            baseMatch: 94,
-            tags: ['Overnight Renewal', 'Collagen Booster'],
-            image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=300&auto=format&fit=crop&q=60'
+            baseMatch: 86,
+            tags: ['Overnight Renewal', 'Collagen Booster']
         },
         {
             id: 'p5',
@@ -189,12 +189,12 @@ window.SKIN_DATA = {
             category: 'Sun Protection',
             price: 32.00,
             targetConcerns: ['hyperpigmentation', 'redness', 'wrinkles'],
+            targetSkinTypes: ['Sensitive', 'Dry', 'Combination', 'Oily', 'Normal'],
             targetAgeGroups: ['18-25', '26-39', '40-54', '55+'],
-            ageNote: 'Universal broad-spectrum defense essential for all age groups',
+            ageNote: 'Non-comedogenic broad spectrum SPF 50 essential for all skin types',
             keyIngredients: ['Zinc Oxide (18%)', 'Panthenol', 'Ectoin'],
-            baseMatch: 96,
-            tags: ['Broad Spectrum SPF 50', 'Reef Safe', 'Invisible Finish'],
-            image: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=300&auto=format&fit=crop&q=60'
+            baseMatch: 88,
+            tags: ['Broad Spectrum SPF 50', 'Reef Safe', 'Invisible Finish']
         },
         {
             id: 'p6',
@@ -203,40 +203,54 @@ window.SKIN_DATA = {
             category: 'Moisturizer',
             price: 62.00,
             targetConcerns: ['wrinkles', 'dryness'],
+            targetSkinTypes: ['Dry', 'Mature', 'Sensitive'],
             targetAgeGroups: ['40-54', '55+'],
-            ageNote: 'Rich lipid recovery & peptide firming specially formulated for mature skin (40+)',
+            ageNote: 'Intensive lipid recovery & copper peptide firming for mature dry skin',
             keyIngredients: ['Copper Tripeptide-1', 'Ceramide EOP', 'Shea Butter', 'Squalane'],
-            baseMatch: 97,
-            tags: ['Mature Barrier Support', 'Intensive Lipid Care'],
-            image: 'https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=300&auto=format&fit=crop&q=60'
+            baseMatch: 88,
+            tags: ['Mature Barrier Support', 'Intensive Lipid Care']
         },
         {
             id: 'p7',
-            name: 'CicaSoothe Barrier Relief Hydrosol Mist',
+            name: 'CicaSoothe Calming Cleansing Foam',
             brand: 'PurePhyto Care',
-            category: 'Special Care',
-            price: 26.00,
+            category: 'Cleanser',
+            price: 22.00,
             targetConcerns: ['redness', 'dryness'],
+            targetSkinTypes: ['Sensitive', 'Dry', 'Combination'],
             targetAgeGroups: ['18-25', '26-39', '40-54', '55+'],
-            ageNote: 'Soothing mid-day hydration & redness calming mist for all skin profiles',
-            keyIngredients: ['Centella Asiatica', 'Madecassoside', 'Green Tea Extract'],
-            baseMatch: 93,
-            tags: ['Soothing', 'Alcohol-Free', 'pH Balanced'],
-            image: 'https://images.unsplash.com/photo-1608248597260-244e45c7e14a?w=300&auto=format&fit=crop&q=60'
+            ageNote: 'Ultra-gentle pH-balanced cleanser designed for reactive & sensitive skin',
+            keyIngredients: ['Centella Asiatica', 'Panthenol B5', 'Madecassoside'],
+            baseMatch: 85,
+            tags: ['Calming', 'Fragrance-Free', 'Barrier Mild']
         },
         {
             id: 'p8',
-            name: 'Bio-Cellulose Deep Hydration Sheet Mask',
-            brand: 'Apothecary Skin',
-            category: 'Special Care',
-            price: 28.00,
-            targetConcerns: ['dryness', 'wrinkles', 'redness'],
-            targetAgeGroups: ['18-25', '26-39', '40-54', '55+'],
-            ageNote: 'Intensive weekly hydration treatment to replenish barrier moisture',
-            keyIngredients: ['Triple Hyaluronic Acid', 'Ceramides', 'Panthenol'],
-            baseMatch: 95,
-            tags: ['Weekly Ritual', 'Intensive Plumping'],
-            image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&auto=format&fit=crop&q=60'
+            name: 'Niacinamide 10% + Zinc PCA Sebum Gel',
+            brand: 'LumiClear Labs',
+            category: 'Serum',
+            price: 29.00,
+            targetConcerns: ['oily_pores', 'acne', 'redness'],
+            targetSkinTypes: ['Oily', 'Blemish-Prone', 'Combination'],
+            targetAgeGroups: ['18-25', '26-39'],
+            ageNote: 'Pore-tightening sebum regulation gel for oily & blemish-prone complexions',
+            keyIngredients: ['Niacinamide (10%)', 'Zinc PCA (1%)', 'Willow Bark'],
+            baseMatch: 86,
+            tags: ['Pore Refining', 'Shine Control']
+        },
+        {
+            id: 'p9',
+            name: 'HydraLight Oil-Free Water Cream Gel',
+            brand: 'Pure Botanical Care',
+            category: 'Moisturizer',
+            price: 30.00,
+            targetConcerns: ['oily_pores', 'acne'],
+            targetSkinTypes: ['Oily', 'Blemish-Prone', 'Combination'],
+            targetAgeGroups: ['18-25', '26-39'],
+            ageNote: 'Weightless oil-free hydration gel that won\'t clog pores',
+            keyIngredients: ['Hyaluronic Acid', 'Aloe Vera', 'Niacinamide'],
+            baseMatch: 84,
+            tags: ['Oil-Free', 'Weightless Moisture']
         }
     ],
 
@@ -253,7 +267,8 @@ window.SKIN_DATA = {
             primaryConcerns: ['acne', 'redness'],
             lastScanDate: '2026-07-26',
             lifestyle: { sleepHours: 7.5, waterLiters: 2.2, sunExposure: 'Moderate', stressLevel: 'Medium' },
-            scores: { condition: 74, lifestyle: 82, sleep: 80, routine: 85, hydration: 75 }
+            scores: { condition: 74, lifestyle: 82, sleep: 80, routine: 85, hydration: 75 },
+            clinicalNote: 'Patient exhibits localized cheek redness and occasional adult acne flareups. Recommended treatment includes gentle Cica wash, 5% Niacinamide serum, and daily SPF 50.'
         },
         {
             id: 'usr_102',
@@ -267,7 +282,8 @@ window.SKIN_DATA = {
             primaryConcerns: ['oily_pores', 'acne', 'hyperpigmentation'],
             lastScanDate: '2026-07-27',
             lifestyle: { sleepHours: 6.0, waterLiters: 1.5, sunExposure: 'High', stressLevel: 'High' },
-            scores: { condition: 58, lifestyle: 60, sleep: 65, routine: 70, hydration: 60 }
+            scores: { condition: 58, lifestyle: 60, sleep: 65, routine: 70, hydration: 60 },
+            clinicalNote: 'Excessive T-zone sebum secretion with visible pore congestion. Prescribed 2% BHA clarifying cleanser morning, Niacinamide + Zinc gel evening, and non-comedogenic mineral SPF.'
         },
         {
             id: 'usr_103',
@@ -281,7 +297,8 @@ window.SKIN_DATA = {
             primaryConcerns: ['wrinkles', 'dryness', 'hyperpigmentation'],
             lastScanDate: '2026-07-28',
             lifestyle: { sleepHours: 8.0, waterLiters: 2.8, sunExposure: 'Low', stressLevel: 'Low' },
-            scores: { condition: 82, lifestyle: 90, sleep: 88, routine: 92, hydration: 90 }
+            scores: { condition: 82, lifestyle: 90, sleep: 88, routine: 92, hydration: 90 },
+            clinicalNote: 'Periorbital fine lines and stratum corneum lipid depletion. Prescribed Triple Ceramide cream, Encapsulated Retinol 0.5% (3x/week evening), and Copper Peptide lipid recovery balm.'
         }
     ]
 };

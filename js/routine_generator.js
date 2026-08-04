@@ -99,26 +99,13 @@ class SkincareRoutineGenerator {
         // 2. AFTERNOON TOUCH-UP CARE
         afternoonSteps.push({
             id: 'a1',
-            category: 'Step 1: Mid-Day Moisture Refresh',
+            category: 'Mid-Day Hydration & Calming Mist',
             name: 'CicaSoothe Barrier Relief Hydrosol Mist',
-            active: 'Green Tea & Centella Hydrosol',
+            active: 'Madecassoside & Green Tea Extract',
             duration: '10 Seconds',
-            method: 'Spritz 2-3 pumps 8 inches from face',
-            targetZone: 'Full Face',
-            instruction: 'Lightly spritz over face to instantly soothe redness and replenish mid-day hydration.',
-            time: 'Afternoon',
-            completed: false
-        });
-
-        afternoonSteps.push({
-            id: 'a2',
-            category: 'Step 2: SPF Touch-Up Protection',
-            name: 'Mineral SPF 50 Cushion Touch-Up',
-            active: 'Non-nano Zinc Oxide',
-            duration: '30 Seconds',
-            method: 'Gently pat cushion over face',
-            targetZone: 'Face & Cheekbones',
-            instruction: 'Gently pat over makeup or bare skin to maintain continuous broad-spectrum UV defense.',
+            method: 'Hold mist 8 inches away and mist lightly across face',
+            targetZone: 'Full Face & Neck',
+            instruction: 'Instant hydration boost to soothe mid-day environmental stress and skin tightness.',
             time: 'Afternoon',
             completed: false
         });
@@ -126,72 +113,57 @@ class SkincareRoutineGenerator {
         // 3. EVENING RITUAL
         eveningSteps.push({
             id: 'e1',
-            category: 'Step 1: Double Cleanse Melt',
-            name: 'Calming Botanical Oil + LumiClear Wash',
-            active: 'Double Cleanse Routine',
-            duration: '2 Minutes Total',
-            method: 'Massage oil on dry skin 60s, emulsify with water, follow with gentle wash',
+            category: 'Step 1: Double Cleansing Ritual',
+            name: 'Botanical Cleansing Oil & Gentle Wash',
+            active: 'Jojoba Oil & Squalane',
+            duration: '90 Seconds',
+            method: 'Massage oil on dry skin, emulsify with warm water, rinse',
             targetZone: 'Full Face',
-            instruction: 'Melt sunscreen and daily urban impurities with oil cleanser first, followed by gentle gel wash.',
+            instruction: 'Melt away daily sunscreen, makeup, and environmental micro-pollutants.',
             time: 'Evening',
             completed: false
         });
 
-        if (ageGroup === '40-54' || ageGroup === '55+' || detectedConcerns.includes('wrinkles')) {
+        if (detectedConcerns.includes('wrinkles') || detectedConcerns.includes('hyperpigmentation')) {
             eveningSteps.push({
                 id: 'e2',
-                category: 'Step 2: Night Renewal Elixir',
+                category: 'Step 2: Targeted Night Renewal',
                 name: 'RetinoLift Gentle Night Renewal Elixir',
-                active: 'Encapsulated Retinol (0.5%) + Copper Peptides',
-                duration: 'Wait 3 minutes before moisturizer',
-                method: 'Apply pea-sized amount onto completely dry skin 2-3 nights per week',
-                targetZone: 'Face (Avoid eye lids)',
-                instruction: 'Targeted micro-encapsulated retinol to support cell turnover and smooth fine lines overnight.',
+                active: 'Encapsulated Retinol (0.5%) & Peptides',
+                duration: 'Allow 2 minutes to absorb before cream',
+                method: 'Apply 1 pump over dry face avoiding eye contours',
+                targetZone: 'Forehead, Cheeks & Jawline',
+                instruction: 'Boost cell turnover and collagen renewal while you sleep. Use 3 nights per week.',
                 time: 'Evening',
                 completed: false
             });
         } else {
             eveningSteps.push({
                 id: 'e2',
-                category: 'Step 2: Night Renewal Elixir',
-                name: 'Multi-Peptide Youth Elixir',
-                active: 'Matrixyl 3000 + Hyaluronic Acid',
+                category: 'Step 2: Niacinamide Sebum Repair',
+                name: 'Niacinamide 10% + Zinc PCA Sebum Gel',
+                active: 'Niacinamide (10%) & Zinc PCA',
                 duration: 'Wait 60 seconds',
-                method: 'Press gently into face and neck',
-                targetZone: 'Face & Neck',
-                instruction: 'Smooth over face and neck to deeply nourish skin elasticity overnight.',
+                method: 'Smooth 3 drops over T-zone and cheeks',
+                targetZone: 'T-Zone & Cheeks',
+                instruction: 'Regulate nocturnal sebum production and calm skin redness.',
                 time: 'Evening',
                 completed: false
             });
         }
 
-        if (ageGroup === '40-54' || ageGroup === '55+') {
-            eveningSteps.push({
-                id: 'e3',
-                category: 'Step 3: Deep Lipid Barrier Repair',
-                name: 'PeptideFirm Deep Lipid Recovery Balm',
-                active: 'Copper Tripeptides & Ceramide EOP',
-                duration: 'Overnight',
-                method: 'Warm small amount in palms and press onto face',
-                targetZone: 'Face & Dry Patches',
-                instruction: 'Rich lipid recovery balm to seal in active ingredients and deeply restore moisture lipids overnight.',
-                time: 'Evening',
-                completed: false
-            });
-        } else {
-            eveningSteps.push({
-                id: 'e3',
-                category: 'Step 3: Barrier Repair Cream',
-                name: 'HydraBarrier Triple Ceramide Cream',
-                active: 'Ceramides NP/AP/EOP & Squalane',
-                duration: 'Overnight',
-                method: 'Smooth evenly over face and neck',
-                targetZone: 'Full Face',
-                instruction: 'Nourishing barrier layer that locks in moisture and comfort while you sleep.',
-                time: 'Evening',
-                completed: false
-            });
-        }
+        eveningSteps.push({
+            id: 'e3',
+            category: 'Step 3: Barrier Repair Cream',
+            name: 'HydraBarrier Triple Ceramide Cream',
+            active: 'Ceramides NP/AP/EOP & Squalane',
+            duration: 'Overnight',
+            method: 'Smooth evenly over face and neck',
+            targetZone: 'Full Face',
+            instruction: 'Nourishing barrier layer that locks in moisture and comfort while you sleep.',
+            time: 'Evening',
+            completed: false
+        });
 
         // 4. WEEKLY SPECIAL CARE RITUAL
         weeklySteps.push({
@@ -224,40 +196,52 @@ class SkincareRoutineGenerator {
     }
 
     /**
-     * Calculate Age-Adjusted Product Suitability Score (%) & Explanation
+     * Calculate Dynamic Skin-Type & Age-Adjusted Product Suitability Score (%) & Explanation
      */
-    static calculateAgeAdjustedMatch(product, activeConcerns = [], userAgeGroup = '26-39') {
-        let score = product.baseMatch || 90;
-        let ageBonus = 0;
-        let concernMatchCount = 0;
+    static calculateAgeAdjustedMatch(product, activeConcerns = [], userAgeGroup = '26-39', userSkinType = 'Combination') {
+        let score = product.baseMatch || 80;
+        let explanationParts = [];
 
+        // 1. Skin Type Match Calculation
+        const targetTypes = product.targetSkinTypes || [];
+        const typeMatched = targetTypes.some(st => userSkinType.toLowerCase().includes(st.toLowerCase()));
+        
+        if (typeMatched) {
+            score += 12;
+            explanationParts.push(`Tailored for ${userSkinType} skin`);
+        } else if (targetTypes.length > 0) {
+            score -= 10;
+        }
+
+        // 2. Skin Concern Match Calculation
+        let concernMatchCount = 0;
         if (product.targetConcerns) {
             product.targetConcerns.forEach(c => {
                 if (activeConcerns.includes(c)) concernMatchCount++;
             });
         }
-
         if (concernMatchCount > 0) {
-            score += (concernMatchCount * 3);
+            score += (concernMatchCount * 6);
+            explanationParts.push(`Matches ${concernMatchCount} scan concern(s)`);
         }
 
+        // 3. Age Group Match Calculation
         if (product.targetAgeGroups && product.targetAgeGroups.includes(userAgeGroup)) {
-            ageBonus = 6;
-            score += ageBonus;
+            score += 8;
+            explanationParts.push(`Optimal for ${userAgeGroup} profile`);
         } else {
-            score -= 4;
+            score -= 6;
         }
 
-        score = Math.min(99, Math.max(65, score));
+        score = Math.min(99, Math.max(55, score));
 
-        let ageMatchExplanation = product.ageNote || `Formulated for ${userAgeGroup} skin profile needs.`;
-        if (product.targetAgeGroups && product.targetAgeGroups.includes(userAgeGroup)) {
-            ageMatchExplanation = `✨ Ideal Match for ${userAgeGroup} skin profile. ${product.ageNote}`;
-        }
+        let explanation = explanationParts.length > 0
+            ? `✨ ${explanationParts.join(' • ')}.`
+            : (product.ageNote || 'General skincare formulation.');
 
         return {
             suitabilityScore: score,
-            ageMatchExplanation
+            ageMatchExplanation: explanation
         };
     }
 
