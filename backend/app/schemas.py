@@ -81,3 +81,7 @@ class ProgressResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class ImagePredictionResponse(BaseModel):
+    prediction: str
+    confidence: float

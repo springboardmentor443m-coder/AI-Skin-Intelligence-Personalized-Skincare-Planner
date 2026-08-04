@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+import os
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -6,6 +7,7 @@ from app import schemas, crud
 from ml.recommender import recommend_products
 from ml.profile_recommender import recommend_from_profile
 from ml.routine_generator import generate_routine
+from ml.image_classifier import predict_skin_condition
 
 router = APIRouter()
 
@@ -125,3 +127,22 @@ def create_progress(
 ):
 
     return crud.create_progress(db, progress)
+
+@router.post(
+    "/analyze-image",
+    response_model=schemas.ImagePredictionResponse
+)
+def analyze_image(
+    file: UploadFile = File(...)
+):
+
+    temp_path = f"temp_{file.filename}"
+
+    with open(temp_path, "wb") as buffer:
+        buffer.write(file.file.read())
+
+    result = predict_skin_condition(temp_path)
+
+    os.remove(temp_path)
+
+    return result
