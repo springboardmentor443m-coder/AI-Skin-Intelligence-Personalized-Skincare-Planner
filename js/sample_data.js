@@ -1,10 +1,16 @@
 /**
  * Skin Intelligence & Personalized Skincare Planner
- * Humanized Care Data Sources & Sample Catalog
+ * Extended Product Catalog & Category Taxonomy
  */
 
 window.SKIN_DATA = {
-    // 6 Target Classes for Image Analysis
+    AGE_GROUPS: [
+        { id: '18-25', label: '18–25 (Young Adult)', focus: 'Sebum Balance & Blemish Prevention' },
+        { id: '26-39', label: '26–39 (Adult)', focus: 'Antioxidant Defense & Early Fine-Line Care' },
+        { id: '40-54', label: '40–54 (Mature)', focus: 'Collagen Regeneration & Elasticity' },
+        { id: '55+', label: '55+ (Graceful Senior)', focus: 'Deep Barrier Lipids & Moisture Locking' }
+    ],
+
     CONCERN_CLASSES: [
         {
             id: 'acne',
@@ -56,13 +62,13 @@ window.SKIN_DATA = {
         }
     ],
 
-    // Ingredient Intelligence Database
     INGREDIENTS: [
         {
             name: 'Retinol / Retinoids',
             category: 'Retinoids',
             functions: ['Cell Renewal', 'Collagen Support', 'Blemish Care', 'Fine Line Smoothing'],
             suitableFor: ['wrinkles', 'acne', 'hyperpigmentation'],
+            targetAgeGroups: ['26-39', '40-54', '55+'],
             conflicts: ['AHAs/BHAs (same ritual)', 'Pure Vitamin C (L-Ascorbic Acid)'],
             caution: 'Apply during evening ritual only and pair with daily SPF 50.',
             rating: 4.9
@@ -72,8 +78,9 @@ window.SKIN_DATA = {
             category: 'Niacinamide',
             functions: ['Sebum Harmony', 'Barrier Repair', 'Calming Redness', 'Even Tone'],
             suitableFor: ['oily_pores', 'redness', 'hyperpigmentation', 'acne'],
+            targetAgeGroups: ['18-25', '26-39', '40-54', '55+'],
             conflicts: [],
-            caution: 'Gentle and well-tolerated by most skin profiles.',
+            caution: 'Gentle and well-tolerated by all age groups.',
             rating: 4.8
         },
         {
@@ -81,8 +88,9 @@ window.SKIN_DATA = {
             category: 'Vitamin C',
             functions: ['Antioxidant Protection', 'Radiance', 'Brightening', 'Sun Damage Defense'],
             suitableFor: ['hyperpigmentation', 'wrinkles'],
+            targetAgeGroups: ['18-25', '26-39', '40-54'],
             conflicts: ['Retinol (same ritual)', 'High-strength acids'],
-            caution: 'Apply morning ritual before sunscreen. Store in a cool, dark place.',
+            caution: 'Apply morning ritual before sunscreen.',
             rating: 4.7
         },
         {
@@ -90,6 +98,7 @@ window.SKIN_DATA = {
             category: 'Hyaluronic Acid',
             functions: ['Deep Hydration', 'Plumping Moisture', 'Barrier Softening'],
             suitableFor: ['dryness', 'wrinkles'],
+            targetAgeGroups: ['18-25', '26-39', '40-54', '55+'],
             conflicts: [],
             caution: 'Apply to damp skin for maximum moisture plumping.',
             rating: 4.9
@@ -99,69 +108,78 @@ window.SKIN_DATA = {
             category: 'AHAs/BHAs',
             functions: ['Pore Clearing', 'Gentle Exfoliation', 'Sebum Balance'],
             suitableFor: ['acne', 'oily_pores'],
+            targetAgeGroups: ['18-25', '26-39'],
             conflicts: ['Retinol', 'Strong Vitamin C'],
-            caution: 'Use 2-3 times weekly and follow with a soothing moisturizer.',
+            caution: 'Ideal for oily and blemish-prone young skin.',
             rating: 4.7
         },
         {
-            name: 'Ceramides NP/AP/EOP',
+            name: 'Ceramides & Peptides',
             category: 'Ceramides',
-            functions: ['Barrier Nourishment', 'Moisture Locking', 'Skin Soothing'],
-            suitableFor: ['dryness', 'redness'],
+            functions: ['Barrier Nourishment', 'Moisture Locking', 'Skin Firming'],
+            suitableFor: ['dryness', 'redness', 'wrinkles'],
+            targetAgeGroups: ['26-39', '40-54', '55+'],
             conflicts: [],
-            caution: 'Essential for sensitive or compromised skin barriers.',
+            caution: 'Essential for mature barrier repair and firming.',
             rating: 4.9
         }
     ],
 
-    // Product Database
     PRODUCTS: [
         {
             id: 'p1',
             name: 'LumiClear Gentle Clarifying Wash',
             brand: 'Pure Botanical Care',
-            category: 'Cleansing',
+            category: 'Cleanser',
             price: 24.00,
             targetConcerns: ['acne', 'oily_pores'],
+            targetAgeGroups: ['18-25', '26-39'],
+            ageNote: 'Perfect for young to adult skin managing sebum & pores',
             keyIngredients: ['Salicylic Acid (2%)', 'Niacinamide', 'Zinc PCA'],
-            suitabilityScore: 94,
-            rating: 4.8,
+            baseMatch: 92,
+            tags: ['Cruelty-Free', 'Fragrance-Free', 'Non-Comedogenic'],
             image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&auto=format&fit=crop&q=60'
         },
         {
             id: 'p2',
             name: 'HydraBarrier Triple Ceramide Cream',
             brand: 'CeraCare Botanicals',
-            category: 'Moisturizing',
+            category: 'Moisturizer',
             price: 36.00,
             targetConcerns: ['dryness', 'redness'],
+            targetAgeGroups: ['26-39', '40-54', '55+'],
+            ageNote: 'Essential moisture lipid replenishment for adult & mature skin',
             keyIngredients: ['Ceramides', 'Hyaluronic Acid', 'Squalane', 'Centella'],
-            suitabilityScore: 98,
-            rating: 4.9,
+            baseMatch: 95,
+            tags: ['Barrier Repair', 'Dermatologist Tested', 'Hypoallergenic'],
             image: 'https://images.unsplash.com/photo-1608248597260-244e45c7e14a?w=300&auto=format&fit=crop&q=60'
         },
         {
             id: 'p3',
             name: 'GlowBright Radiance Antioxidant Serum',
             brand: 'Apothecary Skin',
-            category: 'Treatment',
+            category: 'Serum',
             price: 48.00,
             targetConcerns: ['hyperpigmentation', 'wrinkles'],
+            targetAgeGroups: ['18-25', '26-39', '40-54'],
+            ageNote: 'Brightening antioxidant protection against premature aging',
             keyIngredients: ['L-Ascorbic Acid (15%)', 'Ferulic Acid', 'Vitamin E'],
-            suitabilityScore: 91,
-            rating: 4.7,
+            baseMatch: 91,
+            tags: ['Brightening', 'Antioxidant Defense'],
             image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=300&auto=format&fit=crop&q=60'
         },
         {
             id: 'p4',
             name: 'RetinoLift Gentle Night Renewal Elixir',
             brand: 'Dermatica Gentle Care',
-            category: 'Evening Care',
+            category: 'Serum',
             price: 54.00,
             targetConcerns: ['wrinkles', 'hyperpigmentation', 'acne'],
+            targetAgeGroups: ['26-39', '40-54', '55+'],
+            ageNote: 'Targeted cell renewal & collagen support for 26+ skin',
             keyIngredients: ['Encapsulated Retinol (0.5%)', 'Peptides', 'Niacinamide'],
-            suitabilityScore: 89,
-            rating: 4.8,
+            baseMatch: 94,
+            tags: ['Overnight Renewal', 'Collagen Booster'],
             image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=300&auto=format&fit=crop&q=60'
         },
         {
@@ -171,22 +189,54 @@ window.SKIN_DATA = {
             category: 'Sun Protection',
             price: 32.00,
             targetConcerns: ['hyperpigmentation', 'redness', 'wrinkles'],
+            targetAgeGroups: ['18-25', '26-39', '40-54', '55+'],
+            ageNote: 'Universal broad-spectrum defense essential for all age groups',
             keyIngredients: ['Zinc Oxide (18%)', 'Panthenol', 'Ectoin'],
-            suitabilityScore: 96,
-            rating: 4.9,
+            baseMatch: 96,
+            tags: ['Broad Spectrum SPF 50', 'Reef Safe', 'Invisible Finish'],
             image: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=300&auto=format&fit=crop&q=60'
         },
         {
             id: 'p6',
-            name: 'CicaSoothe Calming Essence Toner',
-            brand: 'PurePhyto Care',
-            category: 'Toner',
-            price: 22.00,
-            targetConcerns: ['redness', 'dryness'],
-            keyIngredients: ['Centella Asiatica', 'Madecassoside', 'Green Tea Extract'],
-            suitabilityScore: 92,
-            rating: 4.7,
+            name: 'PeptideFirm Deep Lipid Recovery Balm',
+            brand: 'Cellular Vitality Labs',
+            category: 'Moisturizer',
+            price: 62.00,
+            targetConcerns: ['wrinkles', 'dryness'],
+            targetAgeGroups: ['40-54', '55+'],
+            ageNote: 'Rich lipid recovery & peptide firming specially formulated for mature skin (40+)',
+            keyIngredients: ['Copper Tripeptide-1', 'Ceramide EOP', 'Shea Butter', 'Squalane'],
+            baseMatch: 97,
+            tags: ['Mature Barrier Support', 'Intensive Lipid Care'],
             image: 'https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=300&auto=format&fit=crop&q=60'
+        },
+        {
+            id: 'p7',
+            name: 'CicaSoothe Barrier Relief Hydrosol Mist',
+            brand: 'PurePhyto Care',
+            category: 'Special Care',
+            price: 26.00,
+            targetConcerns: ['redness', 'dryness'],
+            targetAgeGroups: ['18-25', '26-39', '40-54', '55+'],
+            ageNote: 'Soothing mid-day hydration & redness calming mist for all skin profiles',
+            keyIngredients: ['Centella Asiatica', 'Madecassoside', 'Green Tea Extract'],
+            baseMatch: 93,
+            tags: ['Soothing', 'Alcohol-Free', 'pH Balanced'],
+            image: 'https://images.unsplash.com/photo-1608248597260-244e45c7e14a?w=300&auto=format&fit=crop&q=60'
+        },
+        {
+            id: 'p8',
+            name: 'Bio-Cellulose Deep Hydration Sheet Mask',
+            brand: 'Apothecary Skin',
+            category: 'Special Care',
+            price: 28.00,
+            targetConcerns: ['dryness', 'wrinkles', 'redness'],
+            targetAgeGroups: ['18-25', '26-39', '40-54', '55+'],
+            ageNote: 'Intensive weekly hydration treatment to replenish barrier moisture',
+            keyIngredients: ['Triple Hyaluronic Acid', 'Ceramides', 'Panthenol'],
+            baseMatch: 95,
+            tags: ['Weekly Ritual', 'Intensive Plumping'],
+            image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&auto=format&fit=crop&q=60'
         }
     ],
 
@@ -194,9 +244,10 @@ window.SKIN_DATA = {
         {
             id: 'usr_101',
             name: 'Sophia Chen',
+            initials: 'SC',
             age: 28,
+            ageGroup: '26-39',
             role: 'User',
-            avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
             skinType: 'Combination / Sensitive',
             overallScore: 78,
             primaryConcerns: ['acne', 'redness'],
@@ -207,9 +258,10 @@ window.SKIN_DATA = {
         {
             id: 'usr_102',
             name: 'Marcus Vance',
+            initials: 'MV',
             age: 35,
+            ageGroup: '26-39',
             role: 'User',
-            avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
             skinType: 'Oily / Blemish-Prone',
             overallScore: 65,
             primaryConcerns: ['oily_pores', 'acne', 'hyperpigmentation'],
@@ -220,9 +272,10 @@ window.SKIN_DATA = {
         {
             id: 'usr_103',
             name: 'Elena Rostova',
-            age: 42,
+            initials: 'ER',
+            age: 48,
+            ageGroup: '40-54',
             role: 'User',
-            avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
             skinType: 'Dry / Mature',
             overallScore: 84,
             primaryConcerns: ['wrinkles', 'dryness', 'hyperpigmentation'],

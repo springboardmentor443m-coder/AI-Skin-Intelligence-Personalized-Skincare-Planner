@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skin Intelligence & Personalized Skincare Planner</title>
-    <meta name="description" content="Personalized skin health platform providing holistic skin assessments across 6 dermal concern areas and custom routine care planning.">
+    <meta name="description" content="Personalized skin health platform providing holistic skin assessments across 6 dermal concern areas, age-tailored product recommendations, interactive routine tracker, and skincare consultant chat.">
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -13,10 +13,10 @@
     <!-- Header Navigation & Role Switcher -->
     <header class="navbar">
         <a href="#" class="brand-logo">
-            <div class="logo-icon">🌸</div>
+            <div class="logo-mark">🌸</div>
             <div>
-                <div style="line-height: 1.1;">Skin Intelligence</div>
-                <div style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 400;">Personalized Skincare Planner</div>
+                <div class="brand-title">Skin Intelligence</div>
+                <div style="font-size: 0.72rem; color: var(--text-secondary); font-weight: 500;">Personalized Skincare Planner</div>
             </div>
         </a>
 
@@ -32,13 +32,20 @@
                 <span>🩺 Dermatologist Care</span>
             </button>
             <button class="role-btn" data-role="admin">
-                <span>⚡ System Care</span>
+                <span>⚡ Care Analytics</span>
             </button>
         </div>
 
-        <div>
-            <button id="btn-export-pdf" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.85rem;">
-                📄 Download Skin Care Plan
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <!-- Authentication User Badge -->
+            <div id="auth-header-container">
+                <button id="btn-open-login" class="btn btn-primary" style="padding: 7px 16px; font-size: 0.82rem;">
+                    🔑 Sign In / Register
+                </button>
+            </div>
+
+            <button id="btn-export-pdf" class="btn btn-secondary" style="padding: 7px 16px; font-size: 0.82rem;">
+                📄 Care Plan
             </button>
         </div>
     </header>
@@ -49,41 +56,41 @@
         <section id="view-user" class="role-view">
 
             <!-- Hero Section / Scanner Grid -->
-            <div class="scanner-section">
+            <div class="scanner-grid">
 
                 <!-- Left Column: Image Assessment Engine -->
-                <div class="glass-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <h3 class="font-heading" style="font-size: 1.25rem;">📸 Digital Skin Assessment</h3>
-                        <span id="scan-status" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Ready for Photo</span>
+                <div class="human-card">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; border-bottom: 1px solid var(--border-soft); padding-bottom: 0.5rem;">
+                        <h3 class="font-serif">Digital Skin Assessment</h3>
+                        <span id="scan-status" style="font-size: 0.8rem; font-weight: 600; color: var(--terracotta);">Ready for Photo</span>
                     </div>
 
                     <!-- Dropzone -->
                     <div class="upload-dropzone" id="upload-dropzone">
                         <input type="file" id="image-upload" accept="image/*" style="display: none;">
-                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">✨</div>
-                        <div style="font-weight: 600; color: #fff; margin-bottom: 0.25rem;">Upload Your Skin Photo or Take a Selfie</div>
-                        <div style="font-size: 0.8rem; color: var(--text-muted);">Gentle analysis across 6 dermal health zones (Acne, Tone, Texture, Redness, Sebum, Moisture)</div>
+                        <div style="font-size: 2.2rem; margin-bottom: 0.5rem; color: var(--terracotta);">🌿</div>
+                        <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem;">Upload Your Skin Photo or Take a Selfie</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Gentle analysis across 6 dermal health zones + Age Group Estimation</div>
                     </div>
 
                     <!-- Quick Preset & Camera Actions -->
                     <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;" class="preset-btns">
-                        <button class="btn btn-secondary btn-preset" style="padding: 6px 10px; font-size: 0.75rem;">Sample Profile A: Blemishes & Redness</button>
-                        <button class="btn btn-secondary btn-preset" style="padding: 6px 10px; font-size: 0.75rem;">Sample Profile B: Dark Spots</button>
-                        <button class="btn btn-secondary btn-preset" style="padding: 6px 10px; font-size: 0.75rem;">Sample Profile C: Fine Lines</button>
-                        <button id="btn-webcam" class="btn btn-secondary" style="padding: 6px 10px; font-size: 0.75rem; color: var(--accent-teal);">📷 Take Photo</button>
+                        <button class="btn btn-secondary btn-preset" style="padding: 6px 12px; font-size: 0.78rem;">Profile A: Young Blemish Care (22y)</button>
+                        <button class="btn btn-secondary btn-preset" style="padding: 6px 12px; font-size: 0.78rem;">Profile B: Adult Dark Spots (32y)</button>
+                        <button class="btn btn-secondary btn-preset" style="padding: 6px 12px; font-size: 0.78rem;">Profile C: Mature Firming (48y)</button>
+                        <button id="btn-webcam" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.78rem; color: var(--sage); font-weight: 600;">📷 Take Photo</button>
                     </div>
 
                     <!-- Image & Facial Feature Overlay Display -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.25rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1.5rem;">
                         <div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Original Photo</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600;">Original Photo</div>
                             <div class="preview-wrapper">
                                 <img id="preview-img" src="" alt="Skin Input Preview" style="display: none;">
                             </div>
                         </div>
                         <div>
-                            <div style="font-size: 0.75rem; color: var(--primary); margin-bottom: 4px; font-weight: 600;">Facial Health Zone Map (6 Areas)</div>
+                            <div style="font-size: 0.75rem; color: var(--terracotta); margin-bottom: 6px; font-weight: 600;">Facial Health Zone Map (6 Areas + Age Tag)</div>
                             <div class="preview-wrapper">
                                 <img id="annotated-canvas-img" src="" alt="Facial Zone Overlay" style="display: none;">
                             </div>
@@ -91,27 +98,43 @@
                     </div>
                 </div>
 
-                <!-- Right Column: Holistic Skin Health Score -->
-                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                <!-- Right Column: Holistic Skin Health Index & Age Profile -->
+                <div class="human-card" style="display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
-                        <h3 class="font-heading" style="font-size: 1.25rem; margin-bottom: 1rem;">🌿 Holistic Skin Health Index</h3>
+                        <div style="border-bottom: 1px solid var(--border-soft); padding-bottom: 0.5rem; margin-bottom: 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                            <h3 class="font-serif">Holistic Skin Vitality Index</h3>
+                            <span id="estimated-age-badge" style="background:var(--terracotta-soft); color:var(--terracotta); border:1px solid var(--terracotta); font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:var(--radius-full);">
+                                Age Profile: 26–39 (Adult)
+                            </span>
+                        </div>
 
                         <div class="score-circle-container">
                             <div class="score-circle" id="score-circle">
                                 <span class="score-value" id="score-value">--</span>
                             </div>
                             <div>
-                                <div style="font-size: 0.85rem; color: var(--text-muted);">Overall Vitality Score</div>
-                                <div id="score-grade" style="font-size: 1.1rem; font-weight: 700; color: var(--accent-teal);">Status: Assessing...</div>
-                                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
-                                    Calculated from 5 holistic factors: Skin Assessment (35%), Lifestyle (20%), Sleep (15%), Routine Care (20%), Hydration (10%).
+                                <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Overall Vitality Score</div>
+                                <div id="score-grade" style="font-size: 1.15rem; font-weight: 700; color: var(--sage); margin: 2px 0;">Status: Assessing...</div>
+                                <div id="age-focus-text" style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4;">
+                                    Calculated from 5 holistic factors tailored to your estimated age profile.
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Manual Age Group Selector Adjustment -->
+                        <div style="margin-top: 1.25rem; padding: 0.85rem; background: var(--bg-warm-accent); border-radius: var(--radius-md); border: 1px solid var(--border-soft);">
+                            <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">🎯 Adjust Age Profile Target:</div>
+                            <select id="user-age-select" style="width:100%; padding:6px 10px; border-radius:var(--radius-sm); border:1px solid var(--border-warm); font-family:'Plus Jakarta Sans', sans-serif; font-size:0.85rem;">
+                                <option value="18-25">18–25 Years (Young Adult - Sebum & Blemish Balance)</option>
+                                <option value="26-39" selected>26–39 Years (Adult - Antioxidant & Early Line Care)</option>
+                                <option value="40-54">40–54 Years (Mature - Collagen Support & Firming)</option>
+                                <option value="55+">55+ Years (Graceful Senior - Deep Lipid Recovery)</option>
+                            </select>
+                        </div>
+
                         <!-- Score Contribution Breakdown Table -->
                         <div style="margin-top: 1.25rem;">
-                            <h4 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Wellness Contribution Breakdown</h4>
+                            <h4 style="font-size: 0.88rem; color: var(--text-muted); font-weight: 600; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.04em;">Wellness Contribution Breakdown</h4>
                             <div id="score-breakdown-list">
                                 <!-- Populated dynamically by JS -->
                             </div>
@@ -119,50 +142,63 @@
                     </div>
 
                     <!-- Actionable Specialist Recommendations -->
-                    <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(99, 102, 241, 0.08); border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
-                        <div style="font-size: 0.8rem; font-weight: 700; color: var(--primary); margin-bottom: 4px;">💡 Specialist Care Suggestion</div>
-                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Drink plenty of fresh water (>2.2L/day) and wear daily mineral SPF 50 to nourish your skin moisture barrier.</div>
+                    <div style="margin-top: 1.25rem; padding: 1rem; background: var(--bg-warm-accent); border-radius: var(--radius-md); border: 1px solid var(--border-soft);">
+                        <div style="font-size: 0.85rem; font-weight: 700; color: var(--terracotta); margin-bottom: 4px;">💡 Age-Tailored Specialist Suggestion</div>
+                        <div id="age-specialist-tip" style="font-size: 0.82rem; color: var(--text-secondary);">Drink plenty of fresh water (>2.2L/day) and wear daily mineral SPF 50 to nourish your skin moisture barrier.</div>
                     </div>
                 </div>
 
             </div>
 
             <!-- 6 Target Skin Concern Classes Assessment Grid -->
-            <div class="glass-card" style="margin-bottom: 2rem;">
-                <h3 class="font-heading" style="font-size: 1.25rem; margin-bottom: 0.5rem;">🔎 6 Dermal Health Zone Breakdown</h3>
-                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
-                    Detailed observation across your 6 key skin health areas (Blemishes, Pigmentation, Lines & Wrinkles, Redness, Sebum Control, Moisture Barrier).
-                </p>
+            <div class="human-card">
+                <div class="section-header">
+                    <h3 class="font-serif">6 Dermal Health Zone Breakdown</h3>
+                    <span class="section-subtitle">Detailed observation across your 6 key skin health areas</span>
+                </div>
 
                 <div class="concern-grid" id="concern-grid">
                     <!-- Populated dynamically by image_analyzer.js -->
                 </div>
             </div>
 
-            <!-- Personalized Routine Generator & Ingredient Intelligence -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+            <!-- Enhanced Interactive Care Rituals & Habit Tracker -->
+            <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 2rem; margin-bottom: 2rem;">
 
-                <!-- Personalized Skincare Routine -->
-                <div class="glass-card">
-                    <h3 class="font-heading" style="font-size: 1.25rem; margin-bottom: 1rem;">🗓️ Your Personalized Care Ritual</h3>
+                <!-- Personalized Skincare Ritual Tracker (4 Schedules) -->
+                <div class="human-card" style="margin-bottom: 0;">
+                    <div class="section-header" style="align-items:center;">
+                        <div>
+                            <h3 class="font-serif">Interactive Care Ritual Tracker</h3>
+                            <span class="section-subtitle">Check off steps as you complete them to track daily consistency</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <span id="routine-progress-text" style="font-size:0.8rem; font-weight:700; color:var(--terracotta);">0 of 4 Steps Completed</span>
+                            <div class="score-bar-bg" style="width:120px; height:6px; margin-top:4px;">
+                                <div id="routine-progress-bar" class="score-bar-fill" style="width:0%; background:var(--terracotta);"></div>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="tab-header">
-                        <button class="tab-btn active" onclick="this.parentNode.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active'); document.getElementById('morning-routine-list').style.display='block'; document.getElementById('evening-routine-list').style.display='none';">☀️ Morning Ritual</button>
-                        <button class="tab-btn" onclick="this.parentNode.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active'); document.getElementById('morning-routine-list').style.display='none'; document.getElementById('evening-routine-list').style.display='block';">🌙 Evening Ritual</button>
+                        <button class="tab-btn active" onclick="switchRoutineTab('morning', this)">☀️ Morning</button>
+                        <button class="tab-btn" onclick="switchRoutineTab('afternoon', this)">🌤️ Afternoon</button>
+                        <button class="tab-btn" onclick="switchRoutineTab('evening', this)">🌙 Evening</button>
+                        <button class="tab-btn" onclick="switchRoutineTab('weekly', this)">🗓️ Weekly</button>
                     </div>
 
-                    <div id="morning-routine-list">
-                        <!-- Populated by routine_generator.js -->
-                    </div>
-                    <div id="evening-routine-list" style="display: none;">
-                        <!-- Populated by routine_generator.js -->
-                    </div>
+                    <div id="morning-routine-list" class="routine-tab-content"></div>
+                    <div id="afternoon-routine-list" class="routine-tab-content" style="display: none;"></div>
+                    <div id="evening-routine-list" class="routine-tab-content" style="display: none;"></div>
+                    <div id="weekly-routine-list" class="routine-tab-content" style="display: none;"></div>
                 </div>
 
                 <!-- Ingredient Intelligence & Compatibility -->
-                <div class="glass-card">
-                    <h3 class="font-heading" style="font-size: 1.25rem; margin-bottom: 1rem;">🧪 Ingredient Care & Compatibility Guide</h3>
-                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                <div class="human-card" style="margin-bottom: 0;">
+                    <div class="section-header">
+                        <h3 class="font-serif">Ingredient Care & Compatibility</h3>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
                         Expert formulation guidance helping you pair gentle active ingredients safely without irritating your skin barrier.
                     </p>
 
@@ -170,18 +206,69 @@
                         <!-- Populated by routine_generator.js -->
                     </div>
 
-                    <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted);">
+                    <div style="margin-top: 1.25rem; font-size: 0.8rem; color: var(--text-muted);">
                         <strong>Key Active Ingredients Analyzed:</strong> Retinoids, Vitamin C, Salicylic Acid (BHA), Niacinamide, Ceramides, Peptides.
                     </div>
                 </div>
 
             </div>
 
-            <!-- Product Recommendation Engine Catalog -->
-            <div class="glass-card" style="margin-bottom: 2rem;">
-                <h3 class="font-heading" style="font-size: 1.25rem; margin-bottom: 1rem;">🛍️ Thoughtfully Selected Products for You</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;" id="product-recommendations-grid">
-                    <!-- Populated by app.js -->
+            <!-- Enhanced Interactive Product Recommendation Engine with Filtering & Sorting -->
+            <div class="human-card">
+                <div class="section-header" style="align-items:center; flex-wrap:wrap; gap:1rem;">
+                    <div>
+                        <h3 class="font-serif">Age-Tailored Product Recommendations</h3>
+                        <span class="section-subtitle">Filtered & scored for your skin concerns and estimated age profile</span>
+                    </div>
+
+                    <!-- Category Filter Buttons & Sort Dropdown -->
+                    <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+                        <div class="product-category-filters" style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+                            <button class="btn btn-secondary btn-prod-filter active" data-category="All" style="padding:4px 10px; font-size:0.75rem;">All</button>
+                            <button class="btn btn-secondary btn-prod-filter" data-category="Cleanser" style="padding:4px 10px; font-size:0.75rem;">Cleansers</button>
+                            <button class="btn btn-secondary btn-prod-filter" data-category="Serum & Treatment" style="padding:4px 10px; font-size:0.75rem;">Serums</button>
+                            <button class="btn btn-secondary btn-prod-filter" data-category="Moisturizer" style="padding:4px 10px; font-size:0.75rem;">Moisturizers</button>
+                            <button class="btn btn-secondary btn-prod-filter" data-category="Sun Protection" style="padding:4px 10px; font-size:0.75rem;">SPF Defense</button>
+                        </div>
+                        <select id="prod-sort-select" style="padding:4px 8px; border-radius:var(--radius-sm); border:1px solid var(--border-warm); font-size:0.78rem; font-family:'Plus Jakarta Sans', sans-serif;">
+                            <option value="match">Sort: Highest Match %</option>
+                            <option value="price-low">Sort: Price (Low to High)</option>
+                            <option value="price-high">Sort: Price (High to Low)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem;" id="product-recommendations-grid">
+                    <!-- Populated dynamically by app.js -->
+                </div>
+            </div>
+
+            <!-- INTERACTIVE SKINCARE CONSULTANT CHAT SECTION -->
+            <div class="human-card" id="chat-section">
+                <div class="section-header">
+                    <h3 class="font-serif">💬 Skincare Consultant Chat Assistant</h3>
+                    <span class="section-subtitle">Ask questions about your skin scan, age profile, products, or routine adjustments</span>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+                    <button class="btn btn-secondary btn-chat-quick" style="padding: 5px 12px; font-size: 0.78rem;">"What products work best for my estimated age group?"</button>
+                    <button class="btn btn-secondary btn-chat-quick" style="padding: 5px 12px; font-size: 0.78rem;">"How do I care for dark spots & hyperpigmentation?"</button>
+                    <button class="btn btn-secondary btn-chat-quick" style="padding: 5px 12px; font-size: 0.78rem;">"Can I combine Retinol and Vitamin C safely?"</button>
+                    <button class="btn btn-secondary btn-chat-quick" style="padding: 5px 12px; font-size: 0.78rem;">"Explain my Afternoon & Weekly care ritual"</button>
+                </div>
+
+                <div id="chat-messages-container" style="background: var(--bg-warm-accent); border: 1px solid var(--border-soft); border-radius: var(--radius-md); padding: 1.25rem; height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--terracotta); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">🌸</div>
+                        <div style="background: #ffffff; border: 1px solid var(--border-soft); padding: 0.85rem 1.1rem; border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md); max-width: 80%; font-size: 0.88rem; color: var(--text-primary); line-height: 1.5;">
+                            Hello! I am your personal <strong>Skincare Consultant</strong>. I've reviewed your digital skin scan and estimated age profile. How can I assist you with your routine or product recommendations today?
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem;">
+                    <input type="text" id="chat-input" placeholder="Type your skincare question here..." style="flex: 1; padding: 0.85rem 1.1rem; border-radius: var(--radius-full); border: 1px solid var(--border-warm); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.88rem;">
+                    <button id="btn-chat-send" class="btn btn-primary" style="padding: 0.85rem 1.75rem;">Send Message</button>
                 </div>
             </div>
 
@@ -189,22 +276,25 @@
 
         <!-- ================= CONSULTANT VIEW ================= -->
         <section id="view-consultant" class="role-view" style="display: none;">
-            <div class="glass-card">
-                <h3 class="font-heading" style="font-size: 1.35rem; margin-bottom: 0.5rem;">💼 Skincare Specialist & Advisor Dashboard</h3>
-                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Review client skin profiles, examine zone assessments, and curate personalized product rituals.</p>
+            <div class="human-card">
+                <div class="section-header">
+                    <h3 class="font-serif">Skincare Specialist & Advisor Roster</h3>
+                    <span class="section-subtitle">Select a client below to view their specific skin health profile & care plan</span>
+                </div>
 
                 <table class="data-table">
                     <thead>
                         <tr>
                             <th>Client Name</th>
                             <th>Health Index</th>
+                            <th>Age Group</th>
                             <th>Primary Focus Areas</th>
                             <th>Last Consultation</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="consultant-client-table">
-                        <!-- Populated dynamically -->
+                        <!-- Populated dynamically by app.js -->
                     </tbody>
                 </table>
             </div>
@@ -212,43 +302,124 @@
 
         <!-- ================= DERMATOLOGIST VIEW ================= -->
         <section id="view-dermatologist" class="role-view" style="display: none;">
-            <div class="glass-card">
-                <h3 class="font-heading" style="font-size: 1.35rem; margin-bottom: 0.5rem;">🩺 Dermatologist Clinical Care Dashboard</h3>
-                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Clinical observation notes, barrier health grading, and customized treatment recommendations.</p>
+            <div class="human-card">
+                <div class="section-header">
+                    <h3 class="font-serif">Dermatologist Clinical Care Dashboard</h3>
+                    <span class="section-subtitle">Clinical observation notes, barrier health grading, and customized treatment notes</span>
+                </div>
 
                 <div id="derm-patient-list">
-                    <!-- Populated dynamically -->
+                    <!-- Populated dynamically by app.js -->
                 </div>
             </div>
         </section>
 
         <!-- ================= ADMIN VIEW ================= -->
         <section id="view-admin" class="role-view" style="display: none;">
-            <div class="glass-card">
-                <h3 class="font-heading" style="font-size: 1.35rem; margin-bottom: 1rem;">⚡ Platform Operations & Care Analytics</h3>
+            <div class="human-card">
+                <div class="section-header">
+                    <h3 class="font-serif">Platform Operations & Care Analytics</h3>
+                </div>
 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-                    <div style="padding: 1rem; background: rgba(99, 102, 241, 0.1); border-radius: var(--radius-md); border: 1px solid var(--primary-glow);">
-                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Active Members</div>
-                        <div style="font-size: 1.8rem; font-weight: 800; color: #fff;">1,420</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+                    <div style="padding: 1.25rem; background: var(--bg-warm-accent); border-radius: var(--radius-md); border: 1px solid var(--border-soft);">
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Active Members</div>
+                        <div style="font-size: 1.9rem; font-family:'Playfair Display', serif; font-weight: 700; color: var(--text-primary); margin-top:4px;">1,420</div>
                     </div>
-                    <div style="padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: var(--radius-md); border: 1px solid rgba(16, 185, 129, 0.3);">
-                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Dermal Scan Accuracy</div>
-                        <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-teal);">94.8%</div>
+                    <div style="padding: 1.25rem; background: var(--sage-soft); border-radius: var(--radius-md); border: 1px solid var(--border-soft);">
+                        <div style="font-size: 0.8rem; color: var(--sage); font-weight: 600;">Dermal Scan Accuracy</div>
+                        <div style="font-size: 1.9rem; font-family:'Playfair Display', serif; font-weight: 700; color: var(--sage); margin-top:4px;">94.8%</div>
                     </div>
-                    <div style="padding: 1rem; background: rgba(245, 158, 11, 0.1); border-radius: var(--radius-md); border: 1px solid rgba(245, 158, 11, 0.3);">
-                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Total Consultations</div>
-                        <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-amber);">12,850</div>
+                    <div style="padding: 1.25rem; background: var(--amber-soft); border-radius: var(--radius-md); border: 1px solid var(--border-soft);">
+                        <div style="font-size: 0.8rem; color: var(--amber-gold); font-weight: 600;">Total Consultations</div>
+                        <div style="font-size: 1.9rem; font-family:'Playfair Display', serif; font-weight: 700; color: var(--amber-gold); margin-top:4px;">12,850</div>
                     </div>
-                    <div style="padding: 1rem; background: rgba(236, 72, 153, 0.1); border-radius: var(--radius-md); border: 1px solid rgba(236, 72, 153, 0.3);">
-                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Care Service Health</div>
-                        <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-pink);">Active & Smooth</div>
+                    <div style="padding: 1.25rem; background: var(--terracotta-soft); border-radius: var(--radius-md); border: 1px solid var(--border-soft);">
+                        <div style="font-size: 0.8rem; color: var(--terracotta); font-weight: 600;">Care Service Health</div>
+                        <div style="font-size: 1.9rem; font-family:'Playfair Display', serif; font-weight: 700; color: var(--terracotta); margin-top:4px;">Active</div>
                     </div>
                 </div>
             </div>
         </section>
 
     </main>
+
+    <!-- Interactive Client Profile & Clinical Note Modal -->
+    <div id="client-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+            <div id="modal-body">
+                <!-- Dynamically populated per clicked client -->
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTHENTICATION & LOGIN MODAL SCREEN -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-content login-card">
+            <button class="modal-close" id="login-modal-close">&times;</button>
+            
+            <div style="font-size: 2.2rem; color: var(--terracotta); margin-bottom: 0.25rem;">🌸</div>
+            <h2 class="font-serif" style="font-size: 1.7rem; color: var(--text-primary); margin-bottom: 0.25rem;">Welcome to Skin Intelligence</h2>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Sign in to access your personalized skincare rituals and clinical reports.</p>
+
+            <form id="auth-login-form">
+                <div class="auth-form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="login-email" value="sophia.chen@skincare.com" placeholder="name@domain.com" required>
+                </div>
+                <div class="auth-form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" value="••••••••" placeholder="Password" required>
+                </div>
+                <div class="auth-form-group">
+                    <label>Sign In Role</label>
+                    <select id="login-role">
+                        <option value="user">User (Client Care Profile)</option>
+                        <option value="consultant">Skincare Advisor / Consultant</option>
+                        <option value="dermatologist">Dermatologist Clinical Care</option>
+                        <option value="admin">Platform Operations & Care Analytics</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 0.5rem; padding: 0.85rem;">
+                    Sign In to Skin Intelligence
+                </button>
+            </form>
+
+            <div style="margin: 1.5rem 0 1rem 0; border-top: 1px solid var(--border-soft); position: relative;">
+                <span style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #ffffff; padding: 0 10px; font-size: 0.75rem; color: var(--text-muted);">or One-Click Demo Login</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                <button class="btn btn-secondary btn-demo-login" data-role="user" data-name="Sophia Chen" data-email="sophia.chen@skincare.com" style="font-size: 0.78rem; justify-content: center; padding: 6px 8px;">
+                    👤 Sophia (User)
+                </button>
+                <button class="btn btn-secondary btn-demo-login" data-role="consultant" data-name="Advisor Clara" data-email="clara@advisor.com" style="font-size: 0.78rem; justify-content: center; padding: 6px 8px;">
+                    💼 Clara (Advisor)
+                </button>
+                <button class="btn btn-secondary btn-demo-login" data-role="dermatologist" data-name="Dr. Julian" data-email="dr.julian@skin.com" style="font-size: 0.78rem; justify-content: center; padding: 6px 8px;">
+                    🩺 Dr. Julian (Derm)
+                </button>
+                <button class="btn btn-secondary btn-demo-login" data-role="admin" data-name="Admin Team" data-email="admin@skin.com" style="font-size: 0.78rem; justify-content: center; padding: 6px 8px;">
+                    ⚡ Admin Ops
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Switch Helper Script -->
+    <script>
+        function switchRoutineTab(tabName, btnElement) {
+            const tabs = btnElement.parentNode.querySelectorAll('.tab-btn');
+            tabs.forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            document.querySelectorAll('.routine-tab-content').forEach(c => c.style.display = 'none');
+            const target = document.getElementById(tabName + '-routine-list');
+            if (target) target.style.display = 'block';
+        }
+    </script>
 
     <!-- JS Scripts -->
     <script src="js/sample_data.js"></script>
