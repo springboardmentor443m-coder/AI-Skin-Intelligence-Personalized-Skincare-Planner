@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from typing import List, Optional
 
 
 class UserCreate(BaseModel):
@@ -82,6 +83,16 @@ class ProgressResponse(BaseModel):
     class Config:
         from_attributes = True
 
+from typing import List
+
+class ProductRecommendation(BaseModel):
+    product_name: str
+    brand_name: str
+    rating: float
+    price_usd: float
+
+
 class ImagePredictionResponse(BaseModel):
     prediction: str
     confidence: float
+    recommended_products: List[ProductRecommendation]

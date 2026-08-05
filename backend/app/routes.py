@@ -4,7 +4,10 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app import schemas, crud
-from ml.recommender import recommend_products
+from ml.recommender import (
+    recommend_products,
+    recommend_by_skin_condition
+)
 from ml.profile_recommender import recommend_from_profile
 from ml.routine_generator import generate_routine
 from ml.image_classifier import predict_skin_condition
@@ -143,6 +146,13 @@ def analyze_image(
 
     result = predict_skin_condition(temp_path)
 
+    recommendations = recommend_by_skin_condition(
+    result["prediction"]
+    )
+
     os.remove(temp_path)
 
-    return result
+    return {
+    **result,
+    "recommended_products": recommendations
+}
