@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { getMyProfile, saveProfile } from "./api.js";
+import PhotoAnalysis from "./PhotoAnalysis.jsx";
+import "./photo-analysis.css";
 
 const CIRCUMFERENCE = 2 * Math.PI * 74;
 
@@ -11,14 +13,7 @@ function ScoreRing({ score }) {
   return (
     <div className="score-ring">
       <svg width="168" height="168" viewBox="0 0 168 168">
-        <circle
-          cx="84"
-          cy="84"
-          r="74"
-          fill="none"
-          stroke="#eaeee6"
-          strokeWidth="12"
-        />
+        <circle cx="84" cy="84" r="74" fill="none" stroke="#eaeee6" strokeWidth="12" />
         {hasScore && (
           <circle
             cx="84"
@@ -67,19 +62,18 @@ export default function Dashboard({ token, onLogout }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    let cancelled = false;
-    getMyProfile(token)
+  function loadProfile() {
+    return getMyProfile(token)
       .then((data) => {
-        if (cancelled) return;
         setProfile(data);
-        if (!data) setEditing(true); // no profile yet -> show the form immediately
+        if (!data) setEditing(true);
       })
-      .catch((err) => setError(err.message))
-      .finally(() => !cancelled && setLoading(false));
-    return () => {
-      cancelled = true;
-    };
+      .catch((err) => setError(err.message));
+  }
+
+  useEffect(() => {
+    setLoading(true);
+    loadProfile().finally(() => setLoading(false));
   }, [token]);
 
   function toListInputValue(list) {
@@ -100,10 +94,7 @@ export default function Dashboard({ token, onLogout }) {
   }
 
   function toList(str) {
-    return str
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
+    return str.split(",").map((s) => s.trim()).filter(Boolean);
   }
 
   async function handleSave(e) {
@@ -152,20 +143,14 @@ export default function Dashboard({ token, onLogout }) {
             <h3>Skin health score</h3>
             <ScoreRing score={profile?.skin_health_score ?? null} />
             <p className="score-pending">
-              This fills in once the AI skin-assessment module analyzes your
-              profile and photos.
+              This fills in once the scoring engine analyzes your profile
+              and photos.
             </p>
           </div>
 
           <div>
             <div className="card">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
-                }}
-              >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div>
                   <h2 className="section-title">Your skin profile</h2>
                   <p className="section-sub">
@@ -185,7 +170,7 @@ export default function Dashboard({ token, onLogout }) {
                 <>
                   <div className="detail-grid">
                     <div className="detail-item">
-                      <label>Skin type</label>
+                      <label>Skin type (self-reported)</label>
                       <div>{profile.skin_type || "—"}</div>
                     </div>
                     <div className="detail-item">
@@ -207,22 +192,13 @@ export default function Dashboard({ token, onLogout }) {
                   </div>
 
                   <div style={{ marginTop: 22 }}>
-                    <label
-                      style={{
-                        fontSize: 11.5,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.04em",
-                        color: "var(--ink-faint)",
-                      }}
-                    >
-                      Skin concerns
+                    <label style={{ fontSize: 11.5, textTransform: "uppercase", letterSpacing: "0.04em", color: "var(--ink-faint)" }}>
+                      Skin concerns (self-reported)
                     </label>
                     <div className="tag-row">
                       {profile.skin_concerns?.length ? (
                         profile.skin_concerns.map((c) => (
-                          <span className="tag" key={c}>
-                            {c}
-                          </span>
+                          <span className="tag" key={c}>{c}</span>
                         ))
                       ) : (
                         <span className="tag tag--pending">None listed</span>
@@ -231,38 +207,19 @@ export default function Dashboard({ token, onLogout }) {
                   </div>
 
                   <div style={{ marginTop: 18 }}>
-                    <label
-                      style={{
-                        fontSize: 11.5,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.04em",
-                        color: "var(--ink-faint)",
-                      }}
-                    >
+                    <label style={{ fontSize: 11.5, textTransform: "uppercase", letterSpacing: "0.04em", color: "var(--ink-faint)" }}>
                       AI-detected (from photo analysis)
                     </label>
                     <div className="tag-row">
-                      <span
-                        className={`tag ${
-                          !profile.detected_skin_tone ? "tag--pending" : ""
-                        }`}
-                      >
-                        {profile.detected_skin_tone || "Skin tone: pending"}
+                      <span className={`tag ${!profile.detected_skin_type ? "tag--pending" : ""}`}>
+                        {profile.detected_skin_type
+                          ? `Skin type: ${profile.detected_skin_type}`
+                          : "Skin type: pending"}
                       </span>
-                      <span
-                        className={`tag ${
-                          !profile.detected_skin_type ? "tag--pending" : ""
-                        }`}
-                      >
-                        {profile.detected_skin_type || "Skin type: pending"}
-                      </span>
-                      <span
-                        className={`tag ${
-                          !profile.detected_acne_severity ? "tag--pending" : ""
-                        }`}
-                      >
-                        {profile.detected_acne_severity ||
-                          "Acne severity: pending"}
+                      <span className={`tag ${!profile.detected_concern ? "tag--pending" : ""}`}>
+                        {profile.detected_concern
+                          ? `Concern: ${profile.detected_concern}`
+                          : "Concern: pending"}
                       </span>
                     </div>
                   </div>
@@ -274,12 +231,7 @@ export default function Dashboard({ token, onLogout }) {
                   <div className="form-grid">
                     <div className="field">
                       <label>Skin type</label>
-                      <select
-                        value={form.skin_type}
-                        onChange={(e) =>
-                          setForm({ ...form, skin_type: e.target.value })
-                        }
-                      >
+                      <select value={form.skin_type} onChange={(e) => setForm({ ...form, skin_type: e.target.value })}>
                         <option value="">Select…</option>
                         <option value="oily">Oily</option>
                         <option value="dry">Dry</option>
@@ -289,56 +241,23 @@ export default function Dashboard({ token, onLogout }) {
                     </div>
                     <div className="field">
                       <label>Age group</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. 20-25"
-                        value={form.age_group}
-                        onChange={(e) =>
-                          setForm({ ...form, age_group: e.target.value })
-                        }
-                      />
+                      <input type="text" placeholder="e.g. 20-25" value={form.age_group} onChange={(e) => setForm({ ...form, age_group: e.target.value })} />
                     </div>
                     <div className="field field--full">
                       <label>Skin concerns (comma-separated)</label>
-                      <input
-                        type="text"
-                        placeholder="acne, dark_spots, redness"
-                        value={form.skin_concerns}
-                        onChange={(e) =>
-                          setForm({ ...form, skin_concerns: e.target.value })
-                        }
-                      />
+                      <input type="text" placeholder="acne, dark_spots, redness" value={form.skin_concerns} onChange={(e) => setForm({ ...form, skin_concerns: e.target.value })} />
                     </div>
                     <div className="field">
                       <label>Allergies</label>
-                      <input
-                        type="text"
-                        placeholder="fragrance, nuts"
-                        value={form.allergies}
-                        onChange={(e) =>
-                          setForm({ ...form, allergies: e.target.value })
-                        }
-                      />
+                      <input type="text" placeholder="fragrance, nuts" value={form.allergies} onChange={(e) => setForm({ ...form, allergies: e.target.value })} />
                     </div>
                     <div className="field">
                       <label>Sensitivities</label>
-                      <input
-                        type="text"
-                        placeholder="alcohol, sulfates"
-                        value={form.sensitivities}
-                        onChange={(e) =>
-                          setForm({ ...form, sensitivities: e.target.value })
-                        }
-                      />
+                      <input type="text" placeholder="alcohol, sulfates" value={form.sensitivities} onChange={(e) => setForm({ ...form, sensitivities: e.target.value })} />
                     </div>
                     <div className="field">
                       <label>Sleep quality</label>
-                      <select
-                        value={form.sleep_quality}
-                        onChange={(e) =>
-                          setForm({ ...form, sleep_quality: e.target.value })
-                        }
-                      >
+                      <select value={form.sleep_quality} onChange={(e) => setForm({ ...form, sleep_quality: e.target.value })}>
                         <option value="">Select…</option>
                         <option value="poor">Poor</option>
                         <option value="average">Average</option>
@@ -347,42 +266,16 @@ export default function Dashboard({ token, onLogout }) {
                     </div>
                     <div className="field">
                       <label>Water intake (liters/day)</label>
-                      <input
-                        type="number"
-                        step="0.1"
-                        placeholder="2"
-                        value={form.water_intake_liters}
-                        onChange={(e) =>
-                          setForm({
-                            ...form,
-                            water_intake_liters: e.target.value,
-                          })
-                        }
-                      />
+                      <input type="number" step="0.1" placeholder="2" value={form.water_intake_liters} onChange={(e) => setForm({ ...form, water_intake_liters: e.target.value })} />
                     </div>
                   </div>
 
-                  <div
-                    style={{
-                      marginTop: 20,
-                      display: "flex",
-                      gap: 10,
-                    }}
-                  >
-                    <button
-                      className="btn-primary"
-                      type="submit"
-                      style={{ width: "auto", padding: "12px 24px" }}
-                      disabled={saving}
-                    >
+                  <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
+                    <button className="btn-primary" type="submit" style={{ width: "auto", padding: "12px 24px" }} disabled={saving}>
                       {saving ? "Saving…" : "Save profile"}
                     </button>
                     {profile && (
-                      <button
-                        type="button"
-                        className="btn-ghost"
-                        onClick={() => setEditing(false)}
-                      >
+                      <button type="button" className="btn-ghost" onClick={() => setEditing(false)}>
                         Cancel
                       </button>
                     )}
@@ -390,6 +283,8 @@ export default function Dashboard({ token, onLogout }) {
                 </form>
               )}
             </div>
+
+            <PhotoAnalysis token={token} onAnalyzed={loadProfile} />
           </div>
         </div>
       )}

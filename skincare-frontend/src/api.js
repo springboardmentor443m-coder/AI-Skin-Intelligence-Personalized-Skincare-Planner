@@ -55,3 +55,15 @@ export async function saveProfile(token, profile) {
   });
   return handleResponse(res);
 }
+
+export async function analyzePhoto(token, file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(`${BASE_URL}/skin-analysis/upload`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
+  return handleResponse(res);
+}

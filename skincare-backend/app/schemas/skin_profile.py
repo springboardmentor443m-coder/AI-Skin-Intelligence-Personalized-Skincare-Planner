@@ -21,6 +21,10 @@ class SkinProfileOut(SkinProfileCreate):
     detected_skin_tone: Optional[str] = None
     detected_skin_type: Optional[str] = None
     detected_acne_severity: Optional[str] = None
+    detected_concern: Optional[str] = None
+    detected_concern_confidence: Optional[float] = None
+    concern_scores: Optional[dict] = None
+    skin_type_scores: Optional[dict] = None
     skin_health_score: Optional[int] = None
     created_at: datetime
 
