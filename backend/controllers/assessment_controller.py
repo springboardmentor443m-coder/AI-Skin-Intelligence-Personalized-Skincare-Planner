@@ -12,6 +12,8 @@ async def analyze_and_save_assessment(file: UploadFile, current_user: Optional[D
     # 1. Run ML Analysis
     try:
         ml_result = ml_service.analyze_uploaded_image(file)
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error running ML models: {str(e)}")
         

@@ -3,6 +3,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from tqdm import tqdm
+from collections import Counter
+import numpy as np
 from dataset import get_dataloaders
 from model import SkinModel
 import argparse
@@ -22,9 +24,25 @@ def train_model(data_dir, num_epochs=10, batch_size=16, learning_rate=0.001, mod
     model = SkinModel(num_classes=num_classes, model_name=model_name)
     model = model.to(device)
 
-    # Loss and Optimizer
-    criterion = nn.CrossEntropyLoss()
+    # Calculate Class Weights to handle Class Imbalance
+    train_dataset = train_loader.dataset
+    target_counts = Counter(train_dataset.targets)
+    total_samples = sum(target_counts.values())
+    
+    class_weights = []
+    print("\nClass Distribution and Weights:")
+    for i in range(num_classes):
+        count = target_counts[i]
+        weight = total_samples / (num_classes * count)
+        class_weights.append(weight)
+        print(f" - {class_names[i]}: {count} images (Weight: {weight:.4f})")
+        
+    class_weights_tensor = torch.tensor(class_weights, dtype=torch.float).to(device)
+
+    # Loss, Optimizer, and Scheduler
+    criterion = nn.CrossEntropyLoss(weight=class_weights_tensor)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=2, verbose=True)
 
     best_val_accuracy = 0.0
 
@@ -93,6 +111,9 @@ def train_model(data_dir, num_epochs=10, batch_size=16, learning_rate=0.001, mod
                 best_val_accuracy = val_epoch_acc
                 torch.save(model.state_dict(), save_path)
                 print(f"Saved new best model with accuracy {val_epoch_acc:.4f}")
+                
+            # Step the scheduler based on validation accuracy
+            scheduler.step(val_epoch_acc)
 
     print("Training complete.")
 

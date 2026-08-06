@@ -422,14 +422,18 @@ class RecommendationService:
 
     @staticmethod
     def generate_7_day_routine(skin_type: str, skin_concern: str) -> Dict[str, Any]:
-        """Generates a 7-day AM/PM Dermatologist-approved Skin Cycling Routine."""
+        """Generates a 7-day AM/PM Dermatologist-approved Skin Cycling Routine using exact recommended products."""
         
         stype = skin_type.capitalize() if skin_type else "Normal"
         sconcern = skin_concern if skin_concern in POPULAR_PRODUCTS["treatments_serums"] else "Normal"
         
-        treatment_info = POPULAR_PRODUCTS["treatments_serums"].get(sconcern, POPULAR_PRODUCTS["treatments_serums"]["Normal"])[0]
-        cleanser_info = POPULAR_PRODUCTS["cleansers"].get(stype, POPULAR_PRODUCTS["cleansers"]["Normal"])[0]
-        moisturizer_info = POPULAR_PRODUCTS["moisturizers"].get(stype, POPULAR_PRODUCTS["moisturizers"]["Normal"])[0]
+        recs = RecommendationService.get_product_recommendations(stype, sconcern)
+        rec_prods = recs["recommended_products"]
+        
+        cleanser_name = rec_prods["cleanser"]["name"]
+        treatment_name = rec_prods["treatment_serum"]["name"]
+        moisturizer_name = rec_prods["moisturizer"]["name"]
+        sunscreen_name = rec_prods["sunscreen"]["name"]
         
         days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         weekly_schedule = []
@@ -438,36 +442,36 @@ class RecommendationService:
             cycle_day = (idx % 4) + 1  # 4-day Skin Cycle
             
             am_routine = {
-                "step_1_cleanse": f"Cleanse with {cleanser_info['name']}",
-                "step_2_treat": "Apply Vitamin C / Hydrating Antioxidant Serum",
-                "step_3_moisturize": f"Apply {moisturizer_info['name']}",
-                "step_4_protect": "Apply Broad Spectrum SPF 50+ Sunscreen (Essential!)"
+                "step_1_cleanse": f"Cleanse with {cleanser_name}",
+                "step_2_treat": f"Apply {treatment_name}",
+                "step_3_moisturize": f"Apply {moisturizer_name}",
+                "step_4_protect": f"Protect skin with {sunscreen_name}"
             }
             
             if cycle_day == 1:
                 focus = "Exfoliation Night"
                 pm_routine = {
-                    "step_1_cleanse": f"Double Cleanse with {cleanser_info['name']}",
-                    "step_2_exfoliate": "Apply Paula's Choice 2% BHA Liquid Exfoliant (Unclog Pores & Smooth Texture)",
-                    "step_3_moisturize": f"Apply {moisturizer_info['name']} to lock in moisture"
+                    "step_1_cleanse": f"Double Cleanse with {cleanser_name}",
+                    "step_2_exfoliate": f"Exfoliate with {treatment_name}",
+                    "step_3_moisturize": f"Apply {moisturizer_name} to lock in hydration"
                 }
-                notes = "Do NOT apply Retinol tonight. Chemical exfoliation opens pores and clears dead skin."
+                notes = f"Apply {treatment_name} gently tonight to exfoliate dead skin cells and unclog pores."
             elif cycle_day == 2:
                 focus = "Targeted Active & Renewal Night"
                 pm_routine = {
-                    "step_1_cleanse": f"Cleanse gently with {cleanser_info['name']}",
-                    "step_2_target": f"Apply {treatment_info['name']} (Key Actives: {', '.join(treatment_info['actives'])})",
-                    "step_3_moisturize": f"Apply {moisturizer_info['name']}"
+                    "step_1_cleanse": f"Cleanse gently with {cleanser_name}",
+                    "step_2_target": f"Target active concerns using {treatment_name}",
+                    "step_3_moisturize": f"Moisturize deeply with {moisturizer_name}"
                 }
-                notes = f"Primary focus on treating {sconcern}. Allow serum to absorb for 3 minutes before moisturizer."
+                notes = f"Primary focus on treating {sconcern} using {treatment_name}. Allow to absorb for 3 minutes before moisturizer."
             else:
                 focus = "Barrier Recovery & Deep Hydration Night"
                 pm_routine = {
-                    "step_1_cleanse": f"Cleanse gently with {cleanser_info['name']}",
-                    "step_2_hydrate": "Apply Hyaluronic Acid / Centella Soothing Serum",
-                    "step_3_barrier_repair": f"Apply generous layer of {moisturizer_info['name']} (or Ceramide Balm)"
+                    "step_1_cleanse": f"Cleanse gently with {cleanser_info['name'] if 'cleanser_info' in locals() else cleanser_name}",
+                    "step_2_hydrate": f"Soothe skin with hydrating layer of {moisturizer_name}",
+                    "step_3_barrier_repair": f"Apply generous barrier layer of {moisturizer_name}"
                 }
-                notes = "No harsh active acids or retinoids tonight! Let your skin barrier rest and repair."
+                notes = "Barrier recovery night! No harsh active acids tonight — let your skin barrier rest and repair."
                 
             weekly_schedule.append({
                 "day": day,
@@ -479,7 +483,7 @@ class RecommendationService:
             
         return {
             "routine_title": f"7-Day Personalized Skincare Routine for {stype} Skin & {sconcern.capitalize()}",
-            "methodology": "Dermatologist-Approved Skin Cycling (Exfoliate -> Renew -> Barrier Recover)",
+            "engine": "Dermatologist-Approved Skin Cycling Engine",
             "weekly_calendar": weekly_schedule
         }
 
@@ -487,9 +491,20 @@ class RecommendationService:
     def generate_llm_routine(skin_type: str, skin_concern: str) -> Dict[str, Any]:
         """
         Uses Groq LLM (llama-3.3-70b-versatile) to dynamically generate an expert, 
-        dermatologist-level 7-Day Skincare Routine & Product Plan.
+        dermatologist-level 7-Day Skincare Routine using the exact recommended products.
         Falls back to rule-based Skin Cycling engine if Groq API Key is not set or fails.
         """
+        stype = skin_type.capitalize() if skin_type else "Normal"
+        sconcern = skin_concern if skin_concern else "Normal"
+        
+        recs = RecommendationService.get_product_recommendations(stype, sconcern)
+        rec_prods = recs["recommended_products"]
+        
+        cleanser_name = rec_prods["cleanser"]["name"]
+        treatment_name = rec_prods["treatment_serum"]["name"]
+        moisturizer_name = rec_prods["moisturizer"]["name"]
+        sunscreen_name = rec_prods["sunscreen"]["name"]
+
         api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
             logger.info("GROQ_API_KEY not found. Using fallback rule-based Skin Cycling engine.")
@@ -501,29 +516,35 @@ class RecommendationService:
             prompt = f"""
 You are a Board-Certified Senior Dermatologist AI specializing in personalized skincare planning.
 Generate a comprehensive, scientific, 7-day personalized skincare routine for a patient with:
-- Skin Type: {skin_type}
-- Primary Skin Concern: {skin_concern}
+- Skin Type: {stype}
+- Primary Skin Concern: {sconcern}
+
+CRITICAL MANDATE: You MUST explicitly name and use these EXACT 4 recommended products in every day's AM and PM routine:
+1. Cleanser: "{cleanser_name}"
+2. Treatment/Serum: "{treatment_name}"
+3. Moisturizer: "{moisturizer_name}"
+4. Sunscreen: "{sunscreen_name}"
 
 Follow the Dermatologist Skin Cycling method (Exfoliation Night -> Active Renewal Night -> Barrier Recovery Nights).
 Respond ONLY in valid JSON matching this exact structure:
 {{
-  "routine_title": "7-Day AI Dermatologist Routine for {skin_type} Skin ({skin_concern})",
+  "routine_title": "7-Day AI Dermatologist Routine for {stype} Skin ({sconcern})",
   "engine": "Groq LLM Llama-3.3-70B Dermatologist Engine",
-  "dermatologist_assessment": "Short 2-sentence clinical assessment of the skin profile.",
+  "dermatologist_assessment": "Short 2-sentence clinical assessment prescribing {cleanser_name}, {treatment_name}, {moisturizer_name}, and {sunscreen_name}.",
   "weekly_calendar": [
     {{
       "day": "Monday",
       "cycle_phase": "Exfoliation Night",
       "am_routine": {{
-        "step_1_cleanse": "...",
-        "step_2_treat": "...",
-        "step_3_moisturize": "...",
-        "step_4_protect": "..."
+        "step_1_cleanse": "Cleanse with {cleanser_name}",
+        "step_2_treat": "Apply {treatment_name}",
+        "step_3_moisturize": "Moisturize with {moisturizer_name}",
+        "step_4_protect": "Protect with {sunscreen_name}"
       }},
       "pm_routine": {{
-        "step_1_cleanse": "...",
-        "step_2_target": "...",
-        "step_3_moisturize": "..."
+        "step_1_cleanse": "Double Cleanse with {cleanser_name}",
+        "step_2_target": "Exfoliate using {treatment_name}",
+        "step_3_moisturize": "Lock in hydration with {moisturizer_name}"
       }},
       "dermatologist_tip": "..."
     }}
@@ -531,7 +552,7 @@ Respond ONLY in valid JSON matching this exact structure:
   "key_active_ingredients_to_use": ["Active 1", "Active 2"],
   "ingredients_to_avoid": ["Ingredient 1"]
 }}
-Generate all 7 days (Monday through Sunday). Ensure JSON is 100% valid.
+Generate all 7 days (Monday through Sunday). Ensure every day explicitly names "{cleanser_name}", "{treatment_name}", "{moisturizer_name}", and "{sunscreen_name}".
 """
             completion = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",

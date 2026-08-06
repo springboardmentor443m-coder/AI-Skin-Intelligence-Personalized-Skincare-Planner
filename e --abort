@@ -1,0 +1,95 @@
+[33mcommit 612ef06368614353d465f5650592367abfd1eda9[m
+Author: TejKarthik40 <23501a4440@pvpsit.ac.in>
+Date:   Sun Jul 19 21:01:47 2026 +0530
+
+    Save local work
+
+ .gitignore                                         |   1 [32m+[m
+ ...-Intelligence-Personalized-Skincare-Planner.zip | Bin [31m0[m -> [32m516390943[m bytes
+ Data sets/Skin concerns/Test/Normal/image_100.jpg  | Bin [31m0[m -> [32m21335[m bytes
+ Data sets/Skin concerns/Test/Normal/image_110.jpg  | Bin [31m0[m -> [32m22915[m bytes
+ Data sets/Skin concerns/Test/Normal/image_111.jpg  | Bin [31m0[m -> [32m25157[m bytes
+ Data sets/Skin concerns/Test/Normal/image_112.jpg  | Bin [31m0[m -> [32m15295[m bytes
+ Data sets/Skin concerns/Test/Normal/image_14.jpg   | Bin [31m0[m -> [32m21276[m bytes
+ Data sets/Skin concerns/Test/Normal/image_15.jpg   | Bin [31m0[m -> [32m28487[m bytes
+ Data sets/Skin concerns/Test/Normal/image_150.jpg  | Bin [31m0[m -> [32m18473[m bytes
+ Data sets/Skin concerns/Test/Normal/image_151.jpg  | Bin [31m0[m -> [32m26240[m bytes
+ Data sets/Skin concerns/Test/Normal/image_152.jpg  | Bin [31m0[m -> [32m27282[m bytes
+ Data sets/Skin concerns/Test/Normal/image_16.jpg   | Bin [31m0[m -> [32m19673[m bytes
+ Data sets/Skin concerns/Test/Normal/image_162.jpg  | Bin [31m0[m -> [32m22524[m bytes
+ Data sets/Skin concerns/Test/Normal/image_164.jpg  | Bin [31m0[m -> [32m20666[m bytes
+ Data sets/Skin concerns/Test/Normal/image_165.jpg  | Bin [31m0[m -> [32m17654[m bytes
+ Data sets/Skin concerns/Test/Normal/image_200.jpg  | Bin [31m0[m -> [32m27970[m bytes
+ Data sets/Skin concerns/Test/Normal/image_202.jpg  | Bin [31m0[m -> [32m26103[m bytes
+ Data sets/Skin concerns/Test/Normal/image_203.jpg  | Bin [31m0[m -> [32m23787[m bytes
+ Data sets/Skin concerns/Test/Normal/image_213.jpg  | Bin [31m0[m -> [32m23258[m bytes
+ Data sets/Skin concerns/Test/Normal/image_214.jpg  | Bin [31m0[m -> [32m25681[m bytes
+ Data sets/Skin concerns/Test/Normal/image_215.jpg  | Bin [31m0[m -> [32m16265[m bytes
+ Data sets/Skin concerns/Test/Normal/image_250.jpg  | Bin [31m0[m -> [32m4714[m bytes
+ Data sets/Skin concerns/Test/Normal/image_251.jpg  | Bin [31m0[m -> [32m23540[m bytes
+ Data sets/Skin concerns/Test/Normal/image_252.jpg  | Bin [31m0[m -> [32m19045[m bytes
+ Data sets/Skin concerns/Test/Normal/image_262.jpg  | Bin [31m0[m -> [32m19337[m bytes
+ Data sets/Skin concerns/Test/Normal/image_263.jpg  | Bin [31m0[m -> [32m18190[m bytes
+ Data sets/Skin concerns/Test/Normal/image_264.jpg  | Bin [31m0[m -> [32m21932[m bytes
+ Data sets/Skin concerns/Test/Normal/image_299.jpg  | Bin [31m0[m -> [32m17128[m bytes
+ Data sets/Skin concerns/Test/Normal/image_300.jpg  | Bin [31m0[m -> [32m24775[m bytes
+ Data sets/Skin concerns/Test/Normal/image_301.jpg  | Bin [31m0[m -> [32m27473[m bytes
+ Data sets/Skin concerns/Test/Normal/image_313.jpg  | Bin [31m0[m -> [32m16035[m bytes
+ Data sets/Skin concerns/Test/Normal/image_314.jpg  | Bin [31m0[m -> [32m16122[m bytes
+ Data sets/Skin concerns/Test/Normal/image_315.jpg  | Bin [31m0[m -> [32m16122[m bytes
+ Data sets/Skin concerns/Test/Normal/image_355.jpg  | Bin [31m0[m -> [32m56898[m bytes
+ Data sets/Skin concerns/Test/Normal/image_356.jpg  | Bin [31m0[m -> [32m56466[m bytes
+ Data sets/Skin concerns/Test/Normal/image_357.jpg  | Bin [31m0[m -> [32m48914[m bytes
+ Data sets/Skin concerns/Test/Normal/image_367.jpg  | Bin [31m0[m -> [32m55655[m bytes
+ Data sets/Skin concerns/Test/Normal/image_370.jpg  | Bin [31m0[m -> [32m53518[m bytes
+ Data sets/Skin concerns/Test/Normal/image_371.jpg  | Bin [31m0[m -> [32m43612[m bytes
+ Data sets/Skin concerns/Test/Normal/image_50.jpg   | Bin [31m0[m -> [32m23885[m bytes
+ Data sets/Skin concerns/Test/Normal/image_51.jpg   | Bin [31m0[m -> [32m24169[m bytes
+ Data sets/Skin concerns/Test/Normal/image_52.jpg   | Bin [31m0[m -> [32m24169[m bytes
+ Data sets/Skin concerns/Test/Normal/image_62.jpg   | Bin [31m0[m -> [32m17954[m bytes
+ Data sets/Skin concerns/Test/Normal/image_63.jpg   | Bin [31m0[m -> [32m17954[m bytes
+ Data sets/Skin concerns/Test/Normal/image_64.jpg   | Bin [31m0[m -> [32m28048[m bytes
+ Data sets/Skin concerns/Test/Normal/image_98.jpg   | Bin [31m0[m -> [32m21801[m bytes
+ Data sets/Skin concerns/Test/Normal/image_99.jpg   | Bin [31m0[m -> [32m19932[m bytes
+ ...6e7_jpg.rf.ff8e6e61a5b97e8377c08326ecfa3f32.jpg | Bin [31m0[m -> [32m49284[m bytes
+ ...dd4_jpg.rf.00de0a968c3d20e84f21afb3455bc79f.jpg | Bin [31m0[m -> [32m23309[m bytes
+ ...e1c_jpg.rf.c222b7de169d732b9f68b9e0cc464308.jpg | Bin [31m0[m -> [32m33356[m bytes
+ ...acb_jpg.rf.7b0729f4b66cb9504413e06459509e7f.jpg | Bin [31m0[m -> [32m42267[m bytes
+ ...6e8_jpg.rf.ab95b1a08a93086683cf68df5992f295.jpg | Bin [31m0[m -> [32m28156[m bytes
+ ...131_jpg.rf.1499906a5cc05784d64b06673ea4ca84.jpg | Bin [31m0[m -> [32m30569[m bytes
+ ...21a_jpg.rf.3c8afb82ebbfad308bdd2523eb63f4b1.jpg | Bin [31m0[m -> [32m26594[m bytes
+ ...3ae_jpg.rf.58c94f409e89c1c611a960ca51eed128.jpg | Bin [31m0[m -> [32m20435[m bytes
+ ...ef1_jpg.rf.336992d84bbdb67725a7864a5fbe57ea.jpg | Bin [31m0[m -> [32m18929[m bytes
+ ...1c6_jpg.rf.4ce79a7a80c2cb7b5879c46ab213de3f.jpg | Bin [31m0[m -> [32m30212[m bytes
+ ...ceb_jpg.rf.ae9196bf9990df4c2438b269839c70fc.jpg | Bin [31m0[m -> [32m31221[m bytes
+ ...8f7_jpg.rf.4c312ae8b53bdeb47205fbcb561199c0.jpg | Bin [31m0[m -> [32m61176[m bytes
+ ...61b_jpg.rf.d94e39deeb4b4173397fbd172bee1f3c.jpg | Bin [31m0[m -> [32m29823[m bytes
+ ...d0b_jpg.rf.21c21b918715d95d3d3625b790063764.jpg | Bin [31m0[m -> [32m34322[m bytes
+ ...c27_jpg.rf.eb7c38b04eab7ee53df5a0a8f2b3265a.jpg | Bin [31m0[m -> [32m38893[m bytes
+ ...707_jpg.rf.19eea78960e59eb09c9691e1f23cc8d1.jpg | Bin [31m0[m -> [32m53124[m bytes
+ ...45e_jpg.rf.cf298f416fabd162e248fb9cde3776bc.jpg | Bin [31m0[m -> [32m24930[m bytes
+ ...405_jpg.rf.4847266c552187ce43852c8c3e62a9cc.jpg | Bin [31m0[m -> [32m28398[m bytes
+ ...a56_jpg.rf.4f3a99d919b9f86a3fc9882033b3a5c9.jpg | Bin [31m0[m -> [32m37742[m bytes
+ ...d6f_jpg.rf.2cafbf04a008f8586c6743aa43fa99ba.jpg | Bin [31m0[m -> [32m38078[m bytes
+ ...d7a_jpg.rf.31bd185fbbe260a0851f499d3e162f60.jpg | Bin [31m0[m -> [32m29103[m bytes
+ ...c90_jpg.rf.f1fb8b477ff74883cbb4b4e655631915.jpg | Bin [31m0[m -> [32m43673[m bytes
+ ...423_jpg.rf.598e323a296467ae3f5f570c5c35cbcc.jpg | Bin [31m0[m -> [32m17074[m bytes
+ ...fe1_jpg.rf.d5c80f2116fb98dc07594b832132b0e1.jpg | Bin [31m0[m -> [32m21482[m bytes
+ ...86c_jpg.rf.a4e3d796a0f34e59e2811b3f4801c385.jpg | Bin [31m0[m -> [32m25114[m bytes
+ ...0d8_jpg.rf.3ba7f8e5db8941144c0690dc2ce4b1e5.jpg | Bin [31m0[m -> [32m34830[m bytes
+ ...376_jpg.rf.f13b2788fc314d9ba271ba5855b5a284.jpg | Bin [31m0[m -> [32m21246[m bytes
+ ...1a0_jpg.rf.52d5c08ab6c467088f2a3d70dd7b7dda.jpg | Bin [31m0[m -> [32m36483[m bytes
+ ...07a_jpg.rf.9b5468927dbd3f46d17b8e2383d3c600.jpg | Bin [31m0[m -> [32m46246[m bytes
+ ...793_jpg.rf.94371b879ae9a7d9091cdc74731323b7.jpg | Bin [31m0[m -> [32m30680[m bytes
+ ...6d6_jpg.rf.4555b378fe712df3cdbe635f283f85b7.jpg | Bin [31m0[m -> [32m51294[m bytes
+ ...06d_jpg.rf.55dcc73a53cb3cda43524667e492fd96.jpg | Bin [31m0[m -> [32m26652[m bytes
+ ...698_jpg.rf.8e690613ca2739a8a60590c356da32af.jpg | Bin [31m0[m -> [32m33199[m bytes
+ ...c71_jpg.rf.82a6e9094611fd9d8933e557a7a885b3.jpg | Bin [31m0[m -> [32m41240[m bytes
+ ...982_jpg.rf.5f4b1777e2d8ade390df759fd10ead00.jpg | Bin [31m0[m -> [32m34094[m bytes
+ ...7da_jpg.rf.56fe58ec5ac836386d1472f84ccc967b.jpg | Bin [31m0[m -> [32m28100[m bytes
+ ...803_jpg.rf.4973ff5e9fca97488953c96cce838ce5.jpg | Bin [31m0[m -> [32m36298[m bytes
+ ...061_jpg.rf.46ffc21b6bee315748ce626b47cbb1d0.jpg | Bin [31m0[m -> [32m37348[m bytes
+ ...463_jpg.rf.1961cbaec91475ecacc7b1b2331775a6.jpg | Bin [31m0[m -> [32m26059[m bytes
+ ...0b2_jpg.rf.81cc64dbb820a6c1e2b7beef20072baa.jpg | Bin [31m0[m -> [32m63519[m bytes
+ ...fa6_jpg.rf.e17349e24b84049c15604e082f789589.jpg | Bin [31m0[m -> [32m34907[m bytes
+ ...eee_jpg.rf.2d8f6b39670ea00d46a109f82
