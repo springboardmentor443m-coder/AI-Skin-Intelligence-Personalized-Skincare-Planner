@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aetheris Skin AI - Personalized Routine</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Sora:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-container": "#331f80",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e0e3e5",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-tertiary-fixed": "#001c3b",
+                    "on-tertiary": "#ffffff",
+                    "on-surface": "#191c1e",
+                    "surface-container-low": "#f2f4f6",
+                    "primary-fixed-dim": "#c9beff",
+                    "inverse-primary": "#c9beff",
+                    "error-container": "#ffdad6",
+                    "background": "#f7f9fb",
+                    "surface-tint": "#6050af",
+                    "surface": "#f7f9fb",
+                    "primary-fixed": "#e6deff",
+                    "on-tertiary-container": "#003262",
+                    "inverse-surface": "#2d3133",
+                    "surface-bright": "#f7f9fb",
+                    "on-secondary-container": "#2a6d64",
+                    "tertiary-container": "#6d9ce0",
+                    "tertiary": "#2b5f9f",
+                    "secondary-fixed": "#adefe4",
+                    "secondary-fixed-dim": "#91d3c8",
+                    "on-secondary-fixed-variant": "#005048",
+                    "outline-variant": "#c9c4d3",
+                    "surface-variant": "#e0e3e5",
+                    "primary-container": "#9d8df1",
+                    "secondary-container": "#aaece1",
+                    "on-primary-fixed": "#1b0062",
+                    "tertiary-fixed": "#d4e3ff",
+                    "tertiary-fixed-dim": "#a6c8ff",
+                    "on-background": "#191c1e",
+                    "surface-container-high": "#e6e8ea",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#d8dadc",
+                    "on-secondary-fixed": "#00201c",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "surface-container": "#eceef0",
+                    "on-tertiary-fixed-variant": "#024785",
+                    "secondary": "#256960",
+                    "on-surface-variant": "#484552",
+                    "on-error": "#ffffff",
+                    "primary": "#6050af",
+                    "outline": "#797583",
+                    "on-primary-fixed-variant": "#483795"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sidebar-width": "280px",
+                    "card-gap": "20px",
+                    "gutter": "24px",
+                    "container-padding": "32px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-md": ["Sora"],
+                    "display-lg": ["Sora"],
+                    "body-md": ["Inter"],
+                    "display-lg-mobile": ["Sora"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 40px 40px -20px rgba(114, 161, 229, 0.08);
+        }
+        .timeline-line {
+            background: repeating-linear-gradient(to bottom, #9d8df1 0, #9d8df1 4px, transparent 4px, transparent 8px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .step-checkbox:checked + label .check-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e0e3e5;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-hidden">
+<!-- Side Navigation Shell -->
+<aside class="fixed left-0 top-0 bottom-0 w-sidebar-width bg-surface-container-lowest/40 dark:bg-surface-container-high/40 backdrop-blur-2xl border-r border-white/10 flex flex-col py-base gap-2 z-50">
+<div class="px-6 py-8">
+<h1 class="font-display-lg text-headline-md text-primary font-bold">Aetheris AI</h1>
+<p class="text-on-surface-variant font-label-sm uppercase tracking-widest mt-1">Skin Intelligence</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">camera_front</span>
+<span class="font-label-sm">Scan</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">biotech</span>
+<span class="font-label-sm">Analysis</span>
+</a>
+<a class="flex items-center gap-3 bg-primary/10 text-primary font-bold rounded-lg px-4 py-2 transition-all duration-300 translate-x-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="font-label-sm">Routine</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="font-label-sm">Products</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">science</span>
+<span class="font-label-sm">Ingredients</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-label-sm">Progress</span>
+</a>
+</nav>
+<div class="mt-auto px-4 pb-8">
+<div class="glass-card rounded-xl p-4 bg-primary/5 border-primary/10 mb-4">
+<p class="font-label-sm text-primary mb-2">Upgrade to Pro</p>
+<p class="text-xs text-on-surface-variant mb-4">Unlock advanced dermatological AI insights.</p>
+<button class="w-full py-2 bg-primary text-white rounded-lg font-label-sm hover:opacity-90 transition-opacity">Go Premium</button>
+</div>
+<div class="flex items-center gap-3 px-4 py-2">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist portrait of a healthy person with glowing skin, bright and high-key lighting, soft lavender and blue tones in the background to match the clinical sanctuary aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB39YVxGf09lGuhU21zED69LNyd3S1XHq-antKEOzGRfPzYTBTI4R1lGWh9DGbF1sq8JO2jknIM8lvmllz4KSgUF6kZN96gbm-11D9c-dwhB5Fnq47npO1VZ6XK1-nh8knQGkXm1EW_KQlr4qbD7OEFNpA0JG1NU29hdSO-kdzHX2rj-bAJBZ5x1VBZnh_FjoOGQCdfrw__Fk5XW__4Y7XEUfmcedasBQxD7fAYhiukCB5VfJFUecxOfIMaqh64gLSnplSZB1l-6Wj_"/>
+</div>
+<div>
+<p class="font-label-sm text-on-surface">Alex Johnson</p>
+<p class="text-[10px] text-on-surface-variant">Skin Score: 84</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width h-screen flex flex-col overflow-hidden">
+<!-- Top Bar -->
+<header class="h-16 bg-white/60 backdrop-blur-xl border-b border-white/20 px-container-padding flex justify-between items-center sticky top-0 z-40">
+<div class="flex items-center gap-4 bg-surface-container-low px-4 py-2 rounded-full w-96">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-full placeholder:text-outline" placeholder="Search routines or ingredients..." type="text"/>
+</div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform">notifications</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform">contrast</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform">account_circle</span>
+</div>
+</header>
+<!-- Page Content -->
+<div class="flex-1 overflow-y-auto custom-scrollbar px-container-padding py-8 space-y-8">
+<!-- Hero Header Section -->
+<section class="flex flex-col md:flex-row justify-between items-end gap-6">
+<div class="space-y-2">
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary">Daily Routine</h2>
+<p class="text-body-lg text-on-surface-variant max-w-2xl">Customized based on your last scan: <span class="text-secondary font-semibold">Mild Hydration Needed</span>. Your routine is optimized for barrier repair and morning protection.</p>
+</div>
+<div class="flex gap-3">
+<div class="glass-card px-6 py-4 rounded-lg flex flex-col items-center">
+<span class="font-headline-md text-primary">75%</span>
+<span class="font-label-sm text-on-surface-variant">Completed</span>
+</div>
+<div class="glass-card px-6 py-4 rounded-lg flex flex-col items-center">
+<span class="font-headline-md text-secondary">12d</span>
+<span class="font-label-sm text-on-surface-variant">Streak</span>
+</div>
+</div>
+</section>
+<!-- Routine Columns -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-card-gap pb-12">
+<!-- Morning Routine -->
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">light_mode</span>
+</div>
+<div>
+<h3 class="font-headline-md text-on-surface">Morning Ritual</h3>
+<p class="text-label-sm text-on-surface-variant uppercase">Recommended: 07:30 AM</p>
+</div>
+</div>
+<span class="px-4 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-sm">Active</span>
+</div>
+<div class="relative pl-4 space-y-8">
+<!-- Connecting Line -->
+<div class="absolute left-[20px] top-4 bottom-4 w-0.5 timeline-line opacity-30"></div>
+<!-- Step 1: Cleanser -->
+<div class="relative flex gap-6 group">
+<div class="z-10 w-4 h-4 rounded-full bg-primary mt-2 ring-4 ring-primary/10 transition-transform group-hover:scale-125"></div>
+<div class="glass-card flex-1 p-6 rounded-lg transition-all duration-300 hover:translate-x-2">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-headline-md text-lg text-primary">01 Gentle Hydrating Cleanser</h4>
+<p class="text-body-md text-on-surface-variant">La Roche-Posay Toleriane Dermo-Cleanser</p>
+</div>
+<input class="hidden step-checkbox" id="step-am-1" type="checkbox"/>
+<label class="w-8 h-8 rounded-full border-2 border-primary/30 flex items-center justify-center cursor-pointer hover:bg-primary/5 transition-colors" for="step-am-1">
+<span class="material-symbols-outlined text-primary check-icon opacity-0 transition-all scale-50">check</span>
+</label>
+</div>
+<div class="flex items-center gap-4 text-label-sm text-on-surface-variant bg-surface-container-low p-3 rounded-lg">
+<span class="material-symbols-outlined text-primary">info</span>
+<span>Use lukewarm water. Pat dry, do not rub.</span>
+</div>
+</div>
+</div>
+<!-- Step 2: Toner -->
+<div class="relative flex gap-6 group">
+<div class="z-10 w-4 h-4 rounded-full bg-primary mt-2 ring-4 ring-primary/10 transition-transform group-hover:scale-125"></div>
+<div class="glass-card flex-1 p-6 rounded-lg transition-all duration-300 hover:translate-x-2">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-headline-md text-lg text-primary">02 Soothing Toner</h4>
+<p class="text-body-md text-on-surface-variant">Paula's Choice Calm Nourishing Toner</p>
+</div>
+<input class="hidden step-checkbox" id="step-am-2" type="checkbox"/>
+<label class="w-8 h-8 rounded-full border-2 border-primary/30 flex items-center justify-center cursor-pointer hover:bg-primary/5 transition-colors" for="step-am-2">
+<span class="material-symbols-outlined text-primary check-icon opacity-0 transition-all scale-50">check</span>
+</label>
+</div>
+<div class="flex items-center gap-4 text-label-sm text-on-surface-variant bg-surface-container-low p-3 rounded-lg">
+<span class="material-symbols-outlined text-primary">science</span>
+<span>Contains Oat Kernel to reduce morning redness.</span>
+</div>
+</div>
+</div>
+<!-- Step 3: Serum -->
+<div class="relative flex gap-6 group">
+<div class="z-10 w-4 h-4 rounded-full bg-primary mt-2 ring-4 ring-primary/10 transition-transform group-hover:scale-125"></div>
+<div class="glass-card flex-1 p-6 rounded-lg border-primary/20 bg-primary/5 transition-all duration-300 hover:translate-x-2">
+<div class="flex justify-between items-start mb-4">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-primary text-white rounded text-[10px] font-bold uppercase">AI Pick</span>
+<h4 class="font-headline-md text-lg text-primary">03 Vitamin C Complex</h4>
+</div>
+<p class="text-body-md text-on-surface-variant">SkinCeuticals C E Ferulic</p>
+</div>
+<input checked="" class="hidden step-checkbox" id="step-am-3" type="checkbox"/>
+<label class="w-8 h-8 rounded-full border-2 border-primary/30 flex items-center justify-center cursor-pointer bg-primary/10" for="step-am-3">
+<span class="material-symbols-outlined text-primary check-icon opacity-100 scale-100">check</span>
+</label>
+</div>
+<div class="flex items-center gap-4 text-label-sm text-on-surface-variant bg-white/50 p-3 rounded-lg">
+<span class="material-symbols-outlined text-primary">timer</span>
+<span>Wait 2 minutes before the next step for absorption.</span>
+</div>
+</div>
+</div>
+<!-- Step 4: Sunscreen -->
+<div class="relative flex gap-6 group">
+<div class="z-10 w-4 h-4 rounded-full bg-primary mt-2 ring-4 ring-primary/10 transition-transform group-hover:scale-125"></div>
+<div class="glass-card flex-1 p-6 rounded-lg transition-all duration-300 hover:translate-x-2">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-headline-md text-lg text-primary">04 UV Protection SPF 50</h4>
+<p class="text-body-md text-on-surface-variant">EltaMD UV Clear Broad-Spectrum</p>
+</div>
+<input class="hidden step-checkbox" id="step-am-4" type="checkbox"/>
+<label class="w-8 h-8 rounded-full border-2 border-primary/30 flex items-center justify-center cursor-pointer hover:bg-primary/5 transition-colors" for="step-am-4">
+<span class="material-symbols-outlined text-primary check-icon opacity-0 transition-all scale-50">check</span>
+</label>
+</div>
+<div class="grid grid-cols-2 gap-2 mt-4">
+<div class="h-20 rounded bg-cover bg-center" data-alt="Close up product photography of a premium white sunscreen tube on a clean glass surface with soft morning light and lavender shadows." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDbEonQYxy20xvAJOcMaeq3BK8A9q7Fgz-p0IXS5BCxn4RJpKZXYy30hPAHdvUbXHk_lY4mpTh7XVA200tW_51z_KEpxxIRUyz04st1EsCyLte4JRXsDo48Xa-4a3n_aR2_BrIQAqokdirzgbCHqB0u5tcP59u0VogGcxfoly3LiWI_Jsl5DRJcTEo6_knABx5NoUUTVTfLmX2TOfsan_BVhZE-S3U5R88Jnt3ei4hBGoHgkIBtsvmbZruh3anopo9TSF0HYeUh3e5o')"></div>
+<div class="flex flex-col justify-center p-2">
+<span class="font-label-sm text-primary">Pro Tip</span>
+<p class="text-[10px] text-on-surface-variant leading-tight">Apply the "Two Finger Rule" for full coverage.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Night Routine -->
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">dark_mode</span>
+</div>
+<div>
+<h3 class="font-headline-md text-on-surface">Nightly Renewal</h3>
+<p class="text-label-sm text-on-surface-variant uppercase">Recommended: 10:00 PM</p>
+</div>
+</div>
+<span class="px-4 py-1 border border-primary text-primary rounded-full font-label-sm">Upcoming</span>
+</div>
+<div class="relative pl-4 space-y-8">
+<!-- Connecting Line -->
+<div class="absolute left-[20px] top-4 bottom-4 w-0.5 timeline-line opacity-30"></div>
+<!-- Step 1: Double Cleanse -->
+<div class="relative flex gap-6 group">
+<div class="z-10 w-4 h-4 rounded-full bg-tertiary mt-2 ring-4 ring-tertiary/10 transition-transform group-hover:scale-125"></div>
+<div class="glass-card flex-1 p-6 rounded-lg transition-all duration-300 hover:translate-x-2">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-headline-md text-lg text-tertiary">01 Oil Cleanser</h4>
+<p class="text-body-md text-on-surface-variant">DHC Deep Cleansing Oil</p>
+</div>
+<input class="hidden step-checkbox" id="step-pm-1" type="checkbox"/>
+<label class="w-8 h-8 rounded-full border-2 border-tertiary/30 flex items-center justify-center cursor-pointer hover:bg-tertiary/5 transition-colors" for="step-pm-1">
+<span class="material-symbols-outlined text-tertiary check-icon opacity-0 transition-all scale-50">check</span>
+</label>
+</div>
+<div class="flex items-center gap-4 text-label-sm text-on-surface-variant bg-surface-container-low p-3 rounded-lg">
+<span class="material-symbols-outlined text-tertiary">water_drop</span>
+<span>Apply to dry skin to dissolve SPF and impurities.</span>
+</div>
+</div>
+</div>
+<!-- Step 2: Treatment -->
+<div class="relative flex gap-6 group">
+<div class="z-10 w-4 h-4 rounded-full bg-tertiary mt-2 ring-4 ring-tertiary/10 transition-transform group-hover:scale-125"></div>
+<div class="glass-card flex-1 p-6 rounded-lg transition-all duration-300 hover:translate-x-2">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-headline-md text-lg text-tertiary">02 Retinol Treatment</h4>
+<p class="text-body-md text-on-surface-variant">The Ordinary Retinol 0.5% in Squalane</p>
+</div>
+<input class="hidden step-checkbox" id="step-pm-2" type="checkbox"/>
+<label class="w-8 h-8 rounded-full border-2 border-tertiary/30 flex items-center justify-center cursor-pointer hover:bg-tertiary/5 transition-colors" for="step-pm-2">
+<span class="material-symbols-outlined text-tertiary check-icon opacity-0 transition-all scale-50">check</span>
+</label>
+</div>
+<div class="flex items-center gap-4 text-label-sm text-on-surface-variant bg-surface-container-low p-3 rounded-lg">
+<span class="material-symbols-outlined text-tertiary">warning</span>
+<span>Only use 3x per week. Tonight is a "Rest" night.</span>
+</div>
+</div>
+</div>
+<!-- Step 3: Night Cream -->
+<div class="relative flex gap-6 group">
+<div class="z-10 w-4 h-4 rounded-full bg-tertiary mt-2 ring-4 ring-tertiary/10 transition-transform group-hover:scale-125"></div>
+<div class="glass-card flex-1 p-6 rounded-lg transition-all duration-300 hover:translate-x-2">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-headline-md text-lg text-tertiary">03 Deep Recovery Cream</h4>
+<p class="text-body-md text-on-surface-variant">CeraVe Skin Renewing Night Cream</p>
+</div>
+<input class="hidden step-checkbox" id="step-pm-3" type="checkbox"/>
+<label class="w-8 h-8 rounded-full border-2 border-tertiary/30 flex items-center justify-center cursor-pointer hover:bg-tertiary/5 transition-colors" for="step-pm-3">
+<span class="material-symbols-outlined text-tertiary check-icon opacity-0 transition-all scale-50">check</span>
+</label>
+</div>
+<div class="flex items-center gap-4 text-label-sm text-on-surface-variant bg-surface-container-low p-3 rounded-lg">
+<span class="material-symbols-outlined text-tertiary">bedtime</span>
+<span>Locks in moisture for 12-hour hydration.</span>
+</div>
+<div class="mt-4 flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-primary/20 flex items-center justify-center overflow-hidden">
+<span class="text-[10px] font-bold text-primary">HA</span>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-secondary/20 flex items-center justify-center overflow-hidden">
+<span class="text-[10px] font-bold text-secondary">CE</span>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container flex items-center justify-center">
+<span class="text-[10px] text-on-surface-variant">+2</span>
+</div>
+<span class="ml-4 text-[10px] text-on-surface-variant self-center italic">Key ingredients: Hyaluronic Acid, Ceramides</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Background Decoration -->
+<div class="fixed inset-0 -z-10 pointer-events-none opacity-40">
+
+</div>
+<!-- Floating Action Button (FAB) - Only for Home/Routine Context -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-lg shadow-primary/40 flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+<script>
+        // Micro-interactions for checkboxes and progress
+        document.querySelectorAll('.step-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const card = this.closest('.glass-card');
+                if (this.checked) {
+                    card.style.opacity = '0.7';
+                    card.classList.add('grayscale-[0.5]');
+                } else {
+                    card.style.opacity = '1';
+                    card.classList.remove('grayscale-[0.5]');
+                }
+            });
+        });
+
+        // Simple animation logic for the hero metrics
+        setTimeout(() => {
+            document.querySelectorAll('.font-headline-md').forEach(el => {
+                el.classList.add('transition-all', 'duration-1000');
+            });
+        }, 100);
+    </script>
+</body></html>

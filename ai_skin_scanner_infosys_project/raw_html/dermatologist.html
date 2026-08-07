@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aetheris Skin AI | Professional Dermatologist Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Sora:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Sora:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      font-size: 20px;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 40px 40px -40px rgba(114, 161, 229, 0.08);
+    }
+    .active-nav-glow {
+      box-shadow: 0 0 15px rgba(96, 80, 175, 0.1);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e0e3e5;
+      border-radius: 10px;
+    }
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    .animate-pulse-subtle {
+      animation: pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary-container": "#331f80",
+            "on-error-container": "#93000a",
+            "surface-container-highest": "#e0e3e5",
+            "inverse-on-surface": "#eff1f3",
+            "on-tertiary-fixed": "#001c3b",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#191c1e",
+            "surface-container-low": "#f2f4f6",
+            "primary-fixed-dim": "#c9beff",
+            "inverse-primary": "#c9beff",
+            "error-container": "#ffdad6",
+            "background": "#f7f9fb",
+            "surface-tint": "#6050af",
+            "surface": "#f7f9fb",
+            "primary-fixed": "#e6deff",
+            "on-tertiary-container": "#003262",
+            "inverse-surface": "#2d3133",
+            "surface-bright": "#f7f9fb",
+            "on-secondary-container": "#2a6d64",
+            "tertiary-container": "#6d9ce0",
+            "tertiary": "#2b5f9f",
+            "secondary-fixed": "#adefe4",
+            "secondary-fixed-dim": "#91d3c8",
+            "on-secondary-fixed-variant": "#005048",
+            "outline-variant": "#c9c4d3",
+            "surface-variant": "#e0e3e5",
+            "primary-container": "#9d8df1",
+            "secondary-container": "#aaece1",
+            "on-primary-fixed": "#1b0062",
+            "tertiary-fixed": "#d4e3ff",
+            "tertiary-fixed-dim": "#a6c8ff",
+            "on-background": "#191c1e",
+            "surface-container-high": "#e6e8ea",
+            "on-secondary": "#ffffff",
+            "surface-dim": "#d8dadc",
+            "on-secondary-fixed": "#00201c",
+            "surface-container-lowest": "#ffffff",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "surface-container": "#eceef0",
+            "on-tertiary-fixed-variant": "#024785",
+            "secondary": "#256960",
+            "on-surface-variant": "#484552",
+            "on-error": "#ffffff",
+            "primary": "#6050af",
+            "outline": "#797583",
+            "on-primary-fixed-variant": "#483795"
+          },
+          "borderRadius": {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "sidebar-width": "280px",
+            "card-gap": "20px",
+            "gutter": "24px",
+            "container-padding": "32px",
+            "base": "8px"
+          },
+          "fontFamily": {
+            "body-lg": ["Inter"],
+            "label-sm": ["Inter"],
+            "headline-md": ["Sora"],
+            "display-lg": ["Sora"],
+            "body-md": ["Inter"],
+            "display-lg-mobile": ["Sora"]
+          },
+          "fontSize": {
+            "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+            "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+            "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "500"}],
+            "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+            "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+            "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 bottom-0 w-sidebar-width bg-surface-container-lowest/40 backdrop-blur-2xl border-r border-white/10 shadow-xl shadow-tertiary/10 flex flex-col h-full py-base gap-2 z-50">
+<div class="px-container-padding py-6 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-gradient-to-br from-primary to-tertiary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">science</span>
+</div>
+<div>
+<h1 class="font-display-lg text-headline-md text-primary font-bold">Aetheris AI</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-70">Skin Intelligence</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar">
+<a class="flex items-center gap-3 bg-primary/10 text-primary font-bold rounded-lg px-4 py-2 hover:translate-x-1 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-sm text-label-sm">Patients</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">biotech</span>
+<span class="font-label-sm text-label-sm">Analysis</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-sm text-label-sm">Appointments</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-sm text-label-sm">Reports</span>
+</a>
+<div class="pt-4 pb-2 px-4">
+<span class="text-[10px] font-bold uppercase tracking-widest text-outline">Account</span>
+</div>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+</nav>
+<div class="px-6 py-6">
+<div class="bg-gradient-to-br from-primary to-tertiary-container p-4 rounded-2xl text-white shadow-lg shadow-primary/20">
+<p class="font-label-sm text-[10px] opacity-80 mb-1">CURRENT PLAN</p>
+<p class="font-headline-md text-body-md font-bold mb-3">Enterprise Suite</p>
+<button class="w-full py-2 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-lg text-white font-label-sm text-label-sm transition-all duration-200">
+          Upgrade to Pro
+        </button>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-sidebar-width min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-0 ml-sidebar-width h-16 bg-white/60 backdrop-blur-xl border-b border-white/20 shadow-sm shadow-tertiary/5 flex justify-between items-center px-container-padding z-40">
+<div class="flex items-center gap-4 flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 font-body-md text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-outline transition-all" placeholder="Search patients, scans, or records..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 rounded-full transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 rounded-full transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">contrast</span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-outline-variant">
+<div class="text-right">
+<p class="font-label-sm text-label-sm font-bold text-on-surface">Dr. Elena Vance</p>
+<p class="text-[10px] text-on-surface-variant">Chief Dermatologist</p>
+</div>
+<img class="w-10 h-10 rounded-full border-2 border-primary/20 object-cover" data-alt="A professional headshot of a female dermatologist with a kind expression, wearing a white lab coat, set against a soft, minimal medical office background with gentle blue lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD04xh84XPIv7nt2PXWdLZazRup5kgDbrZS8lkhbZyg9PQqtjzPUXiBSGBH7nRN3oR-aOVOqBXXQbsNap44Dncg3KbPOjADQuzf50XS7YueIA8YFuv7sWZ_EwMTr1RKNrLXyCFBd9pW0Bltw5mubaWdXQQ5p8Q7lKDAlJ8CJ_PPxoPXn_XszdQbLkGopfjeAxZovzXZhBZeB65uRZ3y_hdj4NwKGB4ggmL2ltV0JJp-RZWBxViDx0oIF1Fst0R9hRLjD3csyo1iScTN"/>
+</div>
+</div>
+</header>
+<div class="mt-16 p-container-padding overflow-y-auto flex-1 grid grid-cols-12 gap-gutter max-w-[1600px] mx-auto w-full">
+<!-- Top Overview Metrics -->
+<div class="col-span-12 grid grid-cols-4 gap-gutter mb-2">
+<div class="glass-card rounded-xl p-5 flex items-center gap-4 group hover:scale-[1.02] transition-transform duration-300">
+<div class="w-12 h-12 bg-secondary-container rounded-full flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-2xl">person_search</span>
+</div>
+<div>
+<p class="text-[11px] font-bold text-on-surface-variant uppercase tracking-tighter">Active Patients</p>
+<p class="font-display-lg text-headline-md text-on-surface">1,284</p>
+</div>
+<div class="ml-auto text-secondary flex items-center text-[11px] font-bold">
+<span class="material-symbols-outlined text-sm">trending_up</span> 8%
+          </div>
+</div>
+<div class="glass-card rounded-xl p-5 flex items-center gap-4 group hover:scale-[1.02] transition-transform duration-300">
+<div class="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-2xl">biotech</span>
+</div>
+<div>
+<p class="text-[11px] font-bold text-on-surface-variant uppercase tracking-tighter">AI Scans (24h)</p>
+<p class="font-display-lg text-headline-md text-on-surface">342</p>
+</div>
+<div class="ml-auto text-primary flex items-center text-[11px] font-bold">
+<span class="material-symbols-outlined text-sm">trending_up</span> 12%
+          </div>
+</div>
+<div class="glass-card rounded-xl p-5 flex items-center gap-4 group hover:scale-[1.02] transition-transform duration-300">
+<div class="w-12 h-12 bg-tertiary-container rounded-full flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined text-2xl">clinical_notes</span>
+</div>
+<div>
+<p class="text-[11px] font-bold text-on-surface-variant uppercase tracking-tighter">Pending Reviews</p>
+<p class="font-display-lg text-headline-md text-on-surface">18</p>
+</div>
+<div class="ml-auto bg-error/10 text-error px-2 py-1 rounded text-[10px] font-bold animate-pulse-subtle">
+            URGENT
+          </div>
+</div>
+<div class="glass-card rounded-xl p-5 flex items-center gap-4 group hover:scale-[1.02] transition-transform duration-300">
+<div class="w-12 h-12 bg-surface-container-highest rounded-full flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-2xl">schedule</span>
+</div>
+<div>
+<p class="text-[11px] font-bold text-on-surface-variant uppercase tracking-tighter">Next Session</p>
+<p class="font-display-lg text-headline-md text-on-surface">09:30</p>
+</div>
+</div>
+</div>
+<!-- Left Column: Patient Directory (Bento Column) -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-gutter">
+<section class="glass-card rounded-lg flex flex-col h-[700px]">
+<div class="p-6 border-b border-white/20 flex justify-between items-center">
+<h2 class="font-headline-md text-body-lg font-bold">Recent Patients</h2>
+<button class="text-primary text-sm font-bold flex items-center gap-1 hover:underline">
+              View all <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-2">
+<!-- Patient Row 1 -->
+<div class="p-4 rounded-xl hover:bg-white/40 cursor-pointer transition-all border border-transparent hover:border-white/40 flex items-center gap-4 group">
+<img class="w-12 h-12 rounded-full object-cover shadow-sm" data-alt="A portrait of a male patient in his late 20s with a clean, focused look. The lighting is soft and daylight-focused, set in a modern, clinical environment with professional healthcare aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPewTbWiHG02mJwAP9b6evFPlZ_79MPDJ-pAk2PdCCKEReUO6ZMBb_Ipt1UcCU5fIXb-ukuLtGG7Ui74K76E4d8Mwoofmg1EMdCvhJ5W9JLI3qU4rhE1Q1NaJgPUX1W4bvMuXvO8U4rGGC8r0Zb5nIXV0LtOYz1qbmc7RFMcLqIBV5aL6stm0qDeLTvHbYzA-HTXBlcpYxyb1j9udZLz-vHgriKPtD8rg1lKkfjW6ZqWypRd7PjxDbpOGTFXgr6NBUVUCUsJgxik8i"/>
+<div class="flex-1 min-w-0">
+<p class="font-bold text-on-surface truncate">Marcus Sterling</p>
+<p class="text-xs text-on-surface-variant">Last Scan: 2h ago</p>
+</div>
+<div class="text-right">
+<div class="text-[10px] font-bold text-secondary bg-secondary/10 px-2 py-0.5 rounded-full inline-block">Score: 92</div>
+<p class="text-[10px] text-outline mt-1 italic">Improving</p>
+</div>
+</div>
+<!-- Patient Row 2 -->
+<div class="p-4 rounded-xl bg-primary/5 border border-primary/20 flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover shadow-sm" data-alt="A portrait of a female patient in her early 40s. The image style is professional and clean, with high-quality clinical lighting, highlighting natural skin textures in a soft-focus medical consultation room." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDC6ABxVilCogW8_Tg-k7Lkjt9GD6F0G71NKka9VMF45l8-RYk_na8D7REfNd_SjSwcogTQCkHBtbGwN4hwt9lqvSsdCVQVSeKv1JqYICctJXBsm_BUgrim14rPnedx5YRFlIGHK9MBsGWwU_DeerKARDJGH3Vc1Cj8AvwKMimmPI62Uxpcx5ViRL_TCk_e50-C19zcCCY2Xn5fdUn-dd0vGoUwVxJCY1ovsKXM2xoKWBBlmzeVWBvAUBYoNgsa4bVZct0LYsEuUKHI"/>
+<div class="flex-1 min-w-0">
+<p class="font-bold text-on-surface truncate">Sarah Jenkins</p>
+<p class="text-xs text-on-surface-variant">Last Scan: Yesterday</p>
+</div>
+<div class="text-right">
+<div class="text-[10px] font-bold text-error bg-error/10 px-2 py-0.5 rounded-full inline-block">Score: 48</div>
+<p class="text-[10px] text-error mt-1 italic">Critical Attention</p>
+</div>
+</div>
+<!-- Patient Row 3 -->
+<div class="p-4 rounded-xl hover:bg-white/40 cursor-pointer transition-all border border-transparent hover:border-white/40 flex items-center gap-4 group">
+<img class="w-12 h-12 rounded-full object-cover shadow-sm" data-alt="A portrait of an elderly gentleman with silver hair, featuring realistic skin details. The image has a calm, trustworthy healthcare vibe with soft, warm lighting in a minimalist office." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSqA9NVdPZgQcuzgrGe1zUNhU7vlKnhOoYwXq6pw2V5mfOg9tnlAEJMjJK702cQvL3Gp-_opEiVcf_18Qhaf6MVAgZf_FED-mKN132BPwu41NI40IIs1LwicMniXgg3YwhX-Qoe-P9XteLMRcLK_r4EMJH8G3E8TTren3fMwBaKtVIwZyxqaxJczn8l45GBPDe7Z8KA4SiA6zuPCrQoQimlYtgUrNUNPPe8RLtTGjoUKvqTrMJMtX0rDlWL8grMAbQ2ff_Bb1U_5Gm"/>
+<div class="flex-1 min-w-0">
+<p class="font-bold text-on-surface truncate">Arthur Penhaligon</p>
+<p class="text-xs text-on-surface-variant">Last Scan: 3d ago</p>
+</div>
+<div class="text-right">
+<div class="text-[10px] font-bold text-tertiary bg-tertiary/10 px-2 py-0.5 rounded-full inline-block">Score: 74</div>
+<p class="text-[10px] text-outline mt-1 italic">Stable</p>
+</div>
+</div>
+<!-- Additional rows for density -->
+<div class="p-4 rounded-xl hover:bg-white/40 cursor-pointer transition-all border border-transparent hover:border-white/40 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-outline">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-bold text-on-surface truncate">Elena Rodriguez</p>
+<p class="text-xs text-on-surface-variant">Last Scan: 1w ago</p>
+</div>
+<div class="text-right">
+<div class="text-[10px] font-bold text-secondary bg-secondary/10 px-2 py-0.5 rounded-full inline-block">Score: 88</div>
+</div>
+</div>
+</div>
+<div class="p-4 bg-white/30">
+<button class="w-full flex items-center justify-center gap-2 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-all">
+<span class="material-symbols-outlined">person_add</span> Add New Patient
+            </button>
+</div>
+</section>
+</div>
+<!-- Center & Right: Detailed View (Asymmetric Bento Grid) -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-gutter">
+<!-- Patient Detail Header -->
+<section class="glass-card rounded-lg p-6 flex flex-col md:flex-row gap-6 relative overflow-hidden">
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl"></div>
+<div class="flex-shrink-0 relative">
+<img class="w-24 h-24 rounded-2xl object-cover ring-4 ring-white shadow-xl" data-alt="Close up high-resolution profile image of a female patient, Sarah Jenkins. The photography is clinical and professional, showing clear skin texture, neutral expression, and soft studio lighting designed for medical analysis." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYqor_ynB31TtJ9ggfPiJg3pTEOgjx6SDwwRa31fsJzKTZPgG401iuQgunKWK6QjTHwQ-EmoxoaTmBXeMHF_IObO63-ep2X-ju-rDa_hY43132bDJkqSFjAVibnPw2cvBxR1GOrUN4GypUXVhos_Wq2yCbW1pdMhU64wbxgisW_9y7Ld-Td9JxW2wWkhvb18W_zdBLLYUbL0gQarh7smARz7cG3Suv3XjGgIZdStx9v8faj8w_eEzu_dFUqf2F_Zs2a_cow_2oJzG9"/>
+<div class="absolute -bottom-2 -right-2 w-8 h-8 bg-error rounded-full border-2 border-white flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-sm">priority_high</span>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+<div>
+<h2 class="font-display-lg text-headline-md font-bold text-on-surface">Sarah Jenkins</h2>
+<p class="text-sm text-on-surface-variant font-medium">Patient ID: #SK-99201 • 42y • Oily/Sensitive Skin Type</p>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-white border border-outline-variant rounded-lg font-bold text-sm hover:bg-surface-container-low transition-colors">Export Records</button>
+<button class="px-4 py-2 bg-primary text-white rounded-lg font-bold text-sm hover:shadow-lg hover:shadow-primary/20 transition-all">Start Virtual Visit</button>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<div class="bg-surface-container-low rounded-xl p-3">
+<p class="text-[10px] font-bold text-outline uppercase tracking-wider mb-1">Hydration Index</p>
+<div class="flex items-end gap-2">
+<span class="text-xl font-bold text-on-surface">32%</span>
+<span class="text-[10px] text-error font-bold mb-1">-12% vs avg</span>
+</div>
+<div class="w-full bg-white rounded-full h-1 mt-2 overflow-hidden">
+<div class="bg-error w-[32%] h-full"></div>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl p-3">
+<p class="text-[10px] font-bold text-outline uppercase tracking-wider mb-1">Sebum Control</p>
+<div class="flex items-end gap-2">
+<span class="text-xl font-bold text-on-surface">64%</span>
+<span class="text-[10px] text-secondary font-bold mb-1">+5% stable</span>
+</div>
+<div class="w-full bg-white rounded-full h-1 mt-2 overflow-hidden">
+<div class="bg-secondary w-[64%] h-full"></div>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl p-3">
+<p class="text-[10px] font-bold text-outline uppercase tracking-wider mb-1">Melanin Uniformity</p>
+<div class="flex items-end gap-2">
+<span class="text-xl font-bold text-on-surface">81%</span>
+<span class="text-[10px] text-tertiary font-bold mb-1">Optimal</span>
+</div>
+<div class="w-full bg-white rounded-full h-1 mt-2 overflow-hidden">
+<div class="bg-tertiary w-[81%] h-full"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Analysis & Timeline Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Scan History & AI Analysis -->
+<section class="glass-card rounded-lg p-6 flex flex-col h-full">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-body-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">biotech</span>
+                AI Analysis History
+              </h3>
+<select class="text-xs bg-transparent border-none focus:ring-0 font-bold text-primary cursor-pointer">
+<option>Last 30 Days</option>
+<option>Last 6 Months</option>
+</select>
+</div>
+<div class="flex-1 space-y-4">
+<!-- Timeline Item -->
+<div class="relative pl-6 pb-6 border-l-2 border-dashed border-primary/20 last:pb-0 last:border-l-0">
+<div class="absolute -left-[9px] top-0 w-4 h-4 bg-primary border-2 border-white rounded-full shadow-sm"></div>
+<div class="bg-white/40 rounded-xl p-4 border border-white/40">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-xs font-bold text-on-surface">May 12, 2024</p>
+<p class="text-[11px] text-outline">Automated Full-Face Scan</p>
+</div>
+<span class="bg-error/10 text-error px-2 py-0.5 rounded text-[10px] font-bold">Inflammation Detected</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">AI identified 14 active inflammatory nodes on the cheek area. Predicted causes: environmental pollution or new product reaction.</p>
+<div class="mt-3 flex gap-2">
+<img class="w-12 h-12 rounded-lg object-cover cursor-zoom-in" data-alt="High-resolution clinical macro photo of human skin with highlighted inflammatory spots, featuring AI-generated overlays showing heatmaps of irritation levels. The aesthetic is scientific and high-tech." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdcuxum0KtMPcKULwBgCo0Z9Fw9xINOzOVil78hwwylelWOHwA21A2mrrEh0yLk8wPdjycUHu3detNiZAXDw8lYIfPkukZOkrJWOouJkG4Z0pTuWPhPMq0iNpcr_6ospG0tc9296iFk-jiMTfCYy2U2d33PYVf9kvV0vy14LuD4TxqK-RmbxUauG7wjhH54OjxXXVFDhx-Y0GwBQikQ4qFTg3hNWG2xUqn_yCoOnGOOpPhppNe5e5np6iGXaKePTaQskprEGiHFO42"/>
+<img class="w-12 h-12 rounded-lg object-cover cursor-zoom-in" data-alt="A close-up dermatoscope image of skin texture showing pore detail and hydration levels, captured under high-intensity ultraviolet light for medical dermatological diagnostics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAbneJOChpCep3JbTHJ0jYcPC5b2v3Le8PQro8LdHnXZth5GbCeFCUww6zXDEojEB11ogwthaf64K0E_wLwb29ZofGx2MIhHrMgMquS_3DUH6rK77XJrp5fnGAc-4Zq-vkwDP7uYWaziIlCHsXI6tiJ5-hfi3C93jAt6PfozyXR6pV-Z-d1nHLJVucVhJHfo3HsD3uJ1UO1P0FPZRpPlkdiA6AmEynK8J6tW5KCI9FatTbNxwuhbsl2KGoUs6TW6QFdrmjVF_sojgg"/>
+</div>
+</div>
+</div>
+<div class="relative pl-6 pb-6 border-l-2 border-dashed border-primary/20">
+<div class="absolute -left-[9px] top-0 w-4 h-4 bg-tertiary border-2 border-white rounded-full shadow-sm"></div>
+<div class="bg-white/40 rounded-xl p-4 border border-white/40">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-xs font-bold text-on-surface">May 05, 2024</p>
+<p class="text-[11px] text-outline">Self-Reported Photo</p>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">Minor scaling around the nasal fold. AI suggests localized dryness. Prescribed Hydrating Serum boost.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Routine & Prescriptions -->
+<section class="glass-card rounded-lg p-6 flex flex-col h-full">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-body-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">medication</span>
+                Current Routine
+              </h3>
+<button class="p-2 hover:bg-secondary/5 rounded-full text-secondary transition-colors">
+<span class="material-symbols-outlined">edit_note</span>
+</button>
+</div>
+<div class="space-y-4">
+<div class="p-4 bg-gradient-to-r from-surface-container-low to-white rounded-xl border-l-4 border-secondary">
+<div class="flex justify-between items-center mb-2">
+<span class="font-bold text-sm">AM Cleanser: Hyaluronic Wash</span>
+<span class="text-[10px] bg-secondary/10 text-secondary px-2 py-0.5 rounded font-bold">In Use</span>
+</div>
+<p class="text-xs text-on-surface-variant">Applied daily. Maintaining 85% compliance.</p>
+</div>
+<div class="p-4 bg-gradient-to-r from-surface-container-low to-white rounded-xl border-l-4 border-primary">
+<div class="flex justify-between items-center mb-2">
+<span class="font-bold text-sm">Treatment: 0.05% Tretinoin</span>
+<span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded font-bold">Adjusted</span>
+</div>
+<p class="text-xs text-on-surface-variant">Recommended: Reduce to 3x weekly to mitigate peeling.</p>
+</div>
+<div class="p-4 bg-gradient-to-r from-error/5 to-white rounded-xl border-l-4 border-error">
+<div class="flex justify-between items-center mb-2">
+<span class="font-bold text-sm">Targeted: AHA/BHA Toner</span>
+<span class="text-[10px] bg-error text-white px-2 py-0.5 rounded font-bold">SUSPEND</span>
+</div>
+<p class="text-xs text-on-surface-variant">Highly reactive with current inflammation. Cease use immediately.</p>
+</div>
+</div>
+<div class="mt-auto pt-6 border-t border-white/20">
+<p class="text-xs font-bold text-on-surface mb-3 uppercase tracking-wider opacity-60">Adjust Routine</p>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 bg-surface-container-high hover:bg-surface-container-highest rounded-lg font-bold text-xs transition-colors">Prescribe New</button>
+<button class="py-2 bg-surface-container-high hover:bg-surface-container-highest rounded-lg font-bold text-xs transition-colors">Pause All</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Progress Chart Area -->
+<section class="glass-card rounded-lg p-6 mb-gutter relative">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-md text-body-lg font-bold">Skin Health Recovery Progress</h3>
+<div class="flex items-center gap-4 text-xs font-bold text-outline">
+<span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-primary"></span> Patient Score</span>
+<span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-secondary"></span> Cohort Avg</span>
+</div>
+</div>
+<div class="h-48 w-full relative flex items-end justify-between px-4 pb-8">
+<!-- Simulated Area Chart -->
+<div class="absolute inset-x-8 bottom-8 top-8">
+<svg class="w-full h-full preserve-3d" viewbox="0 0 800 200">
+<!-- Cohort Line -->
+<path d="M0,150 Q200,140 400,160 T800,145" fill="none" opacity="0.3" stroke="#256960" stroke-dasharray="4" stroke-width="2"></path>
+<!-- Patient Gradient Fill -->
+<path d="M0,180 L0,120 Q150,110 300,140 T500,80 T800,40 L800,180 Z" fill="url(#grad1)" opacity="0.15"></path>
+<!-- Patient Line -->
+<path d="M0,120 Q150,110 300,140 T500,80 T800,40" fill="none" stroke="#6050af" stroke-width="3"></path>
+<defs>
+<lineargradient id="grad1" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#6050af;stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:#6050af;stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+<!-- Chart Labels -->
+<div class="text-[10px] font-bold text-outline">JAN</div>
+<div class="text-[10px] font-bold text-outline">FEB</div>
+<div class="text-[10px] font-bold text-outline">MAR</div>
+<div class="text-[10px] font-bold text-outline">APR</div>
+<div class="text-[10px] font-bold text-primary">MAY</div>
+<div class="text-[10px] font-bold text-outline">JUN</div>
+</div>
+<div class="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col gap-8 text-[9px] font-bold text-outline opacity-40">
+<span>100</span>
+<span>75</span>
+<span>50</span>
+<span>25</span>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Background Atmospheric Shaders/Glows -->
+<div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+<div class="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] left-[-5%] w-[40%] h-[40%] bg-secondary/5 rounded-full blur-[100px]"></div>
+
+</div>
+<script>
+    // Micro-interactions and Tab Logic
+    document.querySelectorAll('.glass-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-2px)';
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0)';
+      });
+    });
+
+    // Patient selection simulation
+    const patients = document.querySelectorAll('.patient-row');
+    patients.forEach(p => {
+      p.addEventListener('click', () => {
+        patients.forEach(el => el.classList.remove('bg-primary/5', 'border-primary/20'));
+        p.classList.add('bg-primary/5', 'border-primary/20');
+      });
+    });
+  </script>
+</body></html>

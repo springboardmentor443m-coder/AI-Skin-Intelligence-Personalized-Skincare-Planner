@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aetheris AI | Profile &amp; Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Sora:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 40px 40px -20px rgba(114, 161, 229, 0.08);
+        }
+        .sidebar-glass {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        body {
+            background: radial-gradient(circle at top right, #e6deff 0%, #f7f9fb 40%),
+                        radial-gradient(circle at bottom left, #d4e3ff 0%, #f7f9fb 40%);
+            background-attachment: fixed;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e0e3e5;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-container": "#331f80",
+                      "on-error-container": "#93000a",
+                      "surface-container-highest": "#e0e3e5",
+                      "inverse-on-surface": "#eff1f3",
+                      "on-tertiary-fixed": "#001c3b",
+                      "on-tertiary": "#ffffff",
+                      "on-surface": "#191c1e",
+                      "surface-container-low": "#f2f4f6",
+                      "primary-fixed-dim": "#c9beff",
+                      "inverse-primary": "#c9beff",
+                      "error-container": "#ffdad6",
+                      "background": "#f7f9fb",
+                      "surface-tint": "#6050af",
+                      "surface": "#f7f9fb",
+                      "primary-fixed": "#e6deff",
+                      "on-tertiary-container": "#003262",
+                      "inverse-surface": "#2d3133",
+                      "surface-bright": "#f7f9fb",
+                      "on-secondary-container": "#2a6d64",
+                      "tertiary-container": "#6d9ce0",
+                      "tertiary": "#2b5f9f",
+                      "secondary-fixed": "#adefe4",
+                      "secondary-fixed-dim": "#91d3c8",
+                      "on-secondary-fixed-variant": "#005048",
+                      "outline-variant": "#c9c4d3",
+                      "surface-variant": "#e0e3e5",
+                      "primary-container": "#9d8df1",
+                      "secondary-container": "#aaece1",
+                      "on-primary-fixed": "#1b0062",
+                      "tertiary-fixed": "#d4e3ff",
+                      "tertiary-fixed-dim": "#a6c8ff",
+                      "on-background": "#191c1e",
+                      "surface-container-high": "#e6e8ea",
+                      "on-secondary": "#ffffff",
+                      "surface-dim": "#d8dadc",
+                      "on-secondary-fixed": "#00201c",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "surface-container": "#eceef0",
+                      "on-tertiary-fixed-variant": "#024785",
+                      "secondary": "#256960",
+                      "on-surface-variant": "#484552",
+                      "on-error": "#ffffff",
+                      "primary": "#6050af",
+                      "outline": "#797583",
+                      "on-primary-fixed-variant": "#483795"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sidebar-width": "280px",
+                      "card-gap": "20px",
+                      "gutter": "24px",
+                      "container-padding": "32px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "headline-md": ["Sora"],
+                      "display-lg": ["Sora"],
+                      "body-md": ["Inter"],
+                      "display-lg-mobile": ["Sora"]
+              },
+              "fontSize": {
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                      "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-x-hidden">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 bottom-0 w-sidebar-width border-r border-white/10 sidebar-glass shadow-xl shadow-tertiary/10 flex flex-col py-base gap-2 z-50">
+<div class="px-6 py-8">
+<h1 class="font-display-lg text-headline-md text-primary font-bold">Aetheris AI</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1 opacity-70">Skin Intelligence</p>
+</div>
+<nav class="flex-1 px-4 space-y-1 custom-scrollbar overflow-y-auto">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all duration-300 px-4 py-2 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-inherit group-hover:translate-x-1 duration-200">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all duration-300 px-4 py-2 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-inherit group-hover:translate-x-1 duration-200">camera_front</span>
+<span class="font-label-sm text-label-sm">Scan</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all duration-300 px-4 py-2 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-inherit group-hover:translate-x-1 duration-200">biotech</span>
+<span class="font-label-sm text-label-sm">Analysis</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all duration-300 px-4 py-2 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-inherit group-hover:translate-x-1 duration-200">calendar_today</span>
+<span class="font-label-sm text-label-sm">Routine</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all duration-300 px-4 py-2 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-inherit group-hover:translate-x-1 duration-200">shopping_bag</span>
+<span class="font-label-sm text-label-sm">Products</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all duration-300 px-4 py-2 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-inherit group-hover:translate-x-1 duration-200">science</span>
+<span class="font-label-sm text-label-sm">Ingredients</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all duration-300 px-4 py-2 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-inherit group-hover:translate-x-1 duration-200">insights</span>
+<span class="font-label-sm text-label-sm">Progress</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all duration-300 px-4 py-2 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-inherit group-hover:translate-x-1 duration-200">assessment</span>
+<span class="font-label-sm text-label-sm">Reports</span>
+</a>
+<a class="flex items-center gap-3 bg-primary/10 text-primary font-bold rounded-lg px-4 py-2 group" href="#">
+<span class="material-symbols-outlined text-inherit group-hover:translate-x-1 duration-200">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all duration-300 px-4 py-2 rounded-lg group" href="#">
+<span class="material-symbols-outlined text-inherit group-hover:translate-x-1 duration-200">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-6 py-8">
+<div class="p-4 rounded-xl bg-primary-container/20 border border-primary/20">
+<p class="font-label-sm text-label-sm text-primary mb-3">Professional Plan</p>
+<button class="w-full py-2 bg-primary text-white rounded-lg font-label-sm text-label-sm hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95 cursor-pointer">Upgrade to Pro</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width min-h-screen relative">
+<!-- Top Nav Bar -->
+<header class="fixed top-0 right-0 left-sidebar-width h-16 bg-white/60 backdrop-blur-xl border-b border-white/20 shadow-sm shadow-tertiary/5 z-40 flex justify-between items-center px-container-padding">
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant opacity-60">search</span>
+<input class="pl-10 pr-4 py-1.5 rounded-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary/20 w-64 text-sm transition-all" placeholder="Search skin analytics..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">contrast</span>
+</button>
+<div class="flex items-center gap-3 border-l border-surface-variant pl-6">
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface">Evelyn Harper</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Premium Member</p>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary/20 p-0.5 overflow-hidden">
+<img class="w-full h-full object-cover rounded-full" data-alt="A professional studio portrait of a woman with radiant, clear skin and soft features. The lighting is ethereal and soft, reflecting a high-end medical aesthetic. She wears a minimalist silk top, and the background is a soft, blurred gradient of lavender and light blue, matching the digital sanctuary theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3Ft0-pgy8XfIeGCvSQoOgnM8Z4DqlBLCWEuKTj45nLvNuhlNBBhQbwsPN42PAQTYKvNTg87uHjt4GRm85DDZ_ID2_eJbMIVmAs8IfOZi820w7PfNUlAHq1mRciGkuOC01yeslDgFFZ4MOJF_KTgyHfHijpbfwqubwhQARoDUE-3sFBbLytdxDpcU3l0Of1daxggolQgPBfLzyDKHgQ9Muh01aDuoEPk5bw7t_TUMOCETLuHxrYmCUxlYxZF0oV2Wcbi6hKB-YIXUx"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Body -->
+<div class="pt-24 pb-12 px-container-padding max-w-7xl mx-auto">
+<div class="mb-10">
+<h2 class="font-display-lg text-display-lg-mobile md:text-headline-md text-primary font-bold mb-2">Account Intelligence</h2>
+<p class="text-on-surface-variant font-body-md">Manage your biometric profile and skin healthcare settings.</p>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Personal Info (Main Column) -->
+<div class="col-span-12 lg:col-span-8 space-y-gutter">
+<section class="glass-card rounded-lg p-8">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<h3 class="font-headline-md text-on-surface">Personal Information</h3>
+<p class="text-sm text-on-surface-variant">Update your identity and contact details</p>
+</div>
+</div>
+<button class="px-4 py-2 border border-primary/20 rounded-lg text-primary font-label-sm text-label-sm hover:bg-primary/5 transition-colors cursor-pointer active:scale-95">Edit Details</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-1.5">
+<label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1">Full Name</label>
+<div class="bg-surface-container-low p-3 rounded-lg border border-transparent text-on-surface">Evelyn Harper</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1">Email Address</label>
+<div class="bg-surface-container-low p-3 rounded-lg border border-transparent text-on-surface">e.harper@skinai.medical</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1">Date of Birth</label>
+<div class="bg-surface-container-low p-3 rounded-lg border border-transparent text-on-surface">May 14, 1994</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1">Location</label>
+<div class="bg-surface-container-low p-3 rounded-lg border border-transparent text-on-surface">San Francisco, CA</div>
+</div>
+</div>
+</section>
+<!-- Skin Profile Section -->
+<section class="glass-card rounded-lg p-8">
+<div class="flex items-center gap-4 mb-8">
+<div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">biotech</span>
+</div>
+<div>
+<h3 class="font-headline-md text-on-surface">Biometric Skin Profile</h3>
+<p class="text-sm text-on-surface-variant">AI-adjusted medical history and lifestyle markers</p>
+</div>
+</div>
+<div class="space-y-8">
+<!-- Allergies & Sensitivities -->
+<div>
+<h4 class="text-sm font-semibold text-on-surface-variant mb-4 flex items-center gap-2">
+<span class="w-1 h-1 rounded-full bg-error"></span> Known Allergies &amp; Sensitivities
+                                </h4>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 bg-error-container/40 text-on-error-container rounded-full text-xs font-medium border border-error/10">Fragrance (Synthetic)</span>
+<span class="px-3 py-1.5 bg-error-container/40 text-on-error-container rounded-full text-xs font-medium border border-error/10">Benzoyl Peroxide</span>
+<span class="px-3 py-1.5 bg-error-container/40 text-on-error-container rounded-full text-xs font-medium border border-error/10">Certain Nut Oils</span>
+<button class="px-3 py-1.5 bg-surface-container border border-dashed border-outline-variant rounded-full text-xs text-on-surface-variant hover:border-primary transition-colors cursor-pointer">+ Add Allergy</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Lifestyle -->
+<div>
+<h4 class="text-sm font-semibold text-on-surface-variant mb-4">Lifestyle Factors</h4>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low border border-white/50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-lg">wb_sunny</span>
+<span class="text-sm text-on-surface">Sun Exposure</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-white px-2 py-1 rounded shadow-sm">Moderate</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low border border-white/50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-lg">water_drop</span>
+<span class="text-sm text-on-surface">Daily Hydration</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-white px-2 py-1 rounded shadow-sm">High (2.5L)</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low border border-white/50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-lg">bedtime</span>
+<span class="text-sm text-on-surface">Sleep Quality</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-white px-2 py-1 rounded shadow-sm">Average</span>
+</div>
+</div>
+</div>
+<!-- Skin Goals -->
+<div>
+<h4 class="text-sm font-semibold text-on-surface-variant mb-4">Active Treatment Goals</h4>
+<div class="space-y-3">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="text-sm font-medium text-on-surface">Reduce Hyperpigmentation</p>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-primary h-full w-[65%] rounded-full shadow-[0_0_8px_rgba(96,80,175,0.4)]"></div>
+</div>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="text-sm font-medium text-on-surface">Increase Barrier Resilience</p>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-primary h-full w-[40%] rounded-full shadow-[0_0_8px_rgba(96,80,175,0.4)]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column (Preferences & Subscription) -->
+<div class="col-span-12 lg:col-span-4 space-y-gutter">
+<!-- Subscription Status -->
+<section class="relative overflow-hidden glass-card rounded-lg p-8 border-primary/20">
+<div class="absolute top-0 right-0 -mr-6 -mt-6 w-32 h-32 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+<h3 class="font-headline-md text-on-surface">Premium Plan</h3>
+</div>
+<div class="mb-6">
+<div class="text-display-lg-mobile font-bold text-on-surface">$29<span class="text-lg font-normal text-on-surface-variant">/mo</span></div>
+<p class="text-xs text-secondary font-semibold uppercase tracking-widest mt-1">Next renewal: Oct 12, 2024</p>
+</div>
+<ul class="space-y-3 mb-8">
+<li class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-xs text-primary">done</span>
+                                    Unlimited AI Skin Scans
+                                </li>
+<li class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-xs text-primary">done</span>
+                                    Dermatologist-grade ingredients analysis
+                                </li>
+<li class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-xs text-primary">done</span>
+                                    Priority Chat Support
+                                </li>
+</ul>
+<button class="w-full py-3 bg-gradient-to-r from-primary to-tertiary text-white rounded-lg font-label-sm text-label-sm shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all cursor-pointer active:scale-95">Manage Subscription</button>
+</div>
+</section>
+<!-- Notifications -->
+<section class="glass-card rounded-lg p-8">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-on-surface-variant">notifications_active</span>
+<h3 class="font-headline-md text-on-surface">Preferences</h3>
+</div>
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-medium text-on-surface">Routine Reminders</p>
+<p class="text-xs text-on-surface-variant">Morning &amp; Evening alerts</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-medium text-on-surface">Pollutant Alerts</p>
+<p class="text-xs text-on-surface-variant">Based on local air quality</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-medium text-on-surface">Ingredient Research</p>
+<p class="text-xs text-on-surface-variant">Monthly insights newsletter</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Privacy & Security -->
+<section class="glass-card rounded-lg p-8">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-on-surface-variant">shield_lock</span>
+<h3 class="font-headline-md text-on-surface">Security</h3>
+</div>
+<div class="space-y-4">
+<button class="w-full text-left p-3 rounded-lg hover:bg-primary/5 text-sm text-on-surface flex items-center justify-between group transition-colors">
+<span>Change Password</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<button class="w-full text-left p-3 rounded-lg hover:bg-primary/5 text-sm text-on-surface flex items-center justify-between group transition-colors">
+<span>Biometric Authentication</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<button class="w-full text-left p-3 rounded-lg hover:bg-error/5 text-sm text-error flex items-center justify-between group transition-colors">
+<span>Deactivate Account</span>
+<span class="material-symbols-outlined text-error opacity-60 group-hover:translate-x-1 transition-transform">delete</span>
+</button>
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('.active\\:scale-95').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'scale(0.95)';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'scale(1)';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'scale(1)';
+            });
+        });
+
+        // Toggle Switch Animation
+        document.querySelectorAll('input[type="checkbox"]').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const parent = this.parentElement;
+                if (this.checked) {
+                    parent.classList.add('scale-105');
+                    setTimeout(() => parent.classList.remove('scale-105'), 200);
+                }
+            });
+        });
+    </script>
+</body></html>
