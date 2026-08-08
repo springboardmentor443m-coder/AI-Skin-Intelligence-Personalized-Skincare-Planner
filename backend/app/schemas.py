@@ -90,7 +90,9 @@ class ProductRecommendation(BaseModel):
     brand_name: str
     rating: float
     price_usd: float
-
+    condition_similarity: float
+    profile_similarity: float
+    similarity_score: float
 
 class ImagePredictionResponse(BaseModel):
     prediction: str

@@ -35,6 +35,18 @@ def recommend_products(product_name, top_n=5):
 
     return recommendations.to_dict(orient="records")
 
+def get_skin_type_match(highlights, skin_type):
+    highlights = str(highlights).lower()
+    skin_type = str(skin_type).lower()
+
+    if f"best for {skin_type}" in highlights:
+        return 1
+
+    if "best for" in highlights and skin_type in highlights:
+        return 1
+
+    return 0
+
 def recommend_by_skin_condition(
     condition,
     skin_type="",
@@ -44,30 +56,59 @@ def recommend_by_skin_condition(
     age=None,
     gender=""
 ):
-    query = " ".join([
-        str(condition),
-        str(skin_type),
-        str(skin_concerns),
-        str(allergies),
-        "sensitive skin" if sensitive_skin else "",
-        str(age) if age else "",
-        str(gender)
-    ])
+    # Query based only on the detected skin condition
+    condition_query = str(condition)
 
-    # Convert user query into TF-IDF vector
-    query_vector = tfidf.transform([query])
+    profile_parts = []
 
-    # Calculate similarity between user query and every product
-    similarity_scores = cosine_similarity(
-        query_vector,
-        tfidf.transform(df["combined_features"])
+    if skin_type:
+        profile_parts.append(f"skin type {skin_type}")
+
+    if skin_concerns:
+        profile_parts.append(f"skin concerns {skin_concerns}")
+
+    if sensitive_skin:
+        profile_parts.append("sensitive skin")
+
+    if allergies and allergies.lower() != "none":
+        profile_parts.append(f"allergy {allergies}")
+
+    profile_query = " ".join(profile_parts)
+
+    # Convert both queries into TF-IDF vectors
+    condition_vector = tfidf.transform([condition_query])
+    profile_vector = tfidf.transform([profile_query])
+
+    # Convert every product into TF-IDF vectors
+    product_vectors = tfidf.transform(
+        df["combined_features"]
+    )
+
+    # Calculate two separate similarities
+    condition_similarity = cosine_similarity(
+        condition_vector,
+        product_vectors
     ).flatten()
 
-    # Add similarity score to products
-    results = df.copy()
-    results["similarity_score"] = similarity_scores
+    profile_similarity = cosine_similarity(
+        profile_vector,
+        product_vectors
+    ).flatten()
 
-    # Rank products by similarity
+    # Combine both similarities
+    final_score = (
+        0.7 * condition_similarity
+        + 0.3 * profile_similarity
+    )
+
+    # Copy dataframe and store final score
+    results = df.copy()
+
+    results["condition_similarity"] = condition_similarity
+    results["profile_similarity"] = profile_similarity
+    results["similarity_score"] = final_score
+
+    # Rank products
     results = results.sort_values(
         by="similarity_score",
         ascending=False
@@ -78,6 +119,9 @@ def recommend_by_skin_condition(
             "product_name",
             "brand_name",
             "rating",
-            "price_usd"
+            "price_usd",
+            "condition_similarity",
+            "profile_similarity",
+            "similarity_score"
         ]
     ].head(5).to_dict(orient="records")
