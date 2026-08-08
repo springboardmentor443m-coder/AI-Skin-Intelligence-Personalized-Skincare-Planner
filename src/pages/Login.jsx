@@ -1,5 +1,6 @@
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles } from 'lucide-react'
 import { useState } from 'react'
+import { GoogleLogin } from '@react-oauth/google'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/useAuth'
 
@@ -8,13 +9,19 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const { login } = useAuth()
+  const [isAuthenticating, setIsAuthenticating] = useState(false)
+  const [googleMessage, setGoogleMessage] = useState('')
+  const [googleError, setGoogleError] = useState('')
+  const { login, googleLogin } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || ''
 
   const handleSubmit = (event) => {
     event.preventDefault()
     setError('')
+    setGoogleError('')
+    setGoogleMessage('')
 
     if (!email.trim() || !password) {
       setError('Enter your email and password to continue.')
@@ -28,6 +35,29 @@ export default function Login() {
     }
 
     navigate(location.state?.from || '/dashboard', { replace: true })
+  }
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setIsAuthenticating(true)
+    setGoogleError('')
+    setGoogleMessage('')
+
+    const result = await googleLogin(credentialResponse?.credential)
+
+    if (!result.ok) {
+      setGoogleError(result.message)
+      setIsAuthenticating(false)
+      return
+    }
+
+    setGoogleMessage('Google sign-in successful. Redirecting to your dashboard...')
+    navigate('/dashboard', { replace: true })
+    setIsAuthenticating(false)
+  }
+
+  const handleGoogleError = () => {
+    setIsAuthenticating(false)
+    setGoogleError('Google sign-in was cancelled or failed. Please try again.')
   }
 
   return (
@@ -94,9 +124,31 @@ export default function Login() {
             Don’t have an account? <Link to="/register" className="font-semibold text-emerald-600">Create one</Link>
           </div>
 
-          <button className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-700 transition hover:border-emerald-500 hover:text-emerald-600">
-            <span className="text-base">G</span> Continue with Google
-          </button>
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+            {!googleClientId ? (
+              <p className="text-center text-sm text-slate-600">Google sign-in is not configured yet. Add your Google OAuth client ID to the frontend .env file to enable this option.</p>
+            ) : (
+              <>
+                <div className="flex justify-center">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleError}
+                    disabled={isAuthenticating}
+                    text="continue_with"
+                    shape="pill"
+                    theme="outline"
+                    size="large"
+                    width="100%"
+                    locale="en"
+                    useOneTap={false}
+                  />
+                </div>
+                {isAuthenticating && <p className="mt-3 text-center text-sm text-emerald-600">Connecting to Google…</p>}
+                {googleError && <p role="alert" className="mt-3 text-center text-sm font-medium text-rose-600">{googleError}</p>}
+                {googleMessage && <p className="mt-3 text-center text-sm text-emerald-600">{googleMessage}</p>}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

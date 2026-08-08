@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { UploadCloud, Sparkles, ScanLine, RefreshCcw, ImagePlus } from 'lucide-react'
 import { useRef, useState } from 'react'
+import { saveSkinAnalysisContext } from '../utils/chatbotContext'
 
 const ACCEPTED_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp']
 const MAX_SIZE = 10 * 1024 * 1024
@@ -68,10 +69,16 @@ export default function SkinAnalysis() {
       }
 
       const data = await response.json()
-      setResult({
+      const nextResult = {
         disease: data.prediction || 'Unknown',
         confidence: `${(Number(data.confidence || 0) * 100).toFixed(2)}%`,
         recommendation: data.recommendation,
+      }
+      setResult(nextResult)
+      saveSkinAnalysisContext({
+        condition: nextResult.disease,
+        confidence: Number(data.confidence || 0),
+        recommendation: data.recommendation?.description || data.recommendation || '',
       })
     } catch (err) {
       console.error(err)

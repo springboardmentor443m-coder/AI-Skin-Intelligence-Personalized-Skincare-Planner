@@ -1,5 +1,6 @@
 import { Camera, Mail, UserRound, ShieldAlert, Sparkles, Droplets, MoonStar, Save, XCircle, PencilLine } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useAuth } from '../auth/useAuth'
 
 const initialProfile = {
   name: 'Alicia Chen',
@@ -14,11 +15,33 @@ const initialProfile = {
   concerns: 'Dryness, mild sensitivity',
 }
 
+function buildProfileData(user) {
+  return {
+    ...initialProfile,
+    name: user?.name || initialProfile.name,
+    email: user?.email || initialProfile.email,
+  }
+}
+
 export default function Profile() {
-  const [formData, setFormData] = useState(initialProfile)
+  const { user } = useAuth()
+  const [formData, setFormData] = useState(() => buildProfileData(user))
   const [isEditing, setIsEditing] = useState(false)
-  const [photoPreview, setPhotoPreview] = useState('')
+  const [photoPreview, setPhotoPreview] = useState(user?.picture || '')
   const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFormData((current) => ({
+      ...current,
+      name: user?.name || current.name,
+      email: user?.email || current.email,
+    }))
+
+    if (user?.picture) {
+      setPhotoPreview(user.picture)
+    }
+  }, [user])
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -40,10 +63,12 @@ export default function Profile() {
   }
 
   const handleCancel = () => {
-    setFormData({ ...initialProfile })
+    setFormData(buildProfileData(user))
     setIsEditing(false)
     setMessage('Changes discarded. Your last saved values remain intact.')
   }
+
+  const avatarSrc = photoPreview || user?.picture || ''
 
   return (
     <div className="space-y-6">
@@ -58,7 +83,7 @@ export default function Profile() {
           <div className="flex flex-col items-center text-center">
             <div className="relative">
               <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-emerald-500 to-sky-600 text-3xl font-semibold text-white">
-                {photoPreview ? <img src={photoPreview} alt="Profile preview" className="h-full w-full object-cover" /> : formData.name.split(' ').map((part) => part[0]).join('').slice(0, 2)}
+                {avatarSrc ? <img src={avatarSrc} alt="Profile preview" className="h-full w-full object-cover" /> : formData.name.split(' ').map((part) => part[0]).join('').slice(0, 2)}
               </div>
               <label className="absolute bottom-0 right-0 cursor-pointer rounded-full bg-slate-900 p-2 text-white shadow-lg">
                 <Camera className="h-4 w-4" />
@@ -66,7 +91,8 @@ export default function Profile() {
               </label>
             </div>
             <h2 className="mt-5 text-2xl font-semibold text-slate-900">{formData.name}</h2>
-            <p className="mt-2 text-sm text-slate-500">Personal skincare profile</p>
+            <p className="mt-2 text-sm text-slate-500">{user?.provider === 'google' ? 'Signed in with Google' : 'Personal skincare profile'}</p>
+            <p className="mt-1 text-sm text-slate-500">{formData.email}</p>
             <button type="button" onClick={() => setIsEditing((value) => !value)} className="mt-6 inline-flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600">
               <PencilLine className="h-4 w-4" />
               {isEditing ? 'Editing mode' : 'Edit profile'}

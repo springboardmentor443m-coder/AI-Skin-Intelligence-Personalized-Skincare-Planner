@@ -15,6 +15,7 @@ import SkinAnalysis from './pages/SkinAnalysis'
 import Recommendations from './pages/Recommendations'
 import Progress from './pages/Progress'
 import Profile from './pages/Profile'
+import ChatBot from "./components/ChatBot";
 import './App.css'
 
 function ProtectedRoute({ children }) {
@@ -32,6 +33,10 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+
+        {/* ChatBot appears on every page */}
+        <ChatBot />
+
         <Routes>
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />} />
@@ -50,6 +55,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
           </Route>
         </Routes>
+
       </AuthProvider>
     </BrowserRouter>
   )
