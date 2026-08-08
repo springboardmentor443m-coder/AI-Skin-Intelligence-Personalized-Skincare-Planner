@@ -68,6 +68,26 @@ def create_skin_profile(
 
     return crud.create_skin_profile(db, profile)
 
+@router.put("/skin-profile/{user_id}", response_model=schemas.SkinProfileResponse)
+def update_skin_profile(
+    user_id: int,
+    profile: schemas.SkinProfileCreate,
+    db: Session = Depends(get_db)
+):
+    updated_profile = crud.update_skin_profile(
+        db,
+        user_id,
+        profile
+    )
+
+    if not updated_profile:
+        raise HTTPException(
+            status_code=404,
+            detail="Skin profile not found"
+        )
+
+    return updated_profile
+
 @router.get("/recommend-by-profile")
 def recommend_by_profile(
     user_id: int,
@@ -136,7 +156,9 @@ def create_progress(
     response_model=schemas.ImagePredictionResponse
 )
 def analyze_image(
-    file: UploadFile = File(...)
+    user_id: int,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db)
 ):
 
     temp_path = f"temp_{file.filename}"
@@ -146,8 +168,22 @@ def analyze_image(
 
     result = predict_skin_condition(temp_path)
 
+    profile = crud.get_skin_profile(db, user_id)
+
+    if not profile:
+        raise HTTPException(
+            status_code=404,
+            detail="Skin profile not found"
+        )
+
     recommendations = recommend_by_skin_condition(
-    result["prediction"]
+        condition=result["prediction"],
+        skin_type=profile.skin_type,
+        skin_concerns=profile.skin_concerns,
+        allergies=profile.allergies,
+        sensitive_skin=profile.sensitive_skin,
+        age=profile.age,
+        gender=profile.gender
     )
 
     os.remove(temp_path)

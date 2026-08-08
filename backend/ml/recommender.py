@@ -1,5 +1,6 @@
 import os
 import joblib
+from sklearn.metrics.pairwise import cosine_similarity
 
 BASE_DIR = os.path.dirname(__file__)
 
@@ -34,101 +35,49 @@ def recommend_products(product_name, top_n=5):
 
     return recommendations.to_dict(orient="records")
 
-def recommend_by_skin_condition(condition, top_n=5):
+def recommend_by_skin_condition(
+    condition,
+    skin_type="",
+    skin_concerns="",
+    allergies="",
+    sensitive_skin=False,
+    age=None,
+    gender=""
+):
+    query = " ".join([
+        str(condition),
+        str(skin_type),
+        str(skin_concerns),
+        str(allergies),
+        "sensitive skin" if sensitive_skin else "",
+        str(age) if age else "",
+        str(gender)
+    ])
 
-    skin_keywords = {
-        "wrinkles": [
-            "retinol",
-            "collagen",
-            "peptide",
-            "anti-aging",
-            "loss of firmness"
-        ],
+    # Convert user query into TF-IDF vector
+    query_vector = tfidf.transform([query])
 
-        "dark spots": [
-            "vitamin c",
-            "niacinamide",
-            "brightening",
-            "dark spot",
-            "pigmentation"
-        ],
+    # Calculate similarity between user query and every product
+    similarity_scores = cosine_similarity(
+        query_vector,
+        tfidf.transform(df["combined_features"])
+    ).flatten()
 
-        "puffy eyes": [
-            "eye cream",
-            "caffeine",
-            "depuff",
-            "hydrating"
-        ],
+    # Add similarity score to products
+    results = df.copy()
+    results["similarity_score"] = similarity_scores
 
-        "clear skin": [
-            "hydrating",
-            "gentle",
-            "moisturizer",
-            "daily"
-        ]
-    }
-
-    keywords = skin_keywords.get(condition.lower(), [])
-
-    if not keywords:
-        return []
-
-    def keyword_score(row):
-        score = 0
-
-        ingredients = str(row["ingredients"]).lower()
-        highlights = str(row["highlights"]).lower()
-        product_name = str(row["product_name"]).lower()
-        categories = (
-            str(row["primary_category"]).lower()
-            + " "
-            + str(row["secondary_category"]).lower()
-            + " "
-            + str(row["tertiary_category"]).lower()
-        )
-
-        for keyword in keywords:
-            if keyword in ingredients:
-                score += 5
-
-            if keyword in highlights:
-                score += 3
-
-            if keyword in product_name:
-                score += 2
-
-            if keyword in categories:
-                score += 1
-
-        return score
-
-
-    filtered_df = df.copy()
-
-    filtered_df["match_score"] = filtered_df.apply(
-        keyword_score,
-        axis=1
-    )
-
-    filtered_df = filtered_df[
-        filtered_df["match_score"] > 0
-    ]
-
-    filtered_df["final_score"] = (
-        filtered_df["match_score"] * 100
-        + filtered_df["rating"]
-    )
-
-    filtered_df = filtered_df.sort_values(
-        by="final_score",
+    # Rank products by similarity
+    results = results.sort_values(
+        by="similarity_score",
         ascending=False
     )
 
-    return filtered_df[
+    return results[
         [
             "product_name",
             "brand_name",
             "rating",
             "price_usd"
         ]
-    ].head(top_n).to_dict(orient="records")
+    ].head(5).to_dict(orient="records")

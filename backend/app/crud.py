@@ -60,6 +60,28 @@ def get_skin_profile(db: Session, user_id: int):
         .first()
     )
 
+def update_skin_profile(
+    db: Session,
+    user_id: int,
+    profile: schemas.SkinProfileCreate
+):
+    db_profile = get_skin_profile(db, user_id)
+
+    if not db_profile:
+        return None
+
+    db_profile.age = profile.age
+    db_profile.gender = profile.gender
+    db_profile.skin_type = profile.skin_type
+    db_profile.skin_concerns = profile.skin_concerns
+    db_profile.allergies = profile.allergies
+    db_profile.sensitive_skin = profile.sensitive_skin
+
+    db.commit()
+    db.refresh(db_profile)
+
+    return db_profile
+
 def create_lifestyle(db: Session, lifestyle: schemas.LifestyleCreate):
 
     db_lifestyle = models.Lifestyle(
