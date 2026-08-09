@@ -1,13 +1,30 @@
 # Python
 __pycache__/
 *.pyc
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+
+# Environment variables / secrets
+backend/.env
+.env
 
 # Database
 database/
+*.db
+*.sqlite
+*.sqlite3
 
-# ML assets
+# Datasets
 datasets/
+recommendation/data/*.csv
+recommendation/data/*.parquet
+
+# ML model artifacts
 models/
+recommendation/models/*.pkl
 
 # Uploaded images
 uploads/
@@ -15,9 +32,10 @@ uploads/
 # Generated prediction files
 outputs/*.json
 
-# Virtual environments
-venv/
-.venv/
+# Temporary testing files
+tmp_test_*.py
+tmp_test_*.jpg
+request.json
 
 # OS files
 .DS_Store

@@ -82,5 +82,3 @@ if __name__ == "__main__":
         json.dump(result, file, indent=4)
 
     print(f"\nPrediction saved to {output_file}")
-
-   

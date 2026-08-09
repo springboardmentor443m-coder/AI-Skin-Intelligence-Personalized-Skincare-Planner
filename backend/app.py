@@ -1,30 +1,96 @@
-from django import db
 from fastapi import FastAPI, UploadFile, File
 from pathlib import Path
 import shutil
 import json
-from pathlib import Path
 from backend.database import engine
 from backend import models
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
-
 from backend.database import get_db
-from backend.models import User
+from backend.models import AnalysisResult, User, Prediction
 from backend.schemas import UserCreate, UserResponse, UserLogin
 from backend.auth import hash_password, verify_password
-
 models.Base.metadata.create_all(bind=engine)
 from backend.predict import predict_image
+from backend.jwt_handler import create_access_token
+from backend.dependencies import get_current_user
+from fastapi.middleware.cors import CORSMiddleware
+from backend.routes.assistant import router as assistant_router
+from backend.llm.groq_service import (generate_weekly_plan, chat_with_skin_assistant)
+from pydantic import BaseModel
+from typing import List, Optional
+from backend.models import (User, Prediction, AnalysisResult,)
+from recommendation.recommender import RecommendationEngine
+
+
+class ChatRequest(BaseModel):
+    message: str
+    skin_type: Optional[str] = None
+    recommendations: Optional[List[str]] = None
 
 app = FastAPI(
     title="AI Skin Intelligence API",
     description="Backend API for Personalized Skincare Planner",
     version="1.0.0"
 )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
+
+
+def _build_product_recommendation_query(predicted_class: str) -> str:
+    normalized_class = (predicted_class or "").strip().lower()
+
+    adapter_map = {
+        "darkspots": "dark spots skincare serum",
+        "wrinkles": "wrinkles anti aging moisturizer",
+        "puffy eyes": "puffy eyes eye cream",
+        "clear face": "gentle cleanser moisturizer sunscreen",
+    }
+
+    return adapter_map.get(normalized_class, "skincare moisturizer")
+
+
+def _get_product_recommendations(
+    predicted_class: str,
+    engine: Optional[RecommendationEngine],
+) -> list[dict]:
+    if engine is None:
+        return []
+
+    query_text = _build_product_recommendation_query(predicted_class)
+
+    try:
+        return engine.recommend_products(
+            query_text=query_text,
+            top_k=5,
+        )
+    except Exception as exc:
+        print(f"Product recommendation failed: {exc}")
+        return []
+
+
+@app.on_event("startup")
+def load_recommendation_engine() -> None:
+    engine = RecommendationEngine()
+
+    try:
+        engine.load_models()
+    except Exception as exc:
+        print(f"Recommendation engine unavailable: {exc}")
+        engine = None
+
+    app.state.recommendation_engine = engine
 
 
 @app.get("/")
@@ -43,7 +109,11 @@ def health():
 
 
 @app.post("/predict")
-async def predict(file: UploadFile = File(...)):
+async def predict(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
 
     image_path = UPLOAD_DIR / file.filename
 
@@ -52,8 +122,81 @@ async def predict(file: UploadFile = File(...)):
 
     result = predict_image(str(image_path))
 
-    return result
 
+    product_engine = getattr(app.state, "recommendation_engine", None)
+    product_recommendations = _get_product_recommendations(
+        result["predicted_class"],
+        product_engine,
+    )
+
+    weekly_plan = generate_weekly_plan(
+    result["predicted_class"],
+    product_recommendations
+    )
+
+    prediction = Prediction(
+        user_id=current_user.id,
+        image_path=str(image_path),
+        predicted_class=result["predicted_class"],
+        confidence=result["confidence"]
+    )
+
+    db.add(prediction)
+    db.commit()
+    db.refresh(prediction)
+
+    analysis = {
+            "skin_type": result["predicted_class"],
+            "confidence": result["confidence"],
+    
+            # For now we have only one detected condition
+            "conditions": [
+                result["predicted_class"]
+            ],
+    
+            # Temporary recommendation format
+            "recommendations": [
+                {
+                    "product_type": product["product_name"],
+                    "description": (
+                        f'{product["brand_name"]} | '
+                        f'{product["category"]} / '
+                        f'{product["subcategory"]} | '
+                        f'Rating: {product["rating"]} | '
+                        f'Price: ${product["price_usd"]}'
+                    ),
+                    "priority": (
+                        "high" if index == 0
+                        else "medium"
+                    )
+                }
+                for index, product in enumerate(
+                    product_recommendations
+                )
+            ],
+            "weekly_plan": weekly_plan,
+            "product_recommendations": product_recommendations,
+        }
+
+    analysis_result = AnalysisResult(
+        prediction_id=prediction.id,
+
+        conditions=analysis["conditions"],
+
+        recommendations=analysis["recommendations"],
+
+        weekly_plan=analysis["weekly_plan"],
+
+        severity_scores={}
+    )
+
+    db.add(analysis_result)
+    db.commit()
+    db.refresh(analysis_result)
+
+    return {
+        "analysis": analysis,
+    }
 @app.post("/compare")
 def compare_predictions():
 
@@ -139,8 +282,79 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
             detail="Invalid email or password"
         )
 
+    access_token = create_access_token(
+        data={
+            "sub": db_user.email,
+            "id": db_user.id
+        }
+    )
     return {
-        "message": "Login Successful",
-        "username": db_user.name,
-        "email": db_user.email
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
+
+@app.get("/history")
+def get_history(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+
+    predictions = (
+        db.query(Prediction)
+        .filter(Prediction.user_id == current_user.id)
+        .all()
+    )
+
+    history = []
+
+    for prediction in predictions:
+
+        analysis = prediction.analysis
+
+        history.append({
+
+            "id": prediction.id,
+
+            "skin_type": prediction.predicted_class,
+
+            "confidence": prediction.confidence,
+
+            "timestamp": prediction.created_at,
+
+            "conditions": analysis.conditions if analysis else [],
+
+            "recommendations": analysis.recommendations if analysis else [],
+
+            "weekly_plan": analysis.weekly_plan if analysis else "",
+
+            "severity_scores": analysis.severity_scores if analysis else {}
+
+        })
+
+    return history
+
+from backend.llm.groq_service import test_groq
+
+
+@app.get("/test-groq")
+def test_groq_api():
+    return {
+        "response": test_groq()
+    }
+
+@app.post("/assistant")
+def assistant(chat: ChatRequest):
+
+    reply = chat_with_skin_assistant(
+
+        message=chat.message,
+
+        skin_type=chat.skin_type,
+
+        recommendations=chat.recommendations
+
+    )
+
+    return {
+        "reply": reply
     }
