@@ -5,7 +5,7 @@ from app.core.config import settings
 from app.core.database import Base, engine
 from app.ml.predict import load_model
 from app.models import *  # noqa: F401,F403
-from app.routes import auth, skin_profile, skin_analysis, products
+from app.routes import auth, skin_profile, skin_analysis, products, rag
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
@@ -23,6 +23,7 @@ app.include_router(auth.router)
 app.include_router(skin_profile.router)
 app.include_router(skin_analysis.router)
 app.include_router(products.router)
+app.include_router(rag.router)
 
 
 @app.on_event("startup")

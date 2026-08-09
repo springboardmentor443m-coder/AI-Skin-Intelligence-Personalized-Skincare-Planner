@@ -40,7 +40,7 @@ export async function getMyProfile(token) {
   const res = await fetch(`${BASE_URL}/skin-profile/me`, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  if (res.status === 404) return null; // no profile created yet
+  if (res.status === 404) return null;
   return handleResponse(res);
 }
 
@@ -64,6 +64,35 @@ export async function analyzePhoto(token, file) {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
     body: formData,
+  });
+  return handleResponse(res);
+}
+
+export async function getRecommendations(token) {
+  const res = await fetch(`${BASE_URL}/products/recommendations`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return handleResponse(res);
+}
+
+export async function getWeeklyPlan(token) {
+  const res = await fetch(`${BASE_URL}/skin-profile/weekly-plan`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return handleResponse(res);
+}
+
+export async function queryRAGAdvisor({ query, userConcern, userSkinType, apiKey, scanAnalysis }) {
+  const res = await fetch(`${BASE_URL}/rag/query`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query,
+      user_concern: userConcern,
+      user_skin_type: userSkinType,
+      api_key: apiKey,
+      scan_analysis: scanAnalysis,
+    }),
   });
   return handleResponse(res);
 }

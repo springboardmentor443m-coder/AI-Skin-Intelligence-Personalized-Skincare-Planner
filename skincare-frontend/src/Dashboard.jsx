@@ -1,42 +1,43 @@
-import { useEffect, useState } from "react";
-import { getMyProfile, saveProfile } from "./api.js";
+import { useEffect, useState, useCallback } from "react";
+import {
+  getMyProfile,
+  saveProfile,
+  getRecommendations,
+  getWeeklyPlan,
+  queryRAGAdvisor,
+} from "./api.js";
 import PhotoAnalysis from "./PhotoAnalysis.jsx";
-import "./photo-analysis.css";
+import { translations, translateConcern, translateSkinType, translateRoutineText } from "./translations.js";
 
-const CIRCUMFERENCE = 2 * Math.PI * 74;
+// ── Score Ring ──────────────────────────────────────────────
+const CIRC = 2 * Math.PI * 76;
 
 function ScoreRing({ score }) {
-  const hasScore = typeof score === "number";
-  const pct = hasScore ? score / 100 : 0;
-  const offset = CIRCUMFERENCE * (1 - pct);
+  const has = typeof score === "number";
+  const offset = has ? CIRC * (1 - score / 100) : CIRC;
 
   return (
     <div className="score-ring">
-      <svg width="168" height="168" viewBox="0 0 168 168">
-        <circle cx="84" cy="84" r="74" fill="none" stroke="#eaeee6" strokeWidth="12" />
-        {hasScore && (
-          <circle
-            cx="84"
-            cy="84"
-            r="74"
-            fill="none"
-            stroke="#b5687e"
-            strokeWidth="12"
-            strokeLinecap="round"
-            strokeDasharray={CIRCUMFERENCE}
-            strokeDashoffset={offset}
-          />
-        )}
+      <svg width="180" height="180" viewBox="0 0 180 180">
+        <circle cx="90" cy="90" r="76" fill="none"
+          stroke="rgba(0,0,0,0.06)" strokeWidth="12" />
+        <circle cx="90" cy="90" r="76" fill="none"
+          stroke="var(--rose)" strokeWidth="12"
+          strokeLinecap="round"
+          strokeDasharray={CIRC}
+          strokeDashoffset={has ? offset : CIRC}
+          style={{ transition: "stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)" }}
+        />
       </svg>
       <div className="score-ring__value">
-        {hasScore ? (
+        {has ? (
           <>
             <div className="score-ring__num">{score}</div>
-            <div className="score-ring__label">out of 100</div>
+            <div className="score-ring__label">/ 100</div>
           </>
         ) : (
-          <div className="score-ring__label" style={{ maxWidth: 100 }}>
-            Awaiting first score
+          <div className="score-ring__label" style={{ maxWidth: 90, textAlign: "center" }}>
+            Awaiting scan
           </div>
         )}
       </div>
@@ -44,57 +45,29 @@ function ScoreRing({ score }) {
   );
 }
 
+// ── Profile Tab ────────────────────────────────────────────
 const emptyForm = {
-  skin_type: "",
-  age_group: "",
-  skin_concerns: "",
-  allergies: "",
-  sensitivities: "",
-  sleep_quality: "",
-  water_intake_liters: "",
+  skin_type: "", age_group: "", skin_concerns: "",
+  allergies: "", sensitivities: "", sleep_quality: "", water_intake_liters: "",
 };
 
-export default function Dashboard({ token, onLogout }) {
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(false);
+function ProfileTab({ token, profile, onProfileSaved, t, lang }) {
+  const [editing, setEditing] = useState(!profile);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-
-  function loadProfile() {
-    return getMyProfile(token)
-      .then((data) => {
-        setProfile(data);
-        if (!data) setEditing(true);
-      })
-      .catch((err) => setError(err.message));
-  }
-
-  useEffect(() => {
-    setLoading(true);
-    loadProfile().finally(() => setLoading(false));
-  }, [token]);
-
-  function toListInputValue(list) {
-    return Array.isArray(list) ? list.join(", ") : "";
-  }
 
   function openEdit() {
     setForm({
       skin_type: profile?.skin_type || "",
       age_group: profile?.age_group || "",
-      skin_concerns: toListInputValue(profile?.skin_concerns),
-      allergies: toListInputValue(profile?.allergies),
-      sensitivities: toListInputValue(profile?.sensitivities),
+      skin_concerns: (profile?.skin_concerns || []).join(", "),
+      allergies: (profile?.allergies || []).join(", "),
+      sensitivities: (profile?.sensitivities || []).join(", "),
       sleep_quality: profile?.sleep_quality || "",
       water_intake_liters: profile?.water_intake_liters ?? "",
     });
     setEditing(true);
-  }
-
-  function toList(str) {
-    return str.split(",").map((s) => s.trim()).filter(Boolean);
   }
 
   async function handleSave(e) {
@@ -102,19 +75,17 @@ export default function Dashboard({ token, onLogout }) {
     setSaving(true);
     setError("");
     try {
-      const payload = {
+      const toList = (s) => s.split(",").map((x) => x.trim()).filter(Boolean);
+      const saved = await saveProfile(token, {
         skin_type: form.skin_type || null,
         age_group: form.age_group || null,
         skin_concerns: toList(form.skin_concerns),
         allergies: toList(form.allergies),
         sensitivities: toList(form.sensitivities),
         sleep_quality: form.sleep_quality || null,
-        water_intake_liters: form.water_intake_liters
-          ? Number(form.water_intake_liters)
-          : null,
-      };
-      const saved = await saveProfile(token, payload);
-      setProfile(saved);
+        water_intake_liters: form.water_intake_liters ? Number(form.water_intake_liters) : null,
+      });
+      onProfileSaved(saved);
       setEditing(false);
     } catch (err) {
       setError(err.message);
@@ -123,171 +94,879 @@ export default function Dashboard({ token, onLogout }) {
     }
   }
 
+  function f(key) {
+    return (e) => setForm({ ...form, [key]: e.target.value });
+  }
+
   return (
-    <div className="dash-shell">
-      <div className="dash-topbar">
-        <div className="dash-brand">
-          <span className="dash-brand__dot" />
-          Skin Intelligence
-        </div>
-        <button className="btn-ghost" onClick={onLogout}>
-          Log out
-        </button>
+    <div className="dash-grid section-reveal">
+      {/* Left Score Card */}
+      <div className="card glass score-card">
+        <div className="score-card-label">{t.scoreLabel}</div>
+        <ScoreRing score={profile?.skin_health_score ?? null} />
+        <p className="score-pending">{t.scoreSub}</p>
+
+        {profile && (
+          <div style={{ marginTop: 24, width: "100%" }}>
+            <div className="divider-label" style={{ margin: "0 0 14px" }}>{t.aiDetected}</div>
+            <div className="tag-row" style={{ justifyContent: "center" }}>
+              <span className={`tag ${!profile.detected_skin_type ? "tag--pending" : "tag--rose"}`}>
+                {profile.detected_skin_type ? `🧬 ${translateSkinType(profile.detected_skin_type, lang)}` : "Skin type: pending"}
+              </span>
+              <span className={`tag ${!profile.detected_concern ? "tag--pending" : "tag--emerald"}`}>
+                {profile.detected_concern ? `⚡ ${translateConcern(profile.detected_concern, lang)}` : "Concern: pending"}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
-      {loading ? (
-        <div className="loading-text">Loading your profile…</div>
-      ) : (
-        <div className="dash-grid">
-          <div className="card score-card">
-            <h3>Skin health score</h3>
-            <ScoreRing score={profile?.skin_health_score ?? null} />
-            <p className="score-pending">
-              This fills in once the scoring engine analyzes your profile
-              and photos.
+      {/* Right Details */}
+      <div className="card glass" style={{ padding: 28 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+          <div>
+            <h2 className="section-title">{t.profileTab}</h2>
+            <p className="section-sub" style={{ marginBottom: 0 }}>
+              Self-reported details used to personalize your routine.
             </p>
           </div>
+          {!editing && (
+            <button className="btn-ghost" onClick={openEdit}>
+              {profile ? t.editProfile : t.createProfile}
+            </button>
+          )}
+        </div>
 
-          <div>
-            <div className="card">
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                <div>
-                  <h2 className="section-title">Your skin profile</h2>
-                  <p className="section-sub">
-                    Self-reported details used to personalize your routine.
-                  </p>
+        {error && <div className="error-banner">{error}</div>}
+
+        {!editing && profile && (
+          <>
+            <div className="detail-grid">
+              {[
+                [t.skinType, translateSkinType(profile.skin_type, lang)],
+                [t.ageGroup, profile.age_group],
+                [t.sleepQuality, profile.sleep_quality],
+                [t.waterIntake, profile.water_intake_liters ? `${profile.water_intake_liters} L / day` : null],
+              ].map(([label, val]) => (
+                <div className="detail-item" key={label}>
+                  <label>{label}</label>
+                  <div>{val || "—"}</div>
                 </div>
-                {!editing && (
-                  <button className="btn-ghost" onClick={openEdit}>
-                    {profile ? "Edit" : "Create profile"}
-                  </button>
-                )}
-              </div>
-
-              {error && <div className="error-banner">{error}</div>}
-
-              {!editing && profile && (
-                <>
-                  <div className="detail-grid">
-                    <div className="detail-item">
-                      <label>Skin type (self-reported)</label>
-                      <div>{profile.skin_type || "—"}</div>
-                    </div>
-                    <div className="detail-item">
-                      <label>Age group</label>
-                      <div>{profile.age_group || "—"}</div>
-                    </div>
-                    <div className="detail-item">
-                      <label>Sleep quality</label>
-                      <div>{profile.sleep_quality || "—"}</div>
-                    </div>
-                    <div className="detail-item">
-                      <label>Water intake</label>
-                      <div>
-                        {profile.water_intake_liters
-                          ? `${profile.water_intake_liters} L / day`
-                          : "—"}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style={{ marginTop: 22 }}>
-                    <label style={{ fontSize: 11.5, textTransform: "uppercase", letterSpacing: "0.04em", color: "var(--ink-faint)" }}>
-                      Skin concerns (self-reported)
-                    </label>
-                    <div className="tag-row">
-                      {profile.skin_concerns?.length ? (
-                        profile.skin_concerns.map((c) => (
-                          <span className="tag" key={c}>{c}</span>
-                        ))
-                      ) : (
-                        <span className="tag tag--pending">None listed</span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div style={{ marginTop: 18 }}>
-                    <label style={{ fontSize: 11.5, textTransform: "uppercase", letterSpacing: "0.04em", color: "var(--ink-faint)" }}>
-                      AI-detected (from photo analysis)
-                    </label>
-                    <div className="tag-row">
-                      <span className={`tag ${!profile.detected_skin_type ? "tag--pending" : ""}`}>
-                        {profile.detected_skin_type
-                          ? `Skin type: ${profile.detected_skin_type}`
-                          : "Skin type: pending"}
-                      </span>
-                      <span className={`tag ${!profile.detected_concern ? "tag--pending" : ""}`}>
-                        {profile.detected_concern
-                          ? `Concern: ${profile.detected_concern}`
-                          : "Concern: pending"}
-                      </span>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {editing && (
-                <form className="form-card" onSubmit={handleSave}>
-                  <div className="form-grid">
-                    <div className="field">
-                      <label>Skin type</label>
-                      <select value={form.skin_type} onChange={(e) => setForm({ ...form, skin_type: e.target.value })}>
-                        <option value="">Select…</option>
-                        <option value="oily">Oily</option>
-                        <option value="dry">Dry</option>
-                        <option value="normal">Normal</option>
-                        <option value="combination">Combination</option>
-                      </select>
-                    </div>
-                    <div className="field">
-                      <label>Age group</label>
-                      <input type="text" placeholder="e.g. 20-25" value={form.age_group} onChange={(e) => setForm({ ...form, age_group: e.target.value })} />
-                    </div>
-                    <div className="field field--full">
-                      <label>Skin concerns (comma-separated)</label>
-                      <input type="text" placeholder="acne, dark_spots, redness" value={form.skin_concerns} onChange={(e) => setForm({ ...form, skin_concerns: e.target.value })} />
-                    </div>
-                    <div className="field">
-                      <label>Allergies</label>
-                      <input type="text" placeholder="fragrance, nuts" value={form.allergies} onChange={(e) => setForm({ ...form, allergies: e.target.value })} />
-                    </div>
-                    <div className="field">
-                      <label>Sensitivities</label>
-                      <input type="text" placeholder="alcohol, sulfates" value={form.sensitivities} onChange={(e) => setForm({ ...form, sensitivities: e.target.value })} />
-                    </div>
-                    <div className="field">
-                      <label>Sleep quality</label>
-                      <select value={form.sleep_quality} onChange={(e) => setForm({ ...form, sleep_quality: e.target.value })}>
-                        <option value="">Select…</option>
-                        <option value="poor">Poor</option>
-                        <option value="average">Average</option>
-                        <option value="good">Good</option>
-                      </select>
-                    </div>
-                    <div className="field">
-                      <label>Water intake (liters/day)</label>
-                      <input type="number" step="0.1" placeholder="2" value={form.water_intake_liters} onChange={(e) => setForm({ ...form, water_intake_liters: e.target.value })} />
-                    </div>
-                  </div>
-
-                  <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
-                    <button className="btn-primary" type="submit" style={{ width: "auto", padding: "12px 24px" }} disabled={saving}>
-                      {saving ? "Saving…" : "Save profile"}
-                    </button>
-                    {profile && (
-                      <button type="button" className="btn-ghost" onClick={() => setEditing(false)}>
-                        Cancel
-                      </button>
-                    )}
-                  </div>
-                </form>
-              )}
+              ))}
             </div>
 
-            <PhotoAnalysis token={token} onAnalyzed={loadProfile} />
+            {["skin_concerns", "allergies", "sensitivities"].map((key) => {
+              const items = profile[key] || [];
+              const labels = { skin_concerns: t.skinConcerns, allergies: t.allergies, sensitivities: t.sensitivities };
+              return (
+                <div key={key} style={{ marginTop: 18 }}>
+                  <label style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--ink-faint)", fontWeight: 700 }}>
+                    {labels[key]}
+                  </label>
+                  <div className="tag-row">
+                    {items.length ? items.map((c) => (
+                      <span className="tag" key={c}>{translateConcern(c, lang)}</span>
+                    )) : <span className="tag tag--pending">None listed</span>}
+                  </div>
+                </div>
+              );
+            })}
+          </>
+        )}
+
+        {editing && (
+          <form className="form-card" onSubmit={handleSave}>
+            <div className="form-grid">
+              <div className="field">
+                <label>{t.skinType}</label>
+                <select value={form.skin_type} onChange={f("skin_type")}>
+                  <option value="">Select…</option>
+                  {["oily", "dry", "normal", "combination"].map((v) => (
+                    <option key={v} value={v}>{v.charAt(0).toUpperCase() + v.slice(1)}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="field">
+                <label>{t.ageGroup}</label>
+                <input type="text" placeholder="e.g. 20-25" value={form.age_group} onChange={f("age_group")} />
+              </div>
+              <div className="field field--full">
+                <label>{t.skinConcerns}</label>
+                <input type="text" placeholder="acne, dark_spots, redness" value={form.skin_concerns} onChange={f("skin_concerns")} />
+              </div>
+              <div className="field">
+                <label>{t.allergies}</label>
+                <input type="text" placeholder="fragrance, nuts" value={form.allergies} onChange={f("allergies")} />
+              </div>
+              <div className="field">
+                <label>{t.sensitivities}</label>
+                <input type="text" placeholder="alcohol, sulfates" value={form.sensitivities} onChange={f("sensitivities")} />
+              </div>
+              <div className="field">
+                <label>{t.sleepQuality}</label>
+                <select value={form.sleep_quality} onChange={f("sleep_quality")}>
+                  <option value="">Select…</option>
+                  {["poor", "average", "good"].map((v) => (
+                    <option key={v} value={v}>{v.charAt(0).toUpperCase() + v.slice(1)}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="field">
+                <label>{t.waterIntake}</label>
+                <input type="number" step="0.1" placeholder="2.0" value={form.water_intake_liters} onChange={f("water_intake_liters")} />
+              </div>
+            </div>
+            <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
+              <button className="btn-primary" type="submit" style={{ width: "auto", padding: "12px 28px" }} disabled={saving}>
+                {saving ? "Saving…" : t.saveProfile}
+              </button>
+              {profile && (
+                <button type="button" className="btn-ghost" onClick={() => setEditing(false)}>{t.cancel}</button>
+              )}
+            </div>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Upgraded Planner Tab with Dual Modes & Full Multilingual Support ────────
+function PlannerTab({ token, t, lang, profile, onGoToScan }) {
+  const [plan, setPlan] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [mode, setMode] = useState("natural"); // "natural" | "clinical"
+  const [checkedSteps, setCheckedSteps] = useState({});
+
+  useEffect(() => {
+    getWeeklyPlan(token)
+      .then(setPlan)
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
+  }, [token]);
+
+  function toggleStep(dayName, stepIdx) {
+    const key = `${mode}-${dayName}-${stepIdx}`;
+    setCheckedSteps((prev) => ({ ...prev, [key]: !prev[key] }));
+  }
+
+  if (loading) return <div className="loading-text">⏳ Building your personalized 7-day skincare planner…</div>;
+  if (error) return <div className="error-banner">{error}</div>;
+  if (!plan) return null;
+
+  const hasDetectedConcern = Boolean(plan?.detected_concern || profile?.detected_concern);
+
+  if (!hasDetectedConcern) {
+    return (
+      <div className="card glass section-reveal" style={{ padding: 40, textAlign: "center", maxWidth: 620, margin: "40px auto", borderRadius: 20 }}>
+        <div style={{ fontSize: 52, marginBottom: 16 }}>📷</div>
+        <h2 className="section-title" style={{ fontSize: 24, marginBottom: 12 }}>
+          AI Photo Scan Required
+        </h2>
+        <p style={{ color: "var(--ink-soft)", fontSize: 14.5, lineHeight: 1.6, marginBottom: 24 }}>
+          Please upload your face photo in the <strong>Scan & Analyze</strong> tab first. Our AI will detect your exact skin type & concerns to unlock your custom 7-Day Skincare Routine!
+        </p>
+        <button
+          className="btn-primary"
+          style={{ width: "auto", padding: "12px 32px", fontSize: 15, borderRadius: 10 }}
+          onClick={onGoToScan}
+        >
+          📷 Start AI Photo Scan
+        </button>
+      </div>
+    );
+  }
+
+  const todayEng = new Date().toLocaleDateString("en-US", { weekday: "long" });
+  const activeDays = mode === "natural" ? (plan.natural_days || plan.days) : (plan.clinical_days || plan.days);
+
+  return (
+    <div className="section-reveal">
+      <div className="planner-header card glass" style={{ padding: 24, marginBottom: 24 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
+          <div>
+            <h2 className="section-title" style={{ fontSize: 22 }}>
+              {t.plannerTitle}
+            </h2>
+            <p className="section-sub" style={{ marginBottom: 8 }}>
+              {t.plannerSub} <strong style={{ color: "var(--rose-deep)" }}>{translateRoutineText(plan.concern_label, lang)}</strong>
+            </p>
+            <div className="planner-goal">🎯 {translateRoutineText(plan.goal, lang)}</div>
+          </div>
+
+          {/* Routine Mode Switcher — Natural First */}
+          <div className="planner-mode-switcher">
+            <button
+              className={`mode-btn ${mode === "natural" ? "active" : ""}`}
+              onClick={() => setMode("natural")}
+            >
+              🌿 {t.naturalMode}
+            </button>
+            <button
+              className={`mode-btn ${mode === "clinical" ? "active" : ""}`}
+              onClick={() => setMode("clinical")}
+            >
+              🧪 {t.clinicalMode}
+            </button>
           </div>
         </div>
+
+        {mode === "clinical" && plan.key_actives && (
+          <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", color: "var(--ink-faint)" }}>
+              {t.keyActives}
+            </span>
+            {plan.key_actives.map((act) => (
+              <span key={act} className="tag tag--emerald" style={{ fontSize: 11 }}>{translateRoutineText(act, lang)}</span>
+            ))}
+          </div>
+        )}
+
+        {mode === "natural" && (
+          <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid var(--border)", fontSize: 12, color: "var(--sage-deep)", fontWeight: 500 }}>
+            {t.naturalNotice}
+          </div>
+        )}
+      </div>
+
+      <div className="planner-grid">
+        {activeDays.map((day, i) => {
+          const isToday = day.day === todayEng;
+          const dayNameTranslated = t.days[day.day] || day.day;
+          return (
+            <div
+              key={day.day}
+              className={`day-card ${isToday ? "day-card--active" : "day-card--rest"}`}
+              style={{ animationDelay: `${i * 0.05}s` }}
+            >
+              <div className="day-name">
+                <span>{dayNameTranslated}</span>
+                {isToday && <span className="day-badge">TODAY</span>}
+              </div>
+
+              {day.focus && (
+                <div style={{ fontSize: 12, fontWeight: 600, color: "var(--rose-deep)", marginBottom: 12 }}>
+                  {t.focus} {translateRoutineText(day.focus, lang)}
+                </div>
+              )}
+
+              {/* AM Routine */}
+              <div className="routine-block">
+                <div className="routine-time am">{t.morning}</div>
+                <ul className="routine-steps">
+                  {day.am.map((step, sIdx) => {
+                    const checkKey = `${mode}-${day.day}-am-${sIdx}`;
+                    const done = checkedSteps[checkKey];
+                    return (
+                      <li
+                        key={sIdx}
+                        className="routine-step"
+                        onClick={() => toggleStep(day.day, `am-${sIdx}`)}
+                        style={{ cursor: "pointer", opacity: done ? 0.5 : 1, textDecoration: done ? "line-through" : "none" }}
+                      >
+                        <input type="checkbox" checked={!!done} readOnly style={{ accentColor: "var(--rose)", marginRight: 4 }} />
+                        <span>{translateRoutineText(step, lang)}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              {/* PM Routine */}
+              <div className="routine-block" style={{ marginTop: 14 }}>
+                <div className="routine-time pm">{t.evening}</div>
+                <ul className="routine-steps">
+                  {day.pm.map((step, sIdx) => {
+                    const checkKey = `${mode}-${day.day}-pm-${sIdx}`;
+                    const done = checkedSteps[checkKey];
+                    return (
+                      <li
+                        key={sIdx}
+                        className="routine-step"
+                        onClick={() => toggleStep(day.day, `pm-${sIdx}`)}
+                        style={{ cursor: "pointer", opacity: done ? 0.5 : 1, textDecoration: done ? "line-through" : "none" }}
+                      >
+                        <input type="checkbox" checked={!!done} readOnly style={{ accentColor: "var(--sky)", marginRight: 4 }} />
+                        <span>{translateRoutineText(step, lang)}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              {/* Active Highlight */}
+              {day.active_highlight && (
+                <div style={{ marginTop: 10, padding: "8px 10px", background: "var(--sage-tint)", borderRadius: 8, fontSize: 11.5, color: "var(--sage-deep)", border: "1px solid rgba(107,142,104,0.2)" }}>
+                  {translateRoutineText(day.active_highlight, lang)}
+                </div>
+              )}
+
+              {/* Tip */}
+              {day.tip && (
+                <div className="day-tip">
+                  <span>{translateRoutineText(day.tip, lang)}</span>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── SVG Photo Fallback ────────────────────────────────────
+function ProductPhoto({ src, alt, brand, category }) {
+  const [error, setError] = useState(false);
+
+  if (error || !src) {
+    return (
+      <div className="amazon-card__svg-photo">
+        <svg viewBox="0 0 100 120" width="80" height="96" fill="none">
+          <rect x="25" y="35" width="50" height="70" rx="8" fill="#f0ede8" stroke="#c4826a" strokeWidth="2" />
+          <path d="M40 20 H60 V35 H40 Z" fill="#c4826a" />
+          <circle cx="50" cy="65" r="14" fill="#f9ede8" stroke="#c4826a" strokeWidth="1.5" />
+          <text x="50" y="69" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#a8664e">
+            {brand ? brand.charAt(0) : "S"}
+          </text>
+        </svg>
+        <span style={{ fontSize: 11, color: "var(--ink-soft)", fontWeight: 600, marginTop: 4 }}>
+          {category || "Skincare Product"}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      className="amazon-card__img"
+      src={src}
+      alt={alt}
+      onError={() => setError(true)}
+      loading="lazy"
+    />
+  );
+}
+
+// ── Amazon Product Card ────────────────────────────────────
+function AmazonProductCard({ product, t }) {
+  const price = product.price_inr || 1995;
+  const mrp = product.mrp_inr || Math.round(price * 1.35);
+  const discount = product.discount_pct || 26;
+
+  const amazonSearchUrl = product.purchase_url || `https://www.amazon.in/s?k=${encodeURIComponent(product.name)}`;
+
+  return (
+    <div className="amazon-card">
+      <div className="amazon-card__top">
+        <span className="amazon-card__sponsored">
+          {product.sponsored ? "Sponsored ℹ️" : "AI Matched ⭐"}
+        </span>
+        {product.matched_because && (
+          <span className="amazon-card__match-badge">
+            {product.matched_because}
+          </span>
+        )}
+      </div>
+
+      <div className="amazon-card__img-container">
+        <ProductPhoto
+          src={product.image_url}
+          alt={product.name}
+          brand={product.brand}
+          category={product.category}
+        />
+      </div>
+
+      <div className="amazon-card__content">
+        <div className="amazon-card__brand">{product.brand || "SKINCARE"}</div>
+        <div className="amazon-card__title" title={product.name}>
+          {product.name}
+        </div>
+
+        <div style={{ marginTop: 4 }}>
+          <span className="amazon-card__cat-pill">{product.category || "Skincare"}</span>
+        </div>
+
+        <div className="amazon-card__rating-row">
+          <span className="amazon-card__stars">4.3 ★★★★☆</span>
+          <span className="amazon-card__review-count">{product.review_count || "(1,420)"}</span>
+        </div>
+
+        <div className="amazon-card__price-row">
+          <span className="amazon-card__price">₹{price.toLocaleString("en-IN")}</span>
+          <span className="amazon-card__mrp">M.R.P.: <del>₹{mrp.toLocaleString("en-IN")}</del></span>
+          <span className="amazon-card__discount">({discount}% off)</span>
+        </div>
+
+        <div className="amazon-card__offer">
+          Up to 5% back with Amazon Pay ICICI card
+        </div>
+
+        <div className="amazon-card__delivery">
+          <strong>{t.freeDelivery}</strong>
+          <br />
+          {t.fastestDelivery}
+        </div>
+
+        <a
+          className="amazon-yellow-btn"
+          href={amazonSearchUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t.addToCart}
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function ProductsTab({ token, t }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    getRecommendations(token)
+      .then(setData)
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
+  }, [token]);
+
+  if (loading) return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px,1fr))", gap: 24 }}>
+      {[...Array(6)].map((_, i) => (
+        <div key={i} className="card" style={{ height: 420, borderRadius: 16 }}>
+          <div className="skeleton" style={{ height: 200, borderRadius: 12 }} />
+        </div>
+      ))}
+    </div>
+  );
+
+  if (error) return <div className="error-banner">{error}</div>;
+  if (!data) return null;
+
+  const products = data.products || [];
+  const based = data.based_on;
+
+  return (
+    <div className="section-reveal">
+      <div style={{ marginBottom: 24 }}>
+        <h2 className="section-title">{t.productsTitle}</h2>
+        <p className="section-sub">{t.productsSub}</p>
+
+        {based && (Object.keys(based.weighted_concerns || {}).length > 0 || based.skin_type) && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {based.skin_type && (
+              <span className="tag tag--emerald">Skin type: {based.skin_type}</span>
+            )}
+            {Object.entries(based.weighted_concerns || {})
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 4)
+              .map(([c, w]) => (
+                <span className="tag" key={c}>{c}: {w}%</span>
+              ))}
+          </div>
+        )}
+      </div>
+
+      <div className="amazon-grid">
+        {products.map((p, i) => (
+          <AmazonProductCard key={p.id || i} product={p} t={t} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+
+
+// ── Dataset RAG AI Skincare Advisor Widget ─────────────────────────────
+// ── Dataset RAG AI Skincare Advisor Widget ─────────────────────────────
+function RAGSkincareAdvisor({ t, userConcern, userSkinType, profile }) {
+  const [open, setOpen] = useState(false);
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem("gemini_api_key") || "");
+  const [showKeyInput, setShowKeyInput] = useState(false);
+
+  const scanAnalysis = profile ? {
+    concern_scores: profile.concern_scores,
+    skin_health_score: profile.skin_health_score,
+    detected_concern: profile.detected_concern || userConcern,
+    detected_concern_confidence: profile.detected_concern_confidence,
+    detected_skin_type: profile.detected_skin_type || userSkinType,
+  } : null;
+
+  const [messages, setMessages] = useState([
+    {
+      sender: "ai",
+      text: `Hello! I am your RAG AI Skincare Advisor. I am connected to your AI photo scan output & 1,138 product dataset! Ask me anything about your scan scores, ingredient compatibility (e.g., mixing Retinol with Vitamin C), custom routines, or natural remedies 🌿`,
+      source: "RAG Dataset Engine + Scan Context",
+      products: []
+    }
+  ]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  function handleSaveKey(e) {
+    e.preventDefault();
+    const cleanKey = apiKey.replace(/["']/g, "").trim();
+    setApiKey(cleanKey);
+    localStorage.setItem("gemini_api_key", cleanKey);
+    setShowKeyInput(false);
+  }
+
+  async function submitQuestion(userText) {
+    if (!userText || loading) return;
+    const qText = userText.trim();
+    setInput("");
+    setLoading(true);
+
+    setMessages((prev) => [...prev, { sender: "user", text: qText }]);
+
+    try {
+      const res = await queryRAGAdvisor({
+        query: qText,
+        userConcern: userConcern,
+        userSkinType: userSkinType,
+        apiKey: apiKey,
+        scanAnalysis: scanAnalysis
+      });
+
+      setLoading(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "ai",
+          text: res.answer || "No response generated.",
+          source: res.rag_source || "RAG Vector Engine",
+          products: res.retrieved_products || []
+        }
+      ]);
+    } catch (err) {
+      setLoading(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "ai",
+          text: `⚠️ RAG Error: ${err.message || "Could not fetch RAG response."}`,
+          source: "Error",
+          products: []
+        }
+      ]);
+    }
+  }
+
+  function handleSend(e) {
+    e.preventDefault();
+    submitQuestion(input);
+  }
+
+  return (
+    <>
+      <button className="chatbot-trigger" onClick={() => setOpen(!open)}>
+        {t.askSkinAI || "💬 RAG AI Advisor"}
+      </button>
+
+      {open && (
+        <div className="chatbot-window card">
+          <div className="chatbot-header">
+            <div>
+              <strong>{t.ragTitle || "✦ Dataset RAG AI Skincare Advisor"}</strong>
+              <div style={{ fontSize: 11, opacity: 0.85 }}>
+                {apiKey ? "🔑 Live LLM + RAG Active" : (t.ragSub || "1,138 Product Dataset Grounded RAG")}
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 6 }}>
+              <button
+                className="btn-ghost"
+                style={{ padding: "3px 8px", fontSize: 11 }}
+                onClick={() => setShowKeyInput(!showKeyInput)}
+              >
+                🔑 Key
+              </button>
+              <button className="btn-ghost" style={{ padding: "3px 8px" }} onClick={() => setOpen(false)}>
+                ✕
+              </button>
+            </div>
+          </div>
+
+          {/* Active AI Scan Connection Banner */}
+          {profile && (
+            <div style={{ padding: "6px 12px", background: "linear-gradient(90deg, #ecfdf5, #f0fdf4)", borderBottom: "1px solid #bbf7d0", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 11 }}>
+              <div style={{ color: "#166534", fontWeight: 600 }}>
+                📊 Scan Connected: <strong>Health Score {profile.skin_health_score || 80}/100</strong>
+              </div>
+              <div style={{ color: "#15803d", fontSize: 10, fontStyle: "italic" }}>
+                {profile.detected_concern || "General Care"}
+              </div>
+            </div>
+          )}
+
+          {showKeyInput && (
+            <form onSubmit={handleSaveKey} style={{ padding: 10, background: "#fff", borderBottom: "1px solid var(--border)" }}>
+              <label style={{ fontSize: 11, fontWeight: 700, color: "var(--ink-soft)" }}>{t.enterApiKey || "Gemini API Key (Optional)"}</label>
+              <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
+                <input
+                  type="password"
+                  placeholder="AIzaSy... Paste Gemini API Key"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  style={{ flex: 1, padding: "6px 8px", fontSize: 12, borderRadius: 6, border: "1px solid var(--border-hi)" }}
+                />
+                <button type="submit" className="btn-primary" style={{ width: "auto", padding: "6px 12px", fontSize: 12 }}>Save</button>
+              </div>
+            </form>
+          )}
+
+          <div className="chatbot-messages">
+            {messages.map((m, idx) => (
+              <div key={idx} className={`chat-bubble ${m.sender}`}>
+                <div style={{ whiteSpace: "pre-line" }}>{m.text}</div>
+                {m.source && m.sender === "ai" && (
+                  <div style={{ fontSize: 10, marginTop: 6, opacity: 0.75, fontStyle: "italic", borderTop: "1px stroke var(--border)", paddingTop: 4 }}>
+                    Source: {m.source}
+                  </div>
+                )}
+                {m.products && m.products.length > 0 && (
+                  <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6 }}>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: "var(--ink-soft)" }}>🛍️ RAG Retrieved Dataset Products:</span>
+                    {m.products.slice(0, 2).map((prod, pIdx) => (
+                      <a
+                        key={pIdx}
+                        href={prod.purchase_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          padding: 6,
+                          background: "#f0ede8",
+                          borderRadius: 6,
+                          textDecoration: "none",
+                          color: "var(--ink)"
+                        }}
+                      >
+                        <img src={prod.image_url} alt={prod.name} style={{ width: 32, height: 32, objectFit: "cover", borderRadius: 4 }} />
+                        <div style={{ flex: 1, minWidth: 0, fontSize: 11 }}>
+                          <div style={{ fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{prod.name}</div>
+                          <div style={{ fontSize: 10, color: "#166534", fontWeight: 700 }}>₹{prod.price_inr} • Amazon</div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+            {loading && <div className="chat-bubble ai">✦ RAG Vector Retrieval & Synthesis running…</div>}
+          </div>
+
+          {/* Quick RAG Question Chips */}
+          <div style={{ padding: "6px 10px", display: "flex", gap: 6, overflowX: "auto", borderTop: "1px solid var(--border)", background: "var(--surface-md)" }}>
+            {[
+              "📊 Explain my scan scores & health score",
+              "🧪 Can I mix Retinol with Niacinamide or Vit C?",
+              "☀️ Design my custom AM & PM routine",
+              "🌿 Best natural home remedies for my skin",
+              "🚫 Ingredients I should avoid",
+              "🥗 Diet & lifestyle habits for skin glow"
+            ].map((chipText) => (
+              <button
+                key={chipText}
+                type="button"
+                style={{
+                  fontSize: 11,
+                  padding: "4px 10px",
+                  borderRadius: 14,
+                  border: "1px solid var(--border-hi)",
+                  background: "var(--surface)",
+                  color: "var(--ink-soft)",
+                  whiteSpace: "nowrap",
+                  cursor: "pointer"
+                }}
+                onClick={() => submitQuestion(chipText)}
+              >
+                {chipText}
+              </button>
+            ))}
+          </div>
+
+          <form onSubmit={handleSend} className="chatbot-input-row">
+            <input
+              type="text"
+              placeholder={t.ragPlaceholder || "Ask any skincare question or doubt..."}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+            <button type="submit" className="btn-primary" style={{ width: "auto", padding: "8px 16px" }} disabled={loading}>
+              {t.send || "Send"}
+            </button>
+          </form>
+        </div>
       )}
+    </>
+  );
+}
+
+// ── Main Dashboard Component ───────────────────────────────
+export default function Dashboard({ token, onLogout }) {
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState("profile");
+  const [analysisKey, setAnalysisKey] = useState(0);
+
+  // ── Photo State (Resets on site reload, stays active during in-memory tab switches!) ──
+  const [scanPreview, setScanPreview] = useState(null);
+  const [scanResult, setScanResult] = useState(null);
+
+  // ── Multilingual State (en | te | hi) ──
+  const [lang, setLang] = useState("en");
+  const t = translations[lang] || translations.en;
+
+  const loadProfile = useCallback(() => {
+    return getMyProfile(token)
+      .then((data) => setProfile(data))
+      .catch(() => {});
+  }, [token]);
+
+  useEffect(() => {
+    setLoading(true);
+    loadProfile().finally(() => setLoading(false));
+  }, [loadProfile]);
+
+  function handleAnalyzed(result) {
+    if (result?.concern?.top_concern || result?.skin_type?.top_type) {
+      setProfile((prev) => ({
+        ...(prev || {}),
+        detected_concern: result.concern?.top_concern || prev?.detected_concern,
+        detected_skin_type: result.skin_type?.top_type || prev?.detected_skin_type,
+      }));
+    }
+    loadProfile();
+    setAnalysisKey((k) => k + 1);
+  }
+
+  const tabs = [
+    { id: "profile",  label: t.profileTab },
+    { id: "scan",     label: t.scanTab },
+    { id: "planner",  label: t.plannerTab },
+    { id: "products", label: t.productsTab },
+  ];
+
+  function handleLogout() {
+    setScanPreview(null);
+    setScanResult(null);
+    try {
+      sessionStorage.removeItem("saved_scan_preview");
+      sessionStorage.removeItem("saved_scan_result");
+    } catch (e) {}
+    onLogout();
+  }
+
+  return (
+    <div className="dash-shell">
+      <div className="app-bg" />
+
+      {/* Top Navigation Bar */}
+      <div className="dash-topbar">
+        <div className="dash-brand">
+          <div className="dash-brand-icon">✦</div>
+          {t.brand}
+        </div>
+
+        <div className="topbar-right">
+          {/* Language Selector */}
+          <select
+            value={lang}
+            onChange={(e) => setLang(e.target.value)}
+            style={{
+              padding: "6px 12px",
+              borderRadius: 8,
+              border: "1px solid var(--border-hi)",
+              background: "var(--surface)",
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: "pointer"
+            }}
+          >
+            <option value="en">English 🇬🇧</option>
+            <option value="te">తెలుగు 🇮🇳</option>
+            <option value="hi">हिंदी 🇮🇳</option>
+          </select>
+
+          {profile?.detected_concern && (
+            <span className="tag tag--rose" style={{ fontSize: 12 }}>
+              ⚡ {translateConcern(profile.detected_concern, lang)}
+            </span>
+          )}
+          <button className="btn-ghost" onClick={handleLogout}>{t.signOut}</button>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="section-tabs">
+        {tabs.map((tItem) => (
+          <button
+            key={tItem.id}
+            className={`tab-btn ${tab === tItem.id ? "active" : ""}`}
+            onClick={() => setTab(tItem.id)}
+          >
+            {tItem.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Main Content */}
+      <div className="dash-content">
+        {loading ? (
+          <div className="loading-text">Loading your profile…</div>
+        ) : (
+          <>
+            {tab === "profile" && (
+              <ProfileTab token={token} profile={profile} onProfileSaved={setProfile} t={t} lang={lang} />
+            )}
+
+            {tab === "scan" && (
+              <div className="section-reveal">
+                <PhotoAnalysis
+                  token={token}
+                  onAnalyzed={handleAnalyzed}
+                  preview={scanPreview}
+                  setPreview={setScanPreview}
+                  result={scanResult}
+                  setResult={setScanResult}
+                  lang={lang}
+                />
+              </div>
+            )}
+
+            {tab === "planner" && (
+              <PlannerTab
+                key={`planner-${analysisKey}-${lang}`}
+                token={token}
+                t={t}
+                lang={lang}
+                profile={profile}
+                onGoToScan={() => setTab("scan")}
+              />
+            )}
+
+            {tab === "products" && (
+              <ProductsTab key={`products-${analysisKey}-${lang}`} token={token} t={t} />
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Dataset RAG AI Skincare Advisor */}
+      <RAGSkincareAdvisor
+        t={t}
+        userConcern={profile?.detected_concern}
+        userSkinType={profile?.detected_skin_type}
+        profile={profile}
+      />
     </div>
   );
 }

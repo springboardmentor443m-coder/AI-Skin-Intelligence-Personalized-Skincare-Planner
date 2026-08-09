@@ -1,28 +1,8 @@
 import { useState } from "react";
 import { signup, login } from "./api.js";
 
-function RingsVisual() {
-  // Signature element: concentric scan rings, echoing the skin-analysis theme
-  return (
-    <svg viewBox="0 0 400 400" fill="none">
-      {[170, 135, 100, 65].map((r, i) => (
-        <circle
-          key={r}
-          cx="200"
-          cy="200"
-          r={r}
-          stroke="#eef3ec"
-          strokeOpacity={0.15 + i * 0.08}
-          strokeWidth="1.5"
-        />
-      ))}
-      <circle cx="200" cy="200" r="30" fill="#d98ba0" fillOpacity="0.85" />
-    </svg>
-  );
-}
-
 export default function AuthPage({ onAuthenticated }) {
-  const [mode, setMode] = useState("login"); // "login" | "signup"
+  const [mode, setMode] = useState("login");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -48,24 +28,53 @@ export default function AuthPage({ onAuthenticated }) {
 
   return (
     <div className="auth-shell">
+      {/* ── LEFT PANEL ── */}
       <div className="auth-visual">
-        <div className="auth-visual__rings">
-          <RingsVisual />
+        <div className="auth-visual__orbs">
+          <div className="orb orb-1" />
+          <div className="orb orb-2" />
+          <div className="orb orb-3" />
         </div>
-        <div className="auth-visual__brand">Skin Intelligence</div>
-        <div className="auth-visual__quote">
-          <p>Skincare that reads your skin before it reads a label.</p>
-          <span>Personalized routines · Ingredient intelligence</span>
+
+        <div className="auth-visual__brand">
+          <div className="auth-visual__brand-icon">✦</div>
+          Skin Intelligence
+        </div>
+
+        <div>
+          <div className="auth-visual__quote">
+            <p>
+              AI that reads your skin <span>before</span> you read a label.
+            </p>
+            <p className="sub">Personalized routines · AI Scan · Ingredient Intelligence</p>
+          </div>
+
+          <div className="auth-features">
+            {[
+              { icon: "🔬", title: "AI Photo Analysis", desc: "Upload a selfie — our model detects skin type & concerns instantly" },
+              { icon: "📅", title: "7-Day Planner", desc: "A personalized routine built around your exact skin concern" },
+              { icon: "🛍️", title: "Smart Products", desc: "Products matched to your AI analysis, with direct buy links" },
+            ].map((f) => (
+              <div className="auth-feature" key={f.title}>
+                <span className="auth-feature-icon">{f.icon}</span>
+                <div className="auth-feature-text">
+                  <strong>{f.title}</strong>
+                  {f.desc}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
+      {/* ── RIGHT PANEL ── */}
       <div className="auth-form-side">
         <div className="auth-card">
-          <h1>{mode === "login" ? "Welcome back" : "Create your account"}</h1>
+          <h1>{mode === "login" ? "Welcome back" : "Create account"}</h1>
           <p className="auth-card__sub">
             {mode === "login"
-              ? "Log in to see your skin profile and routine."
-              : "Set up your profile to get personalized skincare guidance."}
+              ? "Sign in to view your AI skin analysis and routine."
+              : "Join and get your personalized skincare plan in minutes."}
           </p>
 
           {error && <div className="error-banner">{error}</div>}
@@ -111,8 +120,8 @@ export default function AuthPage({ onAuthenticated }) {
               {busy
                 ? "Please wait…"
                 : mode === "login"
-                ? "Log in"
-                : "Create account"}
+                ? "Sign in →"
+                : "Create account →"}
             </button>
           </form>
 
@@ -128,7 +137,7 @@ export default function AuthPage({ onAuthenticated }) {
               <>
                 Already have an account?{" "}
                 <button type="button" onClick={() => setMode("login")}>
-                  Log in
+                  Sign in
                 </button>
               </>
             )}
