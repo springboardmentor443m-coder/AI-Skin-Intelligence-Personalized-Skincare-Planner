@@ -1,5 +1,6 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import auth, users, ai, assessment, routine, ingredient, recommendation
+from app.api.v1.endpoints import auth, users, ai, assessment, routine, ingredient, recommendation, tracker
+
 
 api_router = APIRouter()
 api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
@@ -9,3 +10,5 @@ api_router.include_router(assessment.router, prefix="/assessment", tags=["assess
 api_router.include_router(routine.router, prefix="/routine", tags=["routine"])
 api_router.include_router(ingredient.router, prefix="/ingredient", tags=["ingredient"])
 api_router.include_router(recommendation.router, prefix="/recommendation", tags=["recommendation"])
+api_router.include_router(tracker.router, prefix="/tracker", tags=["tracker"])
+

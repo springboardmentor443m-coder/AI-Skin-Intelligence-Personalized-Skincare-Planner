@@ -1,7 +1,10 @@
 from app.core.database import SessionLocal, engine, Base
 from app.models.user import User, Profile
 from app.models.product import Product
+from app.models.tracker import SkinLog
 from app.core.security import get_password_hash
+from datetime import datetime, timedelta, timezone
+
 
 def seed_db():
     # Ensure tables are created
@@ -222,9 +225,42 @@ def seed_db():
         else:
             print("Skincare product catalog already seeded. Skipping product seeding.")
 
+        # 3. Seed Skin Tracker Logs
+        if not db.query(SkinLog).first():
+            patient = db.query(User).filter(User.email == "patient@derma.ai").first()
+            if patient:
+                print("Seeding historical skin log entries for Emily Watson...")
+                now = datetime.now(timezone.utc)
+                for i in range(6, -1, -1):
+                    logged_date = now - timedelta(days=i)
+                    health_score = 70 + (6 - i) * 3
+                    hydration = 45 + (6 - i) * 6
+                    sleep = 6 + (6 - i) // 2
+                    stress = 7 - (6 - i)
+                    
+                    log_entry = SkinLog(
+                        user_id=patient.id,
+                        logged_at=logged_date,
+                        health_score=health_score,
+                        hydration_level=hydration,
+                        sleep_hours=sleep,
+                        stress_level=stress,
+                        acne_level="moderate" if i > 3 else "mild",
+                        dryness_level="severe" if i > 4 else "moderate" if i > 1 else "mild",
+                        sensitivity_level="mild",
+                        notes=f"Day {6-i} of tracking. Noticeable skin texture improvements. Drinking more water.",
+                        photo_url=None
+                    )
+                    db.add(log_entry)
+                db.commit()
+                print("Historical skin tracker logs seeded successfully!")
+        else:
+            print("Skin log records already exist. Skipping tracker seeding.")
+
         print("Seeding completed successfully!")
     finally:
         db.close()
+
 
 if __name__ == "__main__":
     seed_db()

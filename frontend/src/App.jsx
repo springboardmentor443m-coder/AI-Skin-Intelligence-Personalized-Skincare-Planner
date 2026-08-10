@@ -13,6 +13,8 @@ import Unauthorized from './pages/Unauthorized';
 import Routines from './pages/Routines';
 import Ingredients from './pages/Ingredients';
 import Recommendations from './pages/Recommendations';
+import Tracker from './pages/Tracker';
+
 
 // Route Guard for Authenticated Users
 const ProtectedRoute = ({ children }) => {
@@ -105,7 +107,16 @@ function AppContent() {
         }
       />
       <Route
+        path="/tracker"
+        element={
+          <ProtectedRoute>
+            <Tracker />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/unauthorized"
+
         element={
           <ProtectedRoute>
             <Unauthorized />

@@ -11,8 +11,10 @@ import {
   Sparkles,
   Settings,
   ShoppingBag,
+  TrendingUp,
   X
 } from 'lucide-react';
+
 
 export const Sidebar = ({ isOpen, onClose }) => {
   const { user } = useAuth();
@@ -25,10 +27,12 @@ export const Sidebar = ({ isOpen, onClose }) => {
     const base = [
       { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { to: '/profile', label: 'Skin Profile', icon: UserIcon },
+      { to: '/tracker', label: 'Progress Tracker', icon: TrendingUp },
       { to: '/routines', label: 'Routine Planner', icon: Sparkles },
       { to: '/ingredients', label: 'Ingredient Analyzer', icon: ShieldCheck },
       { to: '/recommendations', label: 'Product Picks', icon: ShoppingBag }
     ];
+
 
     if (role === 'dermatologist' || role === 'admin') {
       base.push({ to: '/dermatologist-portal', label: 'Dermatologist Console', icon: Stethoscope });

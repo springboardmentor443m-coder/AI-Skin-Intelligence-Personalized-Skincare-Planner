@@ -25,6 +25,9 @@ class User(Base):
     assessments = relationship("SkinAssessment", back_populates="user", cascade="all, delete-orphan")
     # One-to-many relationship with routines
     routines = relationship("SkincareRoutine", back_populates="user", cascade="all, delete-orphan")
+    # One-to-many relationship with skin logs
+    skin_logs = relationship("SkinLog", back_populates="user", cascade="all, delete-orphan")
+
 
 
 class Profile(Base):
