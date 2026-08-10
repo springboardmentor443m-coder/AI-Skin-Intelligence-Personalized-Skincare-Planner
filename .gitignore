@@ -1,0 +1,15 @@
+# Security & Secrets
+.env
+
+# Database
+*.db
+skin_platform.db
+
+# Python & Jupyter Caches
+__pycache__/
+.ipynb_checkpoints/
+
+# Data & Large Weights
+Data sets/
+models/*.h5
+models/*.pth
