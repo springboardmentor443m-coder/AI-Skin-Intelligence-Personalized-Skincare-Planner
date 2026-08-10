@@ -1,7 +1,8 @@
-import { createContext, useMemo, useState } from 'react'
+import { createContext, useEffect, useMemo, useState } from 'react'
 
+const TOKEN_KEY = 'skin-intelligence-token'
 const SESSION_KEY = 'skin-intelligence-session'
-const USERS_KEY = 'skin-intelligence-users'
+const API_BASE_URL = 'http://localhost:8000'
 
 const AuthContext = createContext(null)
 
@@ -15,108 +16,155 @@ function readStorage(key, fallback) {
 }
 
 function writeStorage(key, value) {
-  window.localStorage.setItem(key, JSON.stringify(value))
-}
-
-function buildSession(account, provider = 'email') {
-  const name = account.name?.trim() || account.email?.split('@')[0] || 'User'
-
-  return {
-    name,
-    email: account.email,
-    picture: account.picture || '',
-    provider,
-    googleId: account.googleId || '',
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value))
+  } catch (err) {
+    console.error('Failed to write storage:', err)
   }
 }
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => readStorage(SESSION_KEY, null))
-
-  const register = (name, email, password) => {
-    const normalizedEmail = email.trim().toLowerCase()
-    const users = readStorage(USERS_KEY, [])
-
-    if (users.some((item) => item.email === normalizedEmail)) {
-      return { ok: false, message: 'An account with this email already exists.' }
-    }
-
-    const account = { name: name.trim(), email: normalizedEmail, password }
-    writeStorage(USERS_KEY, [...users, account])
-    const session = buildSession(account, 'email')
-    writeStorage(SESSION_KEY, session)
-    setUser(session)
-    return { ok: true }
-  }
-
-  const login = (email, password) => {
-    const normalizedEmail = email.trim().toLowerCase()
-    const users = readStorage(USERS_KEY, [])
-    const account = users.find((item) => item.email === normalizedEmail)
-
-    if (!account || account.password !== password) {
-      return { ok: false, message: 'Email or password is incorrect.' }
-    }
-
-    const session = buildSession(account, 'email')
-    writeStorage(SESSION_KEY, session)
-    setUser(session)
-    return { ok: true }
-  }
-
-  const googleLogin = async (credential) => {
-    if (!credential) {
-      return { ok: false, message: 'Google sign-in was cancelled.' }
-    }
-
-    const apiBaseUrl = import.meta.env.VITE_API_URL || ''
-
-    try {
-      const response = await fetch(`${apiBaseUrl}/auth/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ credential }),
-      })
-
-      const data = await response.json().catch(() => ({}))
-
-      if (!response.ok) {
-        return { ok: false, message: data.detail || 'Google sign-in failed.' }
-      }
-
-      const users = readStorage(USERS_KEY, [])
-      const normalizedEmail = data.email?.toLowerCase()
-      const existing = users.find((item) => item.email === normalizedEmail)
-      const account = {
-        name: data.name || data.email?.split('@')[0] || 'Google user',
-        email: normalizedEmail,
-        password: existing?.password || '',
-        picture: data.picture || '',
-        googleId: data.googleId || '',
-      }
-
-      const nextUsers = existing
-        ? users.map((item) => (item.email === normalizedEmail ? { ...item, ...account } : item))
-        : [...users, account]
-
-      writeStorage(USERS_KEY, nextUsers)
-      const session = buildSession(account, 'google')
-      writeStorage(SESSION_KEY, session)
-      setUser(session)
-      return { ok: true, user: session }
-    } catch {
-      return { ok: false, message: 'Unable to reach the authentication service. Please try again.' }
-    }
-  }
+  const [loading, setLoading] = useState(true)
 
   const logout = () => {
+    window.localStorage.removeItem(TOKEN_KEY)
     window.localStorage.removeItem(SESSION_KEY)
     setUser(null)
   }
 
-  const value = useMemo(() => ({ user, register, login, logout, googleLogin }), [user])
+  // Verify JWT token on initial app load
+  useEffect(() => {
+    let active = true
+    const token = window.localStorage.getItem(TOKEN_KEY)
+
+    if (!token) {
+      setTimeout(() => {
+        if (active) setLoading(false)
+      }, 0)
+      return () => { active = false }
+    }
+
+    fetch(`${API_BASE_URL}/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Token expired or invalid')
+        return res.json()
+      })
+      .then((data) => {
+        if (active && data.user) {
+          setUser(data.user)
+          writeStorage(SESSION_KEY, data.user)
+        }
+      })
+      .catch(() => {
+        if (active) logout()
+      })
+      .finally(() => {
+        if (active) setLoading(false)
+      })
+
+    return () => { active = false }
+  }, [])
+
+  const register = async (name, email, password) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) {
+        return { ok: false, message: data.detail || 'Registration failed.' }
+      }
+
+      if (data.token) {
+        window.localStorage.setItem(TOKEN_KEY, data.token)
+      }
+      writeStorage(SESSION_KEY, data.user)
+      setUser(data.user)
+
+      return { ok: true }
+    } catch {
+      return { ok: false, message: 'Server connection error. Is backend running?' }
+    }
+  }
+
+  const login = async (email, password) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) {
+        return { ok: false, message: data.detail || 'Login failed.' }
+      }
+
+      if (data.token) {
+        window.localStorage.setItem(TOKEN_KEY, data.token)
+      }
+      writeStorage(SESSION_KEY, data.user)
+      setUser(data.user)
+
+      return { ok: true }
+    } catch {
+      return { ok: false, message: 'Server connection error. Is backend running?' }
+    }
+  }
+
+  const loginWithGoogle = async (profile) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: profile.name,
+          email: profile.email,
+          sub: profile.sub || profile.id,
+          picture: profile.picture,
+        }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) {
+        return { ok: false, message: data.detail || 'Google sign-in failed.' }
+      }
+
+      if (data.token) {
+        window.localStorage.setItem(TOKEN_KEY, data.token)
+      }
+      writeStorage(SESSION_KEY, data.user)
+      setUser(data.user)
+
+      return { ok: true }
+    } catch {
+      return { ok: false, message: 'Server connection error. Is backend running?' }
+    }
+  }
+
+
+
+  const value = useMemo(
+    () => ({
+      user,
+      loading,
+      register,
+      login,
+      loginWithGoogle,
+      logout,
+    }),
+    [user, loading]
+  )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-export { AuthContext }
+export { AuthContext }

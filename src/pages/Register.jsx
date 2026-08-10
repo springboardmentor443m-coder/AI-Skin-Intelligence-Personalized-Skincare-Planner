@@ -14,7 +14,7 @@ export default function Register() {
     setFormData((current) => ({ ...current, [name]: value }))
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     setError('')
 
@@ -31,7 +31,7 @@ export default function Register() {
       return
     }
 
-    const result = register(formData.name, formData.email, formData.password)
+    const result = await register(formData.name, formData.email, formData.password)
     if (!result.ok) {
       setError(result.message)
       return
@@ -39,6 +39,7 @@ export default function Register() {
 
     navigate('/dashboard', { replace: true })
   }
+
 
   return (
     <div className="min-h-screen bg-[linear-gradient(135deg,_#f8fafc_0%,_#eff6ff_100%)] px-4 py-16 sm:px-6 lg:px-8">

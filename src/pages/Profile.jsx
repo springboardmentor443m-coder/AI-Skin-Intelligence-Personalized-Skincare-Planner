@@ -1,191 +1,261 @@
-import { Camera, Mail, UserRound, ShieldAlert, Sparkles, Droplets, MoonStar, Save, XCircle, PencilLine } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
+import {
+  Camera,
+  UserRound,
+  ShieldAlert,
+  Sparkles,
+  Droplets,
+  MoonStar,
+  ShieldCheck,
+} from 'lucide-react'
 import { useAuth } from '../auth/useAuth'
+import { getAnalysisHistory } from '../utils/skincareStorage'
+import SkinProfileWizardModal from '../components/SkinProfileWizardModal'
+import { calculateSkinHealthScore } from '../utils/healthScoreCalculator'
 
-const initialProfile = {
-  name: 'Alicia Chen',
-  email: 'alicia@example.com',
-  age: '29',
-  gender: 'Female',
-  skinType: 'Sensitive Combination',
-  lifestyle: 'Early riser, indoor work, moderate sun exposure',
-  waterIntake: '2.5L/day',
-  sleepHours: '7.5 hours',
-  allergies: 'Fragrance, essential oils',
-  concerns: 'Dryness, mild sensitivity',
-}
-
-function buildProfileData(user) {
-  return {
-    ...initialProfile,
-    name: user?.name || initialProfile.name,
-    email: user?.email || initialProfile.email,
-  }
-}
+const API_BASE = import.meta.env.DEV ? '' : 'http://127.0.0.1:8000'
 
 export default function Profile() {
   const { user } = useAuth()
-  const [formData, setFormData] = useState(() => buildProfileData(user))
-  const [isEditing, setIsEditing] = useState(false)
-  const [photoPreview, setPhotoPreview] = useState(user?.picture || '')
+  const history = getAnalysisHistory()
+
+  const [profile, setProfile] = useState({
+    age: 25,
+    gender: 'Unspecified',
+    skin_type: 'Combination',
+    skin_concerns: ['Acne & Pimples'],
+    allergies: 'None',
+    skin_sensitivity: 'Moderate',
+    sleep_hours: 7.5,
+    water_intake: 2.5,
+    lifestyle: 'Moderate',
+    environmental_exposure: 'Medium',
+  })
+
+  const [isWizardOpen, setIsWizardOpen] = useState(false)
+  const [photoPreview, setPhotoPreview] = useState('')
   const [message, setMessage] = useState('')
 
+  // Fetch skin profile from MySQL
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setFormData((current) => ({
-      ...current,
-      name: user?.name || current.name,
-      email: user?.email || current.email,
-    }))
+    async function fetchProfile() {
+      try {
+        const token = localStorage.getItem('skin-intelligence-token')
+        if (!token) return
 
-    if (user?.picture) {
-      setPhotoPreview(user.picture)
+        const res = await fetch(`${API_BASE}/auth/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        if (res.ok) {
+          const data = await res.json()
+          if (data.profile) {
+            setProfile(data.profile)
+          }
+        }
+      } catch (err) {
+        console.warn('Could not fetch skin profile from MySQL:', err)
+      }
     }
-  }, [user])
+    fetchProfile()
+  }, [])
 
-  const handleChange = (event) => {
-    const { name, value } = event.target
-    setFormData((current) => ({ ...current, [name]: value }))
+  const handleSaveProfile = async (updatedProfile) => {
+    setProfile(updatedProfile)
+    setIsWizardOpen(false)
+    setMessage('Profile updated successfully.')
+    setTimeout(() => setMessage(''), 3000)
+
+    try {
+      const token = localStorage.getItem('skin-intelligence-token')
+      if (!token) return
+
+      await fetch(`${API_BASE}/auth/profile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updatedProfile),
+      })
+    } catch (err) {
+      console.warn('Could not save skin profile to MySQL:', err)
+    }
   }
 
-  const handlePhotoUpload = (event) => {
-    const file = event.target.files?.[0]
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
     reader.onload = () => setPhotoPreview(reader.result)
     reader.readAsDataURL(file)
   }
 
-  const handleSave = (event) => {
-    event.preventDefault()
-    setIsEditing(false)
-    setMessage('Profile updated locally. Your updates are ready for future sync.')
-  }
+  const latestScan = history[0]
+  const computedScore = calculateSkinHealthScore({
+    condition: latestScan?.disease || 'Normal',
+    sleepHours: profile.sleep_hours,
+    waterIntake: profile.water_intake,
+    lifestyle: profile.lifestyle,
+  })
 
-  const handleCancel = () => {
-    setFormData(buildProfileData(user))
-    setIsEditing(false)
-    setMessage('Changes discarded. Your last saved values remain intact.')
-  }
-
-  const avatarSrc = photoPreview || user?.picture || ''
+  const userName = user?.full_name || user?.name || 'Alicia Chen'
+  const userEmail = user?.email || 'user@example.com'
 
   return (
     <div className="space-y-6">
-      <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70 sm:p-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-600">Profile</p>
-        <h1 className="mt-3 text-3xl font-semibold text-slate-900">A clean profile experience that feels personal and calm.</h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">Edit your skin profile locally, keep your notes organized, and update your routine preferences in seconds.</p>
+      {/* Header */}
+      <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3.5 py-1 text-xs font-bold text-emerald-700">
+          <UserRound className="h-4 w-4" /> Personal Health Record
+        </div>
+        <h1 className="mt-3 text-3xl font-extrabold text-slate-900 tracking-tight sm:text-4xl">
+          Healthcare Profile & Parameters
+        </h1>
+        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
+          Manage your clinical skin profile, environmental exposure, allergies, and health indicators stored in MySQL.
+        </p>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
-        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70 sm:p-8">
-          <div className="flex flex-col items-center text-center">
-            <div className="relative">
-              <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-emerald-500 to-sky-600 text-3xl font-semibold text-white">
-                {avatarSrc ? <img src={avatarSrc} alt="Profile preview" className="h-full w-full object-cover" /> : formData.name.split(' ').map((part) => part[0]).join('').slice(0, 2)}
-              </div>
-              <label className="absolute bottom-0 right-0 cursor-pointer rounded-full bg-slate-900 p-2 text-white shadow-lg">
-                <Camera className="h-4 w-4" />
-                <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
-              </label>
+      <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
+        
+        {/* Profile Card Summary */}
+        <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8 flex flex-col items-center text-center">
+          <div className="relative">
+            <div className="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-emerald-500 to-sky-600 text-3xl font-extrabold text-white shadow-lg">
+              {photoPreview ? (
+                <img src={photoPreview} alt="Avatar" className="h-full w-full object-cover" />
+              ) : (
+                userName
+                  .split(' ')
+                  .map((p) => p[0])
+                  .join('')
+                  .slice(0, 2)
+              )}
             </div>
-            <h2 className="mt-5 text-2xl font-semibold text-slate-900">{formData.name}</h2>
-            <p className="mt-2 text-sm text-slate-500">{user?.provider === 'google' ? 'Signed in with Google' : 'Personal skincare profile'}</p>
-            <p className="mt-1 text-sm text-slate-500">{formData.email}</p>
-            <button type="button" onClick={() => setIsEditing((value) => !value)} className="mt-6 inline-flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600">
-              <PencilLine className="h-4 w-4" />
-              {isEditing ? 'Editing mode' : 'Edit profile'}
+            <label className="absolute bottom-0 right-0 cursor-pointer rounded-full bg-slate-900 p-2 text-white shadow-md hover:bg-slate-800 transition">
+              <Camera className="h-4 w-4" />
+              <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+            </label>
+          </div>
+
+          <h2 className="mt-4 text-2xl font-bold text-slate-900">{userName}</h2>
+          <p className="text-xs font-semibold text-emerald-600">{userEmail}</p>
+
+          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-bold text-emerald-800">
+            <ShieldCheck className="h-3.5 w-3.5" /> Skin Type: {profile.skin_type}
+          </div>
+
+          {/* Quick Metrics Badges */}
+          <div className="mt-6 w-full space-y-2 border-t border-slate-100 pt-5 text-left text-xs">
+            <div className="flex items-center justify-between rounded-xl bg-slate-50 p-3">
+              <span className="text-slate-500 font-medium">Age & Gender</span>
+              <span className="font-bold text-slate-900">{profile.age} yrs • {profile.gender}</span>
+            </div>
+            <div className="flex items-center justify-between rounded-xl bg-slate-50 p-3">
+              <span className="text-slate-500 font-medium">Total Scan History</span>
+              <span className="font-bold text-slate-900">{history.length} Scans Completed</span>
+            </div>
+            <div className="flex items-center justify-between rounded-xl bg-emerald-50 p-3 text-emerald-900 border border-emerald-200">
+              <span className="font-semibold">Calculated Health Score</span>
+              <span className="font-extrabold text-emerald-700">{computedScore.score} / 100</span>
+            </div>
+          </div>
+
+          <div className="mt-6 w-full space-y-2">
+            <button
+              type="button"
+              onClick={() => setIsWizardOpen(true)}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 py-3 text-xs font-bold text-white hover:bg-emerald-600 transition shadow-md"
+            >
+              <Sparkles className="h-4 w-4" />
+              Launch Profile Wizard
             </button>
           </div>
         </div>
 
-        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/70 sm:p-8">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-emerald-50 p-2 text-emerald-600">
-                <UserRound className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-lg font-semibold text-slate-900">Personal information</p>
-                <p className="text-sm text-slate-500">Everything you want to keep close at hand.</p>
-              </div>
-            </div>
-            {message && <p className="text-sm text-emerald-600">{message}</p>}
+        {/* Detailed Profile Form */}
+        <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <h3 className="text-lg font-bold text-slate-900">Personal Medical Parameters</h3>
+            {message && <span className="text-xs font-bold text-emerald-600">{message}</span>}
           </div>
 
-          <form onSubmit={handleSave} className="mt-6 grid gap-4 md:grid-cols-2">
-            <label className="block md:col-span-2">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Name</span>
-              <input name="name" value={formData.name} onChange={handleChange} disabled={!isEditing} className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-70" />
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Email</span>
-              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <Mail className="h-4 w-4 text-slate-400" />
-                <input name="email" value={formData.email} onChange={handleChange} disabled={!isEditing} className="w-full bg-transparent text-sm outline-none disabled:cursor-not-allowed disabled:opacity-70" />
-              </div>
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Age</span>
-              <input name="age" value={formData.age} onChange={handleChange} disabled={!isEditing} className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-70" />
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Gender</span>
-              <input name="gender" value={formData.gender} onChange={handleChange} disabled={!isEditing} className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-70" />
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Skin type</span>
-              <input name="skinType" value={formData.skinType} onChange={handleChange} disabled={!isEditing} className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-70" />
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Lifestyle</span>
-              <input name="lifestyle" value={formData.lifestyle} onChange={handleChange} disabled={!isEditing} className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-70" />
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Water intake</span>
-              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <Droplets className="h-4 w-4 text-slate-400" />
-                <input name="waterIntake" value={formData.waterIntake} onChange={handleChange} disabled={!isEditing} className="w-full bg-transparent text-sm outline-none disabled:cursor-not-allowed disabled:opacity-70" />
-              </div>
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Sleep hours</span>
-              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <MoonStar className="h-4 w-4 text-slate-400" />
-                <input name="sleepHours" value={formData.sleepHours} onChange={handleChange} disabled={!isEditing} className="w-full bg-transparent text-sm outline-none disabled:cursor-not-allowed disabled:opacity-70" />
-              </div>
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Allergies</span>
-              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <ShieldAlert className="h-4 w-4 text-slate-400" />
-                <input name="allergies" value={formData.allergies} onChange={handleChange} disabled={!isEditing} className="w-full bg-transparent text-sm outline-none disabled:cursor-not-allowed disabled:opacity-70" />
-              </div>
-            </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">Skin concerns</span>
-              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <Sparkles className="h-4 w-4 text-slate-400" />
-                <input name="concerns" value={formData.concerns} onChange={handleChange} disabled={!isEditing} className="w-full bg-transparent text-sm outline-none disabled:cursor-not-allowed disabled:opacity-70" />
-              </div>
-            </label>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 text-xs">
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+              <span className="block text-[10px] uppercase font-bold text-slate-400">Age</span>
+              <span className="font-bold text-slate-800 text-sm">{profile.age} years</span>
+            </div>
 
-            {isEditing && (
-              <div className="md:col-span-2 flex flex-wrap gap-3">
-                <button type="submit" className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600">
-                  <Save className="h-4 w-4" />
-                  Save changes
-                </button>
-                <button type="button" onClick={handleCancel} className="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-rose-400 hover:text-rose-600">
-                  <XCircle className="h-4 w-4" />
-                  Cancel
-                </button>
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+              <span className="block text-[10px] uppercase font-bold text-slate-400">Gender</span>
+              <span className="font-bold text-slate-800 text-sm">{profile.gender}</span>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+              <span className="block text-[10px] uppercase font-bold text-slate-400">Primary Skin Type</span>
+              <span className="font-bold text-emerald-700 text-sm">{profile.skin_type}</span>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+              <span className="block text-[10px] uppercase font-bold text-slate-400">Skin Sensitivity</span>
+              <span className="font-bold text-slate-800 text-sm">{profile.skin_sensitivity}</span>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+              <span className="block text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1">
+                <Droplets className="h-3 w-3 text-sky-500" /> Daily Water Intake
+              </span>
+              <span className="font-bold text-sky-700 text-sm">{profile.water_intake} Liters</span>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+              <span className="block text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1">
+                <MoonStar className="h-3 w-3 text-indigo-500" /> Sleep Duration
+              </span>
+              <span className="font-bold text-indigo-700 text-sm">{profile.sleep_hours} Hours/night</span>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 sm:col-span-2">
+              <span className="block text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1">
+                <ShieldAlert className="h-3 w-3 text-rose-500" /> Known Allergies
+              </span>
+              <span className="font-semibold text-slate-800">{profile.allergies || 'None reported'}</span>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 sm:col-span-2">
+              <span className="block text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1">
+                <Sparkles className="h-3 w-3 text-emerald-500" /> Primary Skin Concerns
+              </span>
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
+                {(Array.isArray(profile.skin_concerns) ? profile.skin_concerns : [profile.skin_concerns]).map((c, i) => (
+                  <span key={i} className="rounded-full bg-emerald-100 px-3 py-0.5 text-[11px] font-bold text-emerald-800">
+                    {c}
+                  </span>
+                ))}
               </div>
-            )}
-          </form>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+              <span className="block text-[10px] uppercase font-bold text-slate-400">Activity Level</span>
+              <span className="font-semibold text-slate-800">{profile.lifestyle}</span>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+              <span className="block text-[10px] uppercase font-bold text-slate-400">Sun & UV Exposure</span>
+              <span className="font-semibold text-slate-800">{profile.environmental_exposure}</span>
+            </div>
+          </div>
         </div>
+
       </div>
+
+      {/* Onboarding Profile Wizard Modal */}
+      <SkinProfileWizardModal
+        isOpen={isWizardOpen}
+        onClose={() => setIsWizardOpen(false)}
+        onSave={handleSaveProfile}
+        initialProfile={profile}
+      />
     </div>
   )
 }
