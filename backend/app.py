@@ -185,7 +185,7 @@ async def predict(
 
         recommendations=analysis["recommendations"],
 
-        weekly_plan=analysis["weekly_plan"],
+        weekly_plan=json.dumps(analysis["weekly_plan"]),
 
         severity_scores={}
     )

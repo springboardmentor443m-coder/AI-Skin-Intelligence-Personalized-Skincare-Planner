@@ -124,86 +124,7 @@ export default function UploadPage() {
     }
   }
 
-  const parseWeeklyPlan = (text: string) => {
-    const lines = text
-      .split(/\r?\n/)
-      .map((line) => line.trim())
-      .filter(Boolean)
-
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    const dayHeaderRegex = new RegExp(
-      `^(?:#{1,6}\\s*)?(?:\\*\\*)?(${days.join('|')})(?:\\*\\*)?:?\\s*$`,
-      'i'
-    )
-
-    const entries: Array<{ day: string; content: string }> = []
-
-    let currentDay: string | null = null
-    let currentContent: string[] = []
-
-    lines.forEach((line) => {
-      const matchedDay = line.match(dayHeaderRegex)
-      if (matchedDay) {
-        if (currentDay) {
-          entries.push({ day: currentDay, content: currentContent.join(' ') })
-        }
-        currentDay = matchedDay[1]
-        currentContent = []
-        return
-      }
-
-      if (currentDay) {
-        currentContent.push(line)
-      }
-    })
-
-    if (currentDay) {
-      entries.push({ day: currentDay, content: currentContent.join(' ') })
-    }
-
-    return entries.length > 0 ? entries : [{ day: 'Weekly Ritual', content: text }]
-  }
-
-  const formatRoutineContent = (text: string) => {
-    const normalized = text
-      .replace(/\*\*/g, '')
-      .replace(/^[-•]\s*/gm, '')
-      .trim()
-
-    const lines = normalized
-      .split(/\r?\n/)
-      .map((line) => line.trim())
-      .filter(Boolean)
-
-    const sections = {
-      morning: '',
-      night: '',
-      tip: '',
-    }
-
-    let currentSection: keyof typeof sections | null = null
-
-    lines.forEach((line) => {
-      const sectionMatch = line.match(/^(morning|night|daily tip|tip|hydration|serum|moisturizer|routine)$/i)
-      if (sectionMatch) {
-        const key = sectionMatch[1].toLowerCase()
-        currentSection = key === 'morning' ? 'morning' : key === 'night' ? 'night' : 'tip'
-        return
-      }
-
-      if (currentSection) {
-        sections[currentSection] = `${sections[currentSection]} ${line}`.trim()
-      }
-    })
-
-    return {
-      morning: sections.morning || 'Follow your recommended morning care ritual with gentle hydration and protection.',
-      night: sections.night || 'Follow your recommended evening care ritual with soothing recovery steps.',
-      tip: sections.tip || 'Stay consistent, keep your routine simple, and let your skin respond over time.',
-    }
-  }
-
-  const weeklyPlanEntries = result?.weekly_plan ? parseWeeklyPlan(result.weekly_plan) : []
+  const weeklyPlanEntries = result?.weekly_plan ? Object.entries(result.weekly_plan) : []
 
   return (
     <ProtectedLayout>
@@ -415,21 +336,20 @@ export default function UploadPage() {
 
                   <div className="relative space-y-4 pl-7">
                     <div className="absolute left-[10px] top-0 h-full w-px bg-[#f3e3da]" />
-                    {weeklyPlanEntries.map((entry, index) => {
-                      const isOpen = expandedDay === entry.day
-                      const routine = formatRoutineContent(entry.content)
+                    {weeklyPlanEntries.map(([day, routine]: [string, any], index) => {
+                      const isOpen = expandedDay === day
 
                       return (
-                        <div key={entry.day} className="relative">
+                        <div key={day} className="relative">
                           <div className="absolute left-[-28px] top-4 h-5 w-5 rounded-full border-4 border-[#fff8f3] bg-[#d89c8b] shadow-sm" />
                           <div className="overflow-hidden rounded-[20px] border border-[#f3e3da] bg-[#fffdfb] shadow-[0_10px_30px_rgba(59,47,47,0.04)]">
                             <button
-                              onClick={() => setExpandedDay(isOpen ? null : entry.day)}
+                              onClick={() => setExpandedDay(isOpen ? null : day)}
                               aria-expanded={isOpen}
                               className="flex w-full items-center justify-between px-4 py-4 text-left sm:px-5"
                             >
                               <div>
-                                <p className="text-lg font-semibold text-[#3b2f2f]">{entry.day}</p>
+                                <p className="text-lg font-semibold text-[#3b2f2f]">{day}</p>
                                 <p className="mt-1 text-sm text-[#8a736f]">Daily skincare plan</p>
                               </div>
                               <ChevronDown className={`h-5 w-5 text-[#8a736f] transition ${isOpen ? 'rotate-180' : ''}`} />

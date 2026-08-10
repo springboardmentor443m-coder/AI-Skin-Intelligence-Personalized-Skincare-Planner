@@ -1,4 +1,5 @@
 import os
+import json
 from pathlib import Path
 
 from groq import Groq
@@ -21,19 +22,12 @@ def get_groq_client() -> Groq:
 
     return Groq(api_key=api_key)
 
-def generate_weekly_plan(
-    skin_type,
-    products
-):
+def generate_weekly_plan(skin_type, products):
     product_context = []
-
-    allowed_product_names = []
 
     for rank, product in enumerate(products, start=1):
         name = product.get("product_name", "")
         brand = product.get("brand_name", "")
-
-        allowed_product_names.append(name)
 
         product_context.append(
             f"""
@@ -62,42 +56,81 @@ ML-ranked product candidates:
 
 STRICT PRODUCT GROUNDING RULES:
 
-1. You may ONLY mention products whose exact Product Name
-   appears in the ML-ranked product candidates above.
+1. ONLY mention products whose exact Product Name appears
+   in the ML-ranked product candidates.
 
-2. NEVER invent a cleanser, sunscreen, moisturizer, serum,
-   ingredient, treatment, or any other product that is not
-   explicitly present in the candidates.
+2. NEVER invent products, ingredients, treatments,
+   cleansers, moisturizers, sunscreens, or serums.
 
-3. Do not write phrases such as:
-   "not provided", "use a gentle cleanser", or
-   "wear sunscreen" as product recommendations.
+3. If the provided products are insufficient for a routine,
+   use exactly:
+   "No additional product selected"
 
-4. If the provided products are insufficient for a particular
-   routine, write "No additional product selected" instead
-   of inventing one.
+4. Do not change the ML ranking.
 
-5. The ML recommendation score represents the ranking produced
-   by the recommendation engine. Do not change the ranking.
+5. Do not claim that any product medically treats a condition.
 
-6. Use the actual product names, not "Product #1", etc.
+Create plans for exactly these seven days:
 
-Generate Monday through Sunday.
+Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+Saturday
+Sunday
 
-For each day provide:
+Each day MUST contain:
 
-Morning:
-- One selected product or "No additional product selected"
+- morning
+- night
+- tip
 
-Night:
-- One selected product or "No additional product selected"
+Morning and night should contain either an exact product
+name from the candidates or:
+"No additional product selected"
 
-Tip:
-- One short general skincare tip.
+The tip should be a short, general skincare-care tip.
 
-Do not claim that any product medically treats a condition.
+Return ONLY valid JSON in exactly this structure:
 
-Return only the 7-day plan.
+{{
+  "Monday": {{
+    "morning": "product name or No additional product selected",
+    "night": "product name or No additional product selected",
+    "tip": "short skincare tip"
+  }},
+  "Tuesday": {{
+    "morning": "product name or No additional product selected",
+    "night": "product name or No additional product selected",
+    "tip": "short skincare tip"
+  }},
+  "Wednesday": {{
+    "morning": "product name or No additional product selected",
+    "night": "product name or No additional product selected",
+    "tip": "short skincare tip"
+  }},
+  "Thursday": {{
+    "morning": "product name or No additional product selected",
+    "night": "product name or No additional product selected",
+    "tip": "short skincare tip"
+  }},
+  "Friday": {{
+    "morning": "product name or No additional product selected",
+    "night": "product name or No additional product selected",
+    "tip": "short skincare tip"
+  }},
+  "Saturday": {{
+    "morning": "product name or No additional product selected",
+    "night": "product name or No additional product selected",
+    "tip": "short skincare tip"
+  }},
+  "Sunday": {{
+    "morning": "product name or No additional product selected",
+    "night": "product name or No additional product selected",
+    "tip": "short skincare tip"
+  }}
+}}
 """
 
     client = get_groq_client()
@@ -109,18 +142,92 @@ Return only the 7-day plan.
                 "role": "system",
                 "content": (
                     "You are a skincare planning assistant. "
-                    "You must strictly ground product mentions "
-                    "in the supplied ML-ranked product list."
+                    "You must strictly ground all product mentions "
+                    "in the supplied ML-ranked product list. "
+                    "Return valid JSON only."
+                ),
+            },
+            {
+                "role": "user",
+                "content": prompt,
+            },
+        ],
+        response_format={
+            "type": "json_object"
+        },
+    )
+
+    content = response.choices[0].message.content
+
+    try:
+        return json.loads(content)
+    except json.JSONDecodeError:
+        return {
+            "error": "Weekly plan generation failed",
+            "raw": content,
+        }
+def test_groq():
+    client = get_groq_client()
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role": "user",
+                "content": "Say hello."
+            }
+        ]
+    )
+
+    return response.choices[0].message.content
+
+def chat_with_skin_assistant(
+    message,
+    skin_type,
+    recommendations
+):
+    prompt = f"""
+You are a skincare planning assistant.
+
+Detected skin concern:
+{skin_type}
+
+Recommended products:
+{", ".join(recommendations)}
+
+User question:
+{message}
+
+Rules:
+1. Give safe, general skincare information.
+2. Base your response on the detected concern.
+3. Only mention products from the supplied recommended products.
+4. Do not recommend prescription medicines.
+5. Do not claim that a product medically treats a condition.
+6. Keep the answer under 150 words.
+7. If the question requires medical diagnosis or treatment,
+   recommend consulting a qualified dermatologist.
+
+Answer:
+"""
+
+    client = get_groq_client()
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You are a safe skincare assistant. "
+                    "Stay grounded in the supplied information."
                 )
             },
             {
                 "role": "user",
                 "content": prompt
             }
-        ],
-        response_format={
-            "type": "json_object"
-        }
+        ]
     )
 
     return response.choices[0].message.content
