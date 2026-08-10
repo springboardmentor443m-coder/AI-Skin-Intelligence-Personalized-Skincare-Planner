@@ -1,71 +1,152 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  body {
-    font-family: 'Inter', sans-serif;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Outfit', sans-serif;
-  }
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  /* Spa Organic Brand colors */
+  --color-brand-50: #FAF6F0;
+  --color-brand-100: #F3ECE2;
+  --color-brand-200: #E6D8C5;
+  --color-brand-500: #E28F6B;
+  --color-brand-600: #D4704B;
+  --color-brand-700: #B8502F;
+  --color-brand-800: #933B21;
 }
 
-/* Glassmorphic Cards & UI */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+body {
+  background-color: #FAF6F0;
+  color: #1E293B;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.glass-panel-light {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+.dark body {
+  background-color: #09090D;
+  color: #F8FAFC;
 }
 
-/* Custom Scrollbar for sleek UI */
+/* Glassmorphism Spa Card Styles */
+.glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(230, 216, 197, 0.4);
+  box-shadow: 0 10px 40px -10px rgba(226, 143, 107, 0.08);
+}
+
+.dark .glass-card {
+  background: rgba(17, 17, 22, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.6);
+}
+
+/* Holographic / Aura Glow border */
+.aura-glow {
+  position: relative;
+}
+.aura-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, #e28f6b, #10b981, #f59e0b);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0.15;
+  filter: blur(4px);
+}
+.dark .aura-glow::before {
+  opacity: 0.25;
+  filter: blur(8px);
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.1);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(236, 72, 153, 0.3);
+  background: #E6D8C5;
   border-radius: 4px;
 }
+.dark ::-webkit-scrollbar-thumb {
+  background: #25242E;
+}
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(236, 72, 153, 0.5);
+  background: #E28F6B;
 }
 
-/* Animated Neon Accents */
-@keyframes pulseGlow {
+/* Staggered Animations */
+@keyframes pulse-soft {
   0%, 100% {
-    opacity: 0.2;
     transform: scale(1);
+    opacity: 1;
   }
   50% {
-    opacity: 0.4;
-    transform: scale(1.15);
+    transform: scale(1.03);
+    opacity: 0.9;
   }
 }
-
-.glow-orb-pink {
-  position: absolute;
-  filter: blur(120px);
-  border-radius: 9999px;
-  background: radial-gradient(circle, #ec4899 0%, transparent 70%);
-  animation: pulseGlow 10s infinite ease-in-out;
+.animate-pulse-soft {
+  animation: pulse-soft 3s infinite ease-in-out;
 }
 
-.glow-orb-cyan {
+/* Face Scan Laser Animation */
+@keyframes scan-laser {
+  0% { top: 0%; }
+  50% { top: 100%; }
+  100% { top: 0%; }
+}
+.scanner-line {
   position: absolute;
-  filter: blur(120px);
-  border-radius: 9999px;
-  background: radial-gradient(circle, #06b6d4 0%, transparent 70%);
-  animation: pulseGlow 14s infinite ease-in-out;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(to right, transparent, #E28F6B, transparent);
+  box-shadow: 0 0 10px #E28F6B, 0 0 20px #E28F6B;
+  animation: scan-laser 2.5s infinite ease-in-out;
+  pointer-events: none;
+}
+
+/* Floating & Rotational Animations */
+@keyframes spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 25s infinite linear;
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.animate-bounce-slow {
+  animation: bounce-slow 4s infinite ease-in-out;
+}
+
+/* Staggered Card Slide-in */
+@keyframes slide-in {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.animate-slide-in {
+  animation: slide-in 0.4s forwards cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+}
+
+/* Radar Scan for Ingredients */
+@keyframes radar-pulse {
+  0% { transform: scale(0.9); opacity: 0.2; }
+  50% { opacity: 0.6; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+.radar-circle {
+  position: absolute;
+  border: 1.5px solid #10b981;
+  border-radius: 50%;
+  animation: radar-pulse 3s infinite ease-out;
 }

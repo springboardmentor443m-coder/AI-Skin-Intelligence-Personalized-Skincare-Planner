@@ -1,71 +1,40 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import logging
-
 from app.core.config import settings
-from app.core.database import Base, engine
-from app.api.v1.auth import router as auth_router
+from app.core.database import engine, Base
+from app.api.v1.router import api_router
 
-# Setup logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("skincare_app")
-
-# Automatically create PostgreSQL tables on startup (if they don't exist)
+# Create database tables automatically
+# Note: In production, you would typically use Alembic migrations.
 try:
-    logger.info("Initializing database tables...")
     Base.metadata.create_all(bind=engine)
-    logger.info("Database tables initialized successfully.")
 except Exception as e:
+    import logging
+    logger = logging.getLogger("uvicorn.error")
     logger.error(f"Error creating database tables: {e}")
 
-# Seed default admin user on startup if tables are empty
-try:
-    from app.core.database import SessionLocal
-    from app.models.user import User
-    from app.core.security import get_password_hash
-    
-    db = SessionLocal()
-    if db.query(User).count() == 0:
-        logger.info("Database is empty. Seeding default admin account...")
-        admin_user = User(
-            email="admin@example.com",
-            hashed_password=get_password_hash("password123"),
-            first_name="Default",
-            last_name="Admin",
-            role="admin",
-            is_active=True
-        )
-        db.add(admin_user)
-        db.commit()
-        logger.info("Default admin account seeded successfully (admin@example.com / password123).")
-    db.close()
-except Exception as e:
-    logger.error(f"Error seeding database: {e}")
-
 app = FastAPI(
-    title=settings.PROJECT_NAME,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json",
-    docs_url="/docs",
-    redoc_url="/redoc",
+    title="AI Skin Intelligence & Personalized Skincare Planner API",
+    description="Backend API supporting User Management, AI Predictions, Skincare Routines, and Consultations.",
+    version="1.0.0",
 )
 
-# Set all CORS enabled origins
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # For production, replace with specific domains
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# CORS configuration
+if settings.BACKEND_CORS_ORIGINS:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
-# Register routers
-app.include_router(auth_router, prefix=f"{settings.API_V1_STR}/auth", tags=["authentication"])
-
+app.include_router(api_router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():
     return {
-        "message": f"Welcome to the {settings.PROJECT_NAME} API.",
-        "docs": "/docs",
-        "status": "healthy",
+        "message": "Welcome to AI Skin Intelligence API",
+        "version": "1.0.0",
+        "status": "Healthy",
     }

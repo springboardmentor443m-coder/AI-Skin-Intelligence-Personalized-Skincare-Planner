@@ -1,0 +1,5 @@
+combination
+dry
+normal
+oily
+sensitive

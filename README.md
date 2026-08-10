@@ -1,139 +1,152 @@
 # AI Skin Intelligence & Personalized Skincare Planner
 
-An enterprise-ready, modular, and containerized web application designed to analyze facial skin anomalies, predict skin categories, assess key metrics (acne, wrinkles, pigmentation, hydration), recommend personalized morning/night/weekly skincare routines, and track progress using charts and reports.
+An enterprise-ready AI-powered skincare application designed to analyze facial skin scans, identify skin types and concerns, and generate highly personalized routines and ingredient matches.
 
 ---
 
-## Technical Stack
+## Project Status: Phase 1 Completed (Initialization & Authentication)
 
-* **Frontend**: React (Vite), Tailwind CSS, React Router, Axios, Lucide React
-* **Backend**: FastAPI (Python 3.10), SQLAlchemy (ORM), JWT Authentication, Pydantic (data validation)
-* **Databases**:
-  * **PostgreSQL**: Stores users, profiles, user schedules, and relational records.
-  * **MongoDB**: Stores AI diagnostic logs, diagnostic history, and reports.
-* **AI/ML**: TensorFlow, Keras, EfficientNetB0, MobileNetV2, OpenCV
-* **DevOps**: Docker, Docker Compose, GitHub Actions, AWS
+In this phase, we established the core folder structure, set up the React+Vite frontend and FastAPI backend, designed the initial database models, configured JWT authentication, and developed role-based UI layouts.
 
 ---
 
-## System Architecture (Phase 1)
+## Phase 1 Folder Structure
 
-Phase 1 establishes the enterprise-grade foundation:
-* **MVC Pattern**: High separation of concern using Model-Repository-Service-Controller on the Backend.
-* **Security & Auth**: Bcrypt hashing for password security, JWT bearer tokens, and custom FastAPI dependencies for Role-Based Access Control (RBAC).
-* **Responsive Styling**: Tailwind CSS configuration integrated with Outfit/Inter typography, animated neon backgrounds, and glassmorphism panel styles.
-* **Orchestration**: Orchestrated multi-container ecosystem using Docker Compose.
-
----
-
-## Directory Structure
+The project is structured according to MVC/Service principles for scalability and maintainability:
 
 ```text
-skincare-planner/
-├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── deps.py          # FastAPI shared dependencies (DB sessions, current user, RBAC role-checking)
-│   │   │   └── v1/
-│   │   │       └── auth.py      # Registration, Login, Profile endpoints
-│   │   ├── core/
-│   │   │   ├── config.py        # Settings configuration parsing .env
-│   │   │   ├── database.py      # Postgres (SQLAlchemy) and MongoDB initializations
-│   │   │   └── security.py      # Passlib password hashing, JWT encoding/decoding utilities
-│   │   ├── models/
-│   │   │   └── user.py          # SQLAlchemy User model
-│   │   ├── repositories/
-│   │   │   └── user_repo.py     # Repository pattern separating queries from service layer
-│   │   ├── schemas/
-│   │   │   ├── token.py         # Token schema definitions
-│   │   │   └── user.py          # User request and response validation definitions
-│   │   ├── services/
-│   │   │   └── auth_service.py  # User authentication and registration business logic
-│   │   └── main.py              # Entrypoint initializing CORS, schemas, and router mappings
-│   ├── tests/
-│   │   ├── conftest.py          # Pytest fixtures and sqlite overrides
-│   │   └── test_auth.py         # Endpoint and logic integration tests
-│   ├── Dockerfile
-│   └── requirements.txt
-├── frontend/
-│   ├── src/
-│   │   ├── context/
-│   │   │   └── auth.jsx         # React Authentication Context (login, register, session verification)
-│   │   ├── pages/
-│   │   │   ├── Login.jsx        # Login panel utilizing Lucide icons & glassmorphism
-│   │   │   ├── Register.jsx     # SignUp component supporting customizable role choices
-│   │   │   └── Dashboard.jsx    # Premium dashboard layout featuring custom sidebar & mock stats
-│   │   ├── services/
-│   │   │   └── api.js           # Axios config injecting localStorage JWT header
-│   │   ├── App.jsx              # Routing rules with Protected & Public components
-│   │   ├── index.css            # Tailwind stylesheets, animated backgrounds, and scrollbar layouts
-│   │   └── main.jsx             # React DOM loader
-│   ├── index.html
-│   ├── tailwind.config.js
-│   ├── postcss.config.js
-│   ├── vite.config.js
-│   ├── Dockerfile
-│   └── package.json
-├── docker-compose.yml
-├── .env
-└── README.md
+/backend                     # FastAPI Application
+  ├── app/
+  │    ├── core/
+  │    │    ├── config.py    # Environment settings & JWT configuration
+  │    │    ├── database.py  # SQLAlchemy engine & SQLite fallback mechanism
+  │    │    └── security.py  # Password hashing & JWT generation
+  │    ├── models/
+  │    │    ├── __init__.py
+  │    │    └── user.py      # SQLAlchemy models for User and Profile
+  │    ├── schemas/
+  │    │    ├── __init__.py
+  │    │    └── user.py      # Pydantic schemas for data validation
+  │    ├── api/
+  │    │    └── v1/
+  │    │         ├── endpoints/
+  │    │         │    ├── auth.py   # Register, Login, Auth & Role checkers
+  │    │         │    └── users.py  # Profile retrieval & update endpoints
+  │    │         └── router.py      # Centralized API router
+  │    └── main.py           # FastAPI initialization & CORS
+  └── requirements.txt       # Python dependencies
+
+/frontend                    # React + Vite Application
+  ├── src/
+  │    ├── assets/
+  │    ├── components/
+  │    │    ├── layout/
+  │    │    │    ├── Layout.jsx   # Page container framing navbar and sidebar
+  │    │    │    ├── Navbar.jsx   # Topbar carrying theme toggles & logout
+  │    │    │    └── Sidebar.jsx  # Role-based navigation links drawer
+  │    │    └── ui/
+  │    │         ├── Button.jsx   # Reusable styled button component
+  │    │         ├── Card.jsx     # Card component supporting glassmorphism
+  │    │         └── Input.jsx    # Input component with label & error support
+  │    ├── context/
+  │    │    ├── AuthContext.jsx   # Global auth state, Axios intercepts & JWT rules
+  │    │    └── ThemeContext.jsx  # Application light & dark mode controls
+  │    ├── pages/
+  │    │    ├── Login.jsx         # Sign in panel
+  │    │    ├── Register.jsx      # Dynamic signup page with roles selectors
+  │    │    ├── Dashboard.jsx     # Main panel rendering role-specific details
+  │    │    ├── Profile.jsx       # Skin parameters questionnaire profile page
+  │    │    └── Unauthorized.jsx  # Redirection page for unauthorized access
+  │    ├── App.jsx           # Routing paths & Protected Route guards
+  │    ├── main.jsx          # React app entry point
+  │    └── index.css         # Tailwind v4 directives & custom CSS
+  ├── package.json           # Frontend npm dependencies
+  ├── index.html             # HTML entry point (Inter Google Font)
+  └── vite.config.js         # Vite configuration with Tailwind CSS v4 plugin
 ```
 
 ---
 
-## Deployment & Setup Guide
+## Tech Stack Installed
 
-### 1. Prerequisites
-Ensure you have the following installed on your machine:
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/) (with Docker Compose support)
-
-### 2. Environmental Setup
-Check the root `.env` file to verify configuration parameters:
-```env
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=skincare_secure_pwd_123
-POSTGRES_DB=skincare_db
-POSTGRES_HOST=db
-POSTGRES_PORT=5432
-MONGO_URI=mongodb://mongo:27017/skincare_logs
-JWT_SECRET=super_secret_jwt_key_987654321_abcd
-JWT_ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=60
-PROJECT_NAME="AI Skin Intelligence & Personalized Skincare Planner"
-```
-
-### 3. Running the Stack
-Launch all services using Docker Compose:
-```bash
-docker compose up --build
-```
-This command builds the frontend and backend images and spins up:
-* **PostgreSQL (db)**: Exposed on port `5432`.
-* **MongoDB (mongo)**: Exposed on port `27017`.
-* **FastAPI Backend (backend)**: Exposed on port `8000`. Documentation available at `http://localhost:8000/docs`.
-* **Vite React Frontend (frontend)**: Exposed on port `5173`. Access the client at `http://localhost:5173`.
+- **Backend**: Python, FastAPI, SQLAlchemy, SQLite (Development fallback) / PostgreSQL (Primary), Passlib (Bcrypt), PyJWT (jose), Pydantic v2.
+- **Frontend**: React 18, Vite, Tailwind CSS v4, React Router v6, Axios, React Hook Form, Lucide React (icons).
 
 ---
 
-## Testing Verification
+## Setup & Running Instructions
 
-Unit tests are written with `pytest` and mock configurations. Run tests directly inside the backend docker container:
-```bash
-docker compose exec backend pytest
-```
-Or run locally inside the `backend/` folder (if virtualenv is configured):
-```bash
-cd backend
-pip install -r requirements.txt
-pytest
-```
+### 1. Backend Setup
+
+1. Navigate to the `/backend` folder:
+   ```bash
+   cd backend
+   ```
+2. Create and activate a Python virtual environment:
+   * **Windows (PowerShell)**:
+     ```powershell
+     python -m venv venv
+     .\venv\Scripts\Activate.ps1
+     ```
+   * **macOS/Linux**:
+     ```bash
+     python -m venv venv
+     source venv/bin/activate
+     ```
+3. Install the dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Run the FastAPI development server:
+   ```bash
+   uvicorn app.main:app --reload
+   ```
+   *Note: If PostgreSQL is not active or running at the default address (`localhost:5432`), the backend will automatically initialize and connect to a local SQLite database (`skincare.db`) in the backend root directory.*
+
+### 2. Frontend Setup
+
+1. Open a new terminal and navigate to the `/frontend` folder:
+   ```bash
+   cd frontend
+   ```
+2. Install npm dependencies:
+   ```bash
+   npm install
+   ```
+3. Launch the development server:
+   ```bash
+   npm run dev
+   ```
+4. Open your browser and go to `http://localhost:5173`.
 
 ---
 
-## SDLC Phase Roadmap
+## Manual Verification Steps (Step-by-Step Test Guide)
 
-* **[COMPLETED] Phase 1**: Core authentication system, database setups (Postgres, Mongo), Docker configuration, and Vite + React layout.
-* **Phase 2 (Next)**: Deep learning model training setup (`train.py`, `preprocess.py`, `dataset.py`), model export (`model.keras`), integration of prediction pipelines, and image upload diagnostics UI widget.
-* **Phase 3**: Personalized skincare routine generator algorithms, ingredient index database, allergen scanners.
-* **Phase 4**: Progress tracker (before/after image comparisons, daily charts, health logs), PDF/Excel reports exporter.
-* **Phase 5**: Refinements, production build caching, unit and integration tests completion, GitHub Actions CI/CD pipelines.
+To verify the setup:
+
+1. **User Sign Up (Registration)**:
+   - Navigate to `http://localhost:5173/register`.
+   - Enter your name, email, and choose a password (minimum 6 characters).
+   - Select the role: **User / Patient** and hit **Create Account**.
+   
+2. **Access Control Verification**:
+   - Log in with the registered credentials.
+   - You will land on the **User Dashboard** showing a preview of the upcoming AI Skin Scanner and Skincare Routines.
+   - Attempt to navigate to `http://localhost:5173/admin-portal` or `http://localhost:5173/dermatologist-portal` directly via the URL. You will be redirected to the **Access Denied (Unauthorized)** page.
+   
+3. **Profile Parameter Management**:
+   - Click on **Skin Profile** in the sidebar.
+   - Set your **Age**, select your **Gender**, and choose a preliminary **Skin Type** (e.g. Dry).
+   - Select various concerns (e.g. *Acne*, *Wrinkles*) and enter any allergy details (e.g. *Sensitivities to benzoyl peroxide*).
+   - Click **Save Skin Profile**. Upon reload or dashboard return, notice the values are successfully loaded from the backend database.
+   
+4. **Practitioner & Admin Portals Check**:
+   - Click **Logout** from the navbar.
+   - Register a new account with the role set to **Dermatologist**.
+   - Log in. Notice that the sidebar now displays the **Dermatologist Console** link, and you are redirected to the Dentist/Dermatologist clinical workspace displaying mockup patient queues and practitioner stats fetched from the backend's protected `/api/v1/users/dermatologist-dashboard` endpoint.
+   - Do the same with the **Admin** role to view the System Console.
+   
+5. **Theme Testing**:
+   - Click the theme toggle icon (Sun/Moon) in the top navigation bar.
+   - The application will seamlessly transition between Light Mode and Dark Mode, saving your preference in `localStorage`.

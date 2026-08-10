@@ -1,44 +1,26 @@
-from typing import Any, Dict, Optional
-from pydantic import PostgresDsn, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
-
+from typing import List, Union
+from pydantic import AnyHttpUrl, validator
+from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=(".env", "../.env"), env_file_encoding="utf-8", case_sensitive=True, extra="ignore"
-    )
-
-    PROJECT_NAME: str = "AI Skin Intelligence & Personalized Skincare Planner"
     API_V1_STR: str = "/api/v1"
+    SECRET_KEY: str = "supersecretkeythatsreallyhardtoguess1234567890!@#"
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
 
-    # PostgreSQL Configuration
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
-    POSTGRES_HOST: str
-    POSTGRES_PORT: int = 5432
-    SQLALCHEMY_DATABASE_URI: Optional[str] = None
+    # Database settings: Default to PostgreSQL but allow SQLite fallback
+    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/skincare"
 
-    @field_validator("SQLALCHEMY_DATABASE_URI", mode="before")
-    @classmethod
-    def assemble_db_connection(cls, v: Optional[str], info: Any) -> Any:
-        if isinstance(v, str) and v:
-            return v
-        data = info.data
-        user = data.get("POSTGRES_USER")
-        password = data.get("POSTGRES_PASSWORD")
-        host = data.get("POSTGRES_HOST")
-        port = data.get("POSTGRES_PORT")
-        db = data.get("POSTGRES_DB")
-        return f"postgresql://{user}:{password}@{host}:{port}/{db}"
+    # CORS Origins (allow all in dev, but configurable)
+    BACKEND_CORS_ORIGINS: List[str] = [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+    ]
 
-    # MongoDB Configuration
-    MONGO_URI: str = "mongodb://mongo:27017/skincare_logs"
-
-    # JWT Authentication Configuration
-    JWT_SECRET: str
-    JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
-
+    class Config:
+        case_sensitive = True
+        env_file = ".env"
 
 settings = Settings()

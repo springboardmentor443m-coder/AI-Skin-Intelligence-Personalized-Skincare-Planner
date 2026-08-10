@@ -1,132 +1,133 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/auth';
-import { Sparkles, Mail, Lock, Loader2, ArrowRight } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
+import { Sparkles, KeyRound, Mail, AlertTriangle } from 'lucide-react';
 
-const Login = () => {
+export const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-  
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [authError, setAuthError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
-    const result = await login(email, password);
-    setIsLoading(false);
-    
-    if (result.success) {
+  const onSubmit = async (data) => {
+    setAuthError('');
+    setLoading(true);
+    try {
+      await login(data.email, data.password);
       navigate('/dashboard');
-    } else {
-      setError(result.message);
+    } catch (err) {
+      setAuthError(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#070b14] px-4">
-      {/* Background Neon Orbs */}
-      <div className="glow-orb-pink w-[400px] h-[400px] -top-20 -left-20" />
-      <div className="glow-orb-cyan w-[450px] h-[450px] -bottom-20 -right-20" />
+    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-tr from-slate-100 via-brand-50 to-brand-100/50 dark:from-slate-950 dark:via-slate-900 dark:to-brand-950/20 px-4">
+      <div className="absolute top-10 flex items-center gap-2">
+        <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-500 to-orange-400 flex items-center justify-center text-white text-xl font-bold shadow-md shadow-brand-500/20">
+          ✨
+        </div>
+        <span className="text-2xl font-bold bg-gradient-to-r from-brand-600 to-orange-400 bg-clip-text text-transparent">
+          DermaAI
+        </span>
+      </div>
 
-      {/* Main Card */}
-      <div className="relative w-full max-w-md glass-panel p-8 rounded-2xl shadow-2xl z-10">
-        
-        {/* Title / Logo Area */}
-        <div className="flex flex-col items-center mb-8">
-          <div className="p-3 bg-gradient-to-tr from-pink-500 to-cyan-500 rounded-xl mb-3 shadow-lg shadow-pink-500/20">
-            <Sparkles className="h-7 w-7 text-white" />
-          </div>
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-pink-300 bg-clip-text text-transparent">
-            GlowAI Portal
+      <Card className="w-full max-w-md p-8 glass-card border border-white/40 dark:border-slate-800/40 shadow-xl relative overflow-hidden" glass>
+        {/* Aesthetic background glow */}
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-brand-500/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-orange-500/10 rounded-full blur-2xl pointer-events-none" />
+
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center justify-center gap-1.5">
+            Welcome Back <Sparkles className="w-5 h-5 text-brand-500" />
           </h1>
-          <p className="text-slate-400 text-sm mt-1">AI Skin Intelligence & Planner</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            Access your personalized skin intelligence panel
+          </p>
         </div>
 
-        {error && (
-          <div className="p-3 mb-6 text-sm text-pink-300 bg-pink-950/40 border border-pink-900/50 rounded-lg animate-pulse">
-            {error}
+        {authError && (
+          <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/20 border border-red-200/50 dark:border-red-900/30 rounded-xl flex items-start gap-2.5">
+            <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+            <span className="text-xs font-semibold text-red-700 dark:text-red-400">
+              {authError}
+            </span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Email */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              Email Address
-            </label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-                <Mail className="h-5 w-5" />
-              </span>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-slate-700/50 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all duration-300"
-              />
-            </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="relative">
+            <Mail className="absolute left-4 top-11.5 w-4 h-4 text-slate-400" />
+            <Input
+              label="Email Address"
+              type="email"
+              placeholder="name@example.com"
+              className="pl-11"
+              error={errors.email}
+              {...register('email', {
+                required: 'Email is required',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid email address',
+                },
+              })}
+            />
           </div>
 
-          {/* Password */}
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                Password
-              </label>
-            </div>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-                <Lock className="h-5 w-5" />
-              </span>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-slate-700/50 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all duration-300"
-              />
-            </div>
+          <div className="relative">
+            <KeyRound className="absolute left-4 top-11.5 w-4 h-4 text-slate-400" />
+            <Input
+              label="Password"
+              type="password"
+              placeholder="••••••••"
+              className="pl-11"
+              error={errors.password}
+              {...register('password', {
+                required: 'Password is required',
+                minLength: {
+                  value: 6,
+                  message: 'Password must be at least 6 characters',
+                },
+              })}
+            />
           </div>
 
-          {/* Submit */}
-          <button
+          <Button
             type="submit"
-            disabled={isLoading}
-            className="w-full flex items-center justify-center py-3 px-4 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-semibold rounded-lg shadow-lg shadow-pink-500/20 focus:outline-none hover:shadow-pink-500/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed group"
+            className="w-full mt-2"
+            isLoading={loading}
           >
-            {isLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin mr-2" />
-            ) : (
-              <>
-                Sign In
-                <ArrowRight className="ml-2 h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
-              </>
-            )}
-          </button>
+            Sign In
+          </Button>
         </form>
 
-        <div className="mt-8 text-center border-t border-slate-800/80 pt-6">
-          <p className="text-slate-400 text-sm">
-            Don't have an account?{' '}
-            <Link
-              to="/register"
-              className="font-semibold text-pink-400 hover:text-pink-300 transition-colors"
-            >
-              Sign up free
-            </Link>
-          </p>
+        <div className="mt-6 text-center text-xs text-slate-500 dark:text-slate-400">
+          New to DermaAI?{' '}
+          <Link
+            to="/register"
+            className="text-brand-500 hover:text-brand-600 font-semibold transition-colors duration-150"
+          >
+            Create an Account
+          </Link>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };
-
 export default Login;
