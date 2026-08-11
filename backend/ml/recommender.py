@@ -79,9 +79,41 @@ def recommend_by_skin_condition(
     condition_vector = tfidf.transform([condition_query])
     profile_vector = tfidf.transform([profile_query])
 
-    # Convert every product into TF-IDF vectors
+    # 1. Parse allergens
+    allergen_list = []
+    if allergies and allergies.lower() != "none":
+        allergen_list = [a.strip().lower() for a in allergies.split(",")]
+        
+    # 2. Define sensitive skin red flags
+    sensitive_red_flags = ["alcohol denat", "fragrance", "parfum", "sulfate", "paraben"]
+    
+    # 3. Create a boolean mask for safe products
+    def is_safe(ingredients_str):
+        if not isinstance(ingredients_str, str):
+            return True
+        ingredients_lower = ingredients_str.lower()
+        
+        for allergen in allergen_list:
+            if allergen and allergen in ingredients_lower:
+                return False
+                
+        if sensitive_skin:
+            for flag in sensitive_red_flags:
+                if flag in ingredients_lower:
+                    return False
+                    
+        return True
+
+    safe_mask = df["ingredients"].apply(is_safe)
+    safe_df = df[safe_mask].copy()
+
+    # If filtering removes everything, return an empty list of recommendations
+    if safe_df.empty:
+        return []
+
+    # Convert every safe product into TF-IDF vectors
     product_vectors = tfidf.transform(
-        df["combined_features"]
+        safe_df["combined_features"]
     )
 
     # Calculate two separate similarities
@@ -102,7 +134,7 @@ def recommend_by_skin_condition(
     )
 
     # Copy dataframe and store final score
-    results = df.copy()
+    results = safe_df.copy()
 
     results["condition_similarity"] = condition_similarity
     results["profile_similarity"] = profile_similarity

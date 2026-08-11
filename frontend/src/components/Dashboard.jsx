@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 export default function Dashboard({ userId, onLogout }) {
   const [routine, setRoutine] = useState(null);
+  const [selectedDay, setSelectedDay] = useState('Day 1');
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [analysis, setAnalysis] = useState(null);
@@ -12,7 +13,12 @@ export default function Dashboard({ userId, onLogout }) {
     // Fetch routine on load
     fetch(`http://127.0.0.1:8000/routine/${userId}`)
       .then(res => res.json())
-      .then(data => setRoutine(data.routine))
+      .then(data => {
+        setRoutine(data.routine);
+        if (data.routine && Object.keys(data.routine).length > 0) {
+          setSelectedDay(Object.keys(data.routine)[0]);
+        }
+      })
       .catch(err => console.error("Failed to load routine", err));
   }, [userId]);
 
@@ -58,16 +64,36 @@ export default function Dashboard({ userId, onLogout }) {
         
         {/* Left Column: Routine */}
         <div className="glass-card">
-          <h3>My Skincare Routine</h3>
+          <h3>My 7-Day Skincare Routine</h3>
           {routine ? (
             <div>
-              <h4 style={{ color: 'var(--secondary-color)', marginTop: '1.5rem' }}>Morning ☀️</h4>
+              <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', marginBottom: '1.5rem', paddingBottom: '0.5rem', WebkitOverflowScrolling: 'touch' }}>
+                {Object.keys(routine).map(day => (
+                  <button 
+                    key={day} 
+                    onClick={() => setSelectedDay(day)}
+                    style={{ 
+                      padding: '0.5rem 1rem', 
+                      borderRadius: '20px', 
+                      border: 'none', 
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      background: selectedDay === day ? 'var(--primary-color)' : 'rgba(255,255,255,0.1)',
+                      color: selectedDay === day ? 'white' : 'var(--text-primary)',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {day}
+                  </button>
+                ))}
+              </div>
+              <h4 style={{ color: 'var(--secondary-color)', marginTop: '0.5rem' }}>Morning ☀️</h4>
               <ul style={{ paddingLeft: '1.5rem', color: 'var(--text-secondary)' }}>
-                {routine.morning.map((item, i) => <li key={i} style={{ marginBottom: '0.5rem' }}>{item}</li>)}
+                {routine[selectedDay]?.morning?.map((item, i) => <li key={i} style={{ marginBottom: '0.5rem' }}>{item}</li>)}
               </ul>
               <h4 style={{ color: 'var(--secondary-color)', marginTop: '1.5rem' }}>Night 🌙</h4>
               <ul style={{ paddingLeft: '1.5rem', color: 'var(--text-secondary)' }}>
-                {routine.night.map((item, i) => <li key={i} style={{ marginBottom: '0.5rem' }}>{item}</li>)}
+                {routine[selectedDay]?.night?.map((item, i) => <li key={i} style={{ marginBottom: '0.5rem' }}>{item}</li>)}
               </ul>
             </div>
           ) : (
