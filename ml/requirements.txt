@@ -1,0 +1,42 @@
+# ml/requirements.txt
+# ─────────────────────────────────────────────────────────────────────────────
+# AI Skin Intelligence — ML Pipeline Dependencies (Phase 7)
+#
+# These are SEPARATE from the backend's requirements.txt.
+# This file is only needed for training/evaluation of the ML model.
+#
+# Install in a dedicated virtual environment:
+#   cd ml/
+#   python -m venv venv
+#   venv\Scripts\activate          (Windows)
+#   source venv/bin/activate       (macOS/Linux)
+#   pip install -r requirements.txt
+#
+# On Google Colab, most of these are pre-installed. The notebook
+# will install only what is missing.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Core ML Framework ─────────────────────────────────────────────────────────
+# PyTorch with torchvision — includes EfficientNetB0 pretrained model
+# Install the CPU or CUDA version depending on your hardware.
+# See https://pytorch.org/get-started/locally/ for the right command.
+torch>=2.0.0
+torchvision>=0.15.0
+
+# ── Data Handling ─────────────────────────────────────────────────────────────
+numpy>=1.24.0
+pandas>=2.0.0
+Pillow>=10.0.0           # Image loading and preprocessing
+
+# ── Evaluation & Metrics ──────────────────────────────────────────────────────
+scikit-learn>=1.3.0      # train_test_split, classification_report, confusion_matrix
+
+# ── Visualisation ─────────────────────────────────────────────────────────────
+matplotlib>=3.7.0        # Training curves, confusion matrix
+seaborn>=0.12.0          # Prettier confusion matrix heatmap
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+tqdm>=4.65.0             # Progress bars during training and data loading
+
+# ── Dataset Download (optional — only needed to download from Kaggle CLI) ─────
+kaggle>=1.6.0
