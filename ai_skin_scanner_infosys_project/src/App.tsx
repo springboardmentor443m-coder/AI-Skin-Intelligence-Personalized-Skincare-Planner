@@ -253,7 +253,7 @@ function App() {
               )}
 
               {currentScreen === 'consultant-chat' && (
-                <ConsultantChat scanMetrics={scanMetrics} />
+                <ConsultantChat scanMetrics={scanMetrics} userProfile={userProfile} />
               )}
 
               {currentScreen === 'history' && (
@@ -269,11 +269,11 @@ function App() {
               )}
 
               {currentScreen === 'products' && (
-                <ProductRecommendations />
+                <ProductRecommendations scanMetrics={scanMetrics} />
               )}
 
               {currentScreen === 'progress' && (
-                <ProgressTracking />
+                <ProgressTracking userProfile={userProfile} />
               )}
 
               {currentScreen === 'reports' && (

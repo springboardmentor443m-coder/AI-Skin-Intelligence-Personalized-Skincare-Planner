@@ -28,12 +28,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({ userProfile, setUserPr
     sleepSchedule: userProfile.sleepSchedule
   });
 
-  const [notifications, setNotifications] = useState({
-    emailReports: true,
-    morningReminder: true,
-    nightReminder: true
-  });
-
   React.useEffect(() => {
     setPersonalInfo({
       name: userProfile.name,
@@ -252,8 +246,8 @@ export const UserProfile: React.FC<UserProfileProps> = ({ userProfile, setUserPr
           </div>
         </div>
 
-        {/* Lifestyle & Notifications settings */}
-        <div className="col-span-12 lg:col-span-6 glass-card p-6 rounded-2xl border border-white/20 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Lifestyle settings */}
+        <div className="col-span-12 lg:col-span-6 glass-card p-6 rounded-2xl border border-white/20">
           <div className="space-y-4">
             <h3 className="text-xs font-bold text-on-surface uppercase tracking-wider border-b border-outline-variant/10 pb-2">Lifestyle Baselines</h3>
             <div className="space-y-3">
@@ -277,42 +271,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({ userProfile, setUserPr
                   onChange={(e) => setLifestyle({ ...lifestyle, sleepSchedule: e.target.value })}
                   className="w-full px-3 py-1.5 bg-surface-container-low dark:bg-zinc-800 border border-outline-variant/30 rounded-xl text-xs text-on-surface focus:outline-none"
                 />
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-xs font-bold text-on-surface uppercase tracking-wider border-b border-outline-variant/10 pb-2">Notification Settings</h3>
-            <div className="space-y-2.5">
-              <div className="flex justify-between items-center text-xs">
-                <span className="text-on-surface font-semibold">Email PDF Reports</span>
-                <button 
-                  type="button"
-                  onClick={() => setNotifications({ ...notifications, emailReports: !notifications.emailReports })}
-                  className={`w-9 h-5 rounded-full p-0.5 transition-colors cursor-pointer ${notifications.emailReports ? 'bg-primary' : 'bg-outline-variant'}`}
-                >
-                  <div className={`w-4 h-4 bg-white rounded-full transform transition-transform ${notifications.emailReports ? 'translate-x-4' : 'translate-x-0'}`}></div>
-                </button>
-              </div>
-              <div className="flex justify-between items-center text-xs">
-                <span className="text-on-surface font-semibold">Morning Routine Reminder</span>
-                <button 
-                  type="button"
-                  onClick={() => setNotifications({ ...notifications, morningReminder: !notifications.morningReminder })}
-                  className={`w-9 h-5 rounded-full p-0.5 transition-colors cursor-pointer ${notifications.morningReminder ? 'bg-primary' : 'bg-outline-variant'}`}
-                >
-                  <div className={`w-4 h-4 bg-white rounded-full transform transition-transform ${notifications.morningReminder ? 'translate-x-4' : 'translate-x-0'}`}></div>
-                </button>
-              </div>
-              <div className="flex justify-between items-center text-xs">
-                <span className="text-on-surface font-semibold">Night Routine Reminder</span>
-                <button 
-                  type="button"
-                  onClick={() => setNotifications({ ...notifications, nightReminder: !notifications.nightReminder })}
-                  className={`w-9 h-5 rounded-full p-0.5 transition-colors cursor-pointer ${notifications.nightReminder ? 'bg-primary' : 'bg-outline-variant'}`}
-                >
-                  <div className={`w-4 h-4 bg-white rounded-full transform transition-transform ${notifications.nightReminder ? 'translate-x-4' : 'translate-x-0'}`}></div>
-                </button>
               </div>
             </div>
           </div>

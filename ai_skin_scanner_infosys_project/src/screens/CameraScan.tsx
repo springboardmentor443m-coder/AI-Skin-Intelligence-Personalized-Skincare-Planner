@@ -16,6 +16,10 @@ export const CameraScan: React.FC<CameraScanProps> = ({ onScanComplete, userEmai
   const [capturedMetrics, setCapturedMetrics] = useState<ScanMetrics | null>(null);
   const [capturedImgStr, setCapturedImgStr] = useState<string>('');
   const [isDragOver, setIsDragOver] = useState(false);
+  const [sunExposure, setSunExposure] = useState('Medium');
+  const [sensitivityLevel, setSensitivityLevel] = useState('None');
+  const [skincareGoal, setSkincareGoal] = useState('Brightening');
+  const [skincareExperience, setSkincareExperience] = useState('Beginner');
 
   // Generate facial landmarks to simulate holographic analysis overlay
   useEffect(() => {
@@ -51,7 +55,16 @@ export const CameraScan: React.FC<CameraScanProps> = ({ onScanComplete, userEmai
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ image: imageSrc, email: userEmail })
+        body: JSON.stringify({ 
+          image: imageSrc, 
+          email: userEmail,
+          questionnaire: {
+            sunExposure,
+            sensitivityLevel,
+            skincareGoal,
+            skincareExperience
+          }
+        })
       });
       if (response.ok) {
         const data = await response.json();
@@ -79,7 +92,22 @@ export const CameraScan: React.FC<CameraScanProps> = ({ onScanComplete, userEmai
     else if (redness > 50) skinType = 'Sensitive';
     else if (oily > 50 && dryness > 30) skinType = 'Combination';
 
-    return { acne, dryness, oily, pigmentation, redness, fineLines, score, skinType };
+    return { 
+      acne, 
+      dryness, 
+      oily, 
+      pigmentation, 
+      redness, 
+      fineLines, 
+      score, 
+      skinType,
+      questionnaire: {
+        sunExposure,
+        sensitivityLevel,
+        skincareGoal,
+        skincareExperience
+      }
+    };
   };
 
   // Start analysis trigger
@@ -234,15 +262,16 @@ export const CameraScan: React.FC<CameraScanProps> = ({ onScanComplete, userEmai
         </div>
       </div>
 
-      {/* Main Scanner Box */}
-      <div className="flex-1 flex justify-center items-center">
+      {/* Main Scanner Box & Questionnaire Grid */}
+      <div className={`grid grid-cols-1 ${capturedImgStr ? 'lg:grid-cols-12' : ''} gap-card-gap items-stretch`}>
+        {/* Left Side: Photo Frame */}
         <div 
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`relative w-full max-w-3xl aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border-4 transition-all duration-300 ${
+          className={`relative rounded-3xl overflow-hidden shadow-2xl border-4 transition-all duration-300 ${
             isDragOver ? 'border-primary bg-primary/5 scale-[1.01]' : 'border-white/40 bg-zinc-950'
-          } flex flex-col items-center justify-center group`}
+          } flex flex-col items-center justify-center group ${capturedImgStr ? 'col-span-12 lg:col-span-6 aspect-[4/3] w-full' : 'w-full max-w-3xl aspect-[4/3] mx-auto'}`}
         >
           {capturedImgStr ? (
             <>
@@ -343,6 +372,88 @@ export const CameraScan: React.FC<CameraScanProps> = ({ onScanComplete, userEmai
             </div>
           )}
         </div>
+
+        {/* Right Side: Skincare Questionnaire */}
+        {capturedImgStr && (
+          <div className="col-span-12 lg:col-span-6 glass-card p-6 rounded-3xl border border-white/20 flex flex-col justify-between space-y-4">
+            <div>
+              <h3 className="font-display text-sm font-bold text-on-surface uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-primary text-base">clinical_notes</span>
+                Dermal Lifestyle Profile
+              </h3>
+              <p className="text-[10px] text-on-surface-variant font-medium">Please answer these supplementary diagnostic questions to customize your active ingredient routine.</p>
+            </div>
+
+            <div className="space-y-3.5 flex-1 justify-center flex flex-col">
+              {/* Question 1: Skincare Goal */}
+              <div className="space-y-1">
+                <label className="block text-[9px] font-bold text-on-surface-variant uppercase tracking-wider">Primary Skincare Goal</label>
+                <select
+                  value={skincareGoal}
+                  onChange={(e) => setSkincareGoal(e.target.value)}
+                  disabled={isScanning}
+                  className="w-full py-2 px-3 bg-surface-container-low dark:bg-zinc-800 border border-outline-variant/30 rounded-xl text-xs text-on-surface focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer disabled:opacity-55"
+                >
+                  <option value="Brightening">Fade dark spots & brighten hyperpigmentation</option>
+                  <option value="Sebum Control">Clear acne, blackheads, & balance sebum</option>
+                  <option value="Redness">Calm sensitivity & redness irritation</option>
+                  <option value="Wrinkles">Soften fine lines, wrinkles, & firm skin</option>
+                  <option value="Hydration">Restore moisture & repair dry skin barrier</option>
+                </select>
+              </div>
+
+              {/* Question 2: Sun Exposure */}
+              <div className="space-y-1">
+                <label className="block text-[9px] font-bold text-on-surface-variant uppercase tracking-wider">Daily Sun Exposure</label>
+                <select
+                  value={sunExposure}
+                  onChange={(e) => setSunExposure(e.target.value)}
+                  disabled={isScanning}
+                  className="w-full py-2 px-3 bg-surface-container-low dark:bg-zinc-800 border border-outline-variant/30 rounded-xl text-xs text-on-surface focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer disabled:opacity-55"
+                >
+                  <option value="High">High (Outdoors, frequent sun exposure)</option>
+                  <option value="Medium">Medium (General commute, moderate outdoor time)</option>
+                  <option value="Low">Low (Mostly indoors under fluorescent/AC)</option>
+                </select>
+              </div>
+
+              {/* Question 3: Sensitivity Level */}
+              <div className="space-y-1">
+                <label className="block text-[9px] font-bold text-on-surface-variant uppercase tracking-wider">Skin Sensitivity Level</label>
+                <select
+                  value={sensitivityLevel}
+                  onChange={(e) => setSensitivityLevel(e.target.value)}
+                  disabled={isScanning}
+                  className="w-full py-2 px-3 bg-surface-container-low dark:bg-zinc-800 border border-outline-variant/30 rounded-xl text-xs text-on-surface focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer disabled:opacity-55"
+                >
+                  <option value="None">Tolerant (No allergies, fits most active ingredients)</option>
+                  <option value="Mild">Mild (Occasional tingling or temporary redness)</option>
+                  <option value="High">Highly Sensitive (Prone to irritation, itching, or rashes)</option>
+                </select>
+              </div>
+
+              {/* Question 4: Skincare Experience */}
+              <div className="space-y-1">
+                <label className="block text-[9px] font-bold text-on-surface-variant uppercase tracking-wider">Experience with Actives</label>
+                <select
+                  value={skincareExperience}
+                  onChange={(e) => setSkincareExperience(e.target.value)}
+                  disabled={isScanning}
+                  className="w-full py-2 px-3 bg-surface-container-low dark:bg-zinc-800 border border-outline-variant/30 rounded-xl text-xs text-on-surface focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer disabled:opacity-55"
+                >
+                  <option value="Beginner">Beginner (Mostly use basic hydration cleansers/moisturizers)</option>
+                  <option value="Intermediate">Intermediate (Used Niacinamide or low-strength Vitamin C before)</option>
+                  <option value="Advanced">Advanced (Regularly use high-strength Retinol, AHA/BHA exfoliators)</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="text-[9px] font-semibold text-primary/75 bg-primary/5 border border-primary/10 rounded-xl p-3 flex items-start gap-2 select-none">
+              <span className="material-symbols-outlined text-sm shrink-0">info</span>
+              <span>Our clinical AI consultant uses these environmental & sensitivity inputs to adjust active ingredient dosage recommendation safety.</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Control panel buttons */}

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import type { ScanMetrics } from '../App';
+import type { ScanMetrics, UserProfileData } from '../App';
 
 interface Message {
   sender: 'user' | 'ai';
@@ -9,26 +9,22 @@ interface Message {
 
 interface ConsultantChatProps {
   scanMetrics: ScanMetrics;
+  userProfile: UserProfileData;
 }
 
-export const ConsultantChat: React.FC<ConsultantChatProps> = ({ scanMetrics }) => {
+export const ConsultantChat: React.FC<ConsultantChatProps> = ({ scanMetrics, userProfile }) => {
   const [apiKey, setApiKey] = useState(() => {
     return localStorage.getItem('gemini_api_key') || '';
   });
-  const [tempKey, setTempKey] = useState(apiKey);
-  const [showKeyInput, setShowKeyInput] = useState(false);
-
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // Set initial assistant message dynamically based on whether API key is provided
+  // Set initial assistant message dynamically
   useEffect(() => {
     if (messages.length === 0) {
-      const welcomeText = apiKey 
-        ? `Hello! I'm your Aetheris AI Skincare Consultant, powered by your live Gemini API connection. I've analyzed your skin profile: ${scanMetrics.skinType || 'Normal'} Skin with a Health Score of ${scanMetrics.score}/100. How can I assist you with your routine or skin concerns today?`
-        : `Hello! I'm your Aetheris AI Skincare Consultant. I've analyzed your skin profile: ${scanMetrics.skinType || 'Normal'} Skin with a Health Score of ${scanMetrics.score}/100. For direct live AI consulting, click the "Connect Gemini API Key" button above to link your key. How can I assist you today?`;
+      const welcomeText = `Hello! I'm your Aetheris AI Skincare Consultant. I've analyzed your skin profile: ${scanMetrics.skinType || 'Normal'} Skin with a Health Score of ${scanMetrics.score}/100. How can I assist you with your routine, active ingredients, or skin concerns today?`;
       
       setMessages([
         {
@@ -38,7 +34,7 @@ export const ConsultantChat: React.FC<ConsultantChatProps> = ({ scanMetrics }) =
         }
       ]);
     }
-  }, [scanMetrics, apiKey, messages.length]);
+  }, [scanMetrics, messages.length]);
 
   // Auto-scroll to bottom of chat
   useEffect(() => {
@@ -75,7 +71,8 @@ export const ConsultantChat: React.FC<ConsultantChatProps> = ({ scanMetrics }) =
         message: text,
         history: messages,
         metrics: scanMetrics,
-        apiKey: apiKey
+        apiKey: apiKey,
+        profile: userProfile
       })
     })
       .then(res => res.json())
@@ -107,59 +104,7 @@ export const ConsultantChat: React.FC<ConsultantChatProps> = ({ scanMetrics }) =
           <h2 className="font-display text-2xl font-bold text-on-surface">AI Skincare Consultant</h2>
           <p className="text-xs text-on-surface-variant font-medium mt-1">Get personalized guidance on active ingredients, routine updates, and concern resolutions from our trained AI.</p>
         </div>
-        <button 
-          onClick={() => setShowKeyInput(!showKeyInput)}
-          className={`flex items-center gap-1.5 px-3.5 py-2.5 rounded-full text-xs font-bold transition-all border self-start md:self-center cursor-pointer shadow-sm ${
-            apiKey 
-              ? 'border-emerald-500/20 text-emerald-600 bg-emerald-500/10' 
-              : 'border-primary/20 text-primary bg-primary/5 hover:bg-primary/10'
-          }`}
-        >
-          <span className="material-symbols-outlined text-sm">{apiKey ? 'lock_open' : 'lock'}</span>
-          {apiKey ? 'API Linked' : 'Connect Gemini API Key'}
-        </button>
       </div>
-
-      {showKeyInput && (
-        <div className="p-4 glass-card border border-outline-variant/30 rounded-2xl flex flex-col sm:flex-row gap-3 items-center justify-between bg-surface-container-low dark:bg-zinc-800/40">
-          <div className="flex-1 w-full text-left">
-            <h4 className="text-xs font-bold text-on-surface">Google Gemini API Configuration</h4>
-            <p className="text-[10px] text-on-surface-variant mt-0.5">Paste your personal free `GEMINI_API_KEY` below, or set it as a terminal environment variable ($env:GEMINI_API_KEY) in the backend to run the chatbot and recommendations keylessly.</p>
-          </div>
-          <div className="flex gap-2 w-full sm:w-auto shrink-0 items-center">
-            <input 
-              type="password"
-              value={tempKey}
-              onChange={(e) => setTempKey(e.target.value)}
-              placeholder="Enter Gemini API Key (AIzaSy...)"
-              className="flex-1 sm:w-64 px-3 py-1.5 bg-white dark:bg-zinc-900 border border-outline-variant/30 rounded-xl text-xs focus:outline-none text-on-surface focus:border-primary"
-            />
-            <button 
-              onClick={() => {
-                setApiKey(tempKey);
-                localStorage.setItem('gemini_api_key', tempKey);
-                setShowKeyInput(false);
-              }}
-              className="px-3 py-1.5 bg-primary hover:bg-primary/95 text-white font-bold text-xs rounded-xl cursor-pointer"
-            >
-              Save Key
-            </button>
-            {apiKey && (
-              <button 
-                onClick={() => {
-                  setTempKey('');
-                  setApiKey('');
-                  localStorage.removeItem('gemini_api_key');
-                  setShowKeyInput(false);
-                }}
-                className="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-500 font-bold text-xs rounded-xl cursor-pointer"
-              >
-                Clear
-              </button>
-            )}
-          </div>
-        </div>
-      )}
 
       <div className="grid grid-cols-12 gap-card-gap h-[calc(100vh-220px)] min-h-[450px]">
         {/* Skin Profile Summary sidebar */}

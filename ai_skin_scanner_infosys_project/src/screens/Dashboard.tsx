@@ -113,63 +113,48 @@ export const Dashboard: React.FC<DashboardProps> = ({ setScreen, onStartScan, us
           </div>
         </div>
 
-        {/* Zone Analysis Card */}
+        {/* Targeted Skincare Recommendations */}
         <div className="col-span-12 md:col-span-6 lg:col-span-5 glass-card rounded-2xl p-6 min-h-[300px] flex flex-col justify-between border border-white/20">
-          <div className="flex justify-between items-start mb-4">
+          <div className="flex justify-between items-center mb-3">
             <div>
-              <p className="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-widest mb-0.5">Latest Assessment</p>
-              <h3 className="font-display text-base font-bold text-on-surface">Biometric Zone Status</h3>
+              <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-0.5">Biometric Matches</p>
+              <h3 className="font-display text-sm font-bold text-on-surface">Targeted Recommendations</h3>
             </div>
-            <span className="text-[9px] bg-white/40 dark:bg-zinc-800 px-3 py-1 rounded-full text-on-surface-variant font-semibold shadow-sm">Feb 24, 08:30 AM</span>
+            <button onClick={() => setScreen('products')} className="text-[10px] font-bold text-primary hover:underline cursor-pointer">View All</button>
           </div>
 
-          <div className="grid grid-cols-12 gap-4 items-center flex-1">
-            {/* Minimalist Face Overlay */}
-            <div className="col-span-4 flex items-center justify-center">
-              <div className="w-24 h-24 bg-primary/5 rounded-full border border-primary/20 flex items-center justify-center relative">
-                <span className="material-symbols-outlined text-[64px] text-primary/30">face_retouching_natural</span>
-                {/* Simulated T-Zone dot */}
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-error rounded-full animate-pulse shadow-md shadow-error/50"></div>
-                {/* Cheeks dots */}
-                <div className="absolute top-12 left-6 w-2 h-2 bg-secondary rounded-full opacity-70"></div>
-                <div className="absolute top-12 right-6 w-2 h-2 bg-secondary rounded-full opacity-70"></div>
+          <div className="space-y-3 flex-1 flex flex-col justify-center">
+            {/* Product 1 */}
+            <div 
+              onClick={() => setScreen('products')}
+              className="flex items-center gap-3 p-3 bg-surface-container-low dark:bg-zinc-800/40 border border-outline-variant/10 rounded-xl hover:border-primary/20 hover:shadow-sm transition-all cursor-pointer group"
+            >
+              <div className="w-12 h-12 bg-white dark:bg-zinc-950 rounded-lg flex items-center justify-center shrink-0 shadow-inner relative overflow-hidden">
+                <span className="material-symbols-outlined text-primary text-xl">water_drop</span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-on-surface truncate group-hover:text-primary transition-colors">Lumina C+ Serum</h4>
+                  <span className="text-[8px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">98% FIT</span>
+                </div>
+                <p className="text-[9px] text-on-surface-variant truncate mt-0.5">Active antioxidant formula targeting dark spots.</p>
               </div>
             </div>
 
-            {/* Metrics */}
-            <div className="col-span-8 space-y-3">
-              <div>
-                <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span>T-Zone Sebum</span>
-                  <span className={scanMetrics.oily > 60 ? "text-error" : "text-primary"}>
-                    {scanMetrics.oily > 60 ? 'High' : 'Optimal'} ({scanMetrics.oily}%)
-                  </span>
-                </div>
-                <div className="w-full bg-surface-container-highest dark:bg-zinc-800 h-1.5 rounded-full">
-                  <div className={`h-full rounded-full ${scanMetrics.oily > 60 ? 'bg-error' : 'bg-primary'}`} style={{ width: `${scanMetrics.oily}%` }}></div>
-                </div>
+            {/* Product 2 */}
+            <div 
+              onClick={() => setScreen('products')}
+              className="flex items-center gap-3 p-3 bg-surface-container-low dark:bg-zinc-800/40 border border-outline-variant/10 rounded-xl hover:border-secondary/20 hover:shadow-sm transition-all cursor-pointer group"
+            >
+              <div className="w-12 h-12 bg-white dark:bg-zinc-950 rounded-lg flex items-center justify-center shrink-0 shadow-inner relative overflow-hidden">
+                <span className="material-symbols-outlined text-secondary text-xl">healing</span>
               </div>
-              <div>
-                <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span>Cheek Moisture</span>
-                  <span className={100 - scanMetrics.dryness > 50 ? "text-primary" : "text-amber-500"}>
-                    {100 - scanMetrics.dryness > 50 ? 'Optimal' : 'Low'} ({100 - scanMetrics.dryness}%)
-                  </span>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-on-surface truncate group-hover:text-secondary transition-colors">Barrier Bio-Complex</h4>
+                  <span className="text-[8px] font-bold text-secondary bg-secondary/10 px-1.5 py-0.5 rounded">92% FIT</span>
                 </div>
-                <div className="w-full bg-surface-container-highest dark:bg-zinc-800 h-1.5 rounded-full">
-                  <div className={`h-full rounded-full ${100 - scanMetrics.dryness > 50 ? 'bg-primary' : 'bg-amber-500'}`} style={{ width: `${100 - scanMetrics.dryness}%` }}></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span>Barrier Integrity</span>
-                  <span className={100 - scanMetrics.redness > 50 ? "text-secondary" : "text-error"}>
-                    {100 - scanMetrics.redness > 50 ? 'Good' : 'Sensitive'} ({100 - scanMetrics.redness}%)
-                  </span>
-                </div>
-                <div className="w-full bg-surface-container-highest dark:bg-zinc-800 h-1.5 rounded-full">
-                  <div className={`h-full rounded-full ${100 - scanMetrics.redness > 50 ? 'bg-secondary' : 'bg-error'}`} style={{ width: `${100 - scanMetrics.redness}%` }}></div>
-                </div>
+                <p className="text-[9px] text-on-surface-variant truncate mt-0.5">Soothing lipid repair for sensitive skin.</p>
               </div>
             </div>
           </div>
@@ -335,123 +320,38 @@ export const Dashboard: React.FC<DashboardProps> = ({ setScreen, onStartScan, us
           </button>
         </div>
 
-        {/* Tracker widgets: Sleep, UV index */}
-        <div className="col-span-12 md:col-span-6 lg:col-span-4 glass-card rounded-2xl p-6 grid grid-cols-2 gap-4 border border-white/20">
-          <div className="bg-surface-container-low dark:bg-zinc-800/40 p-4 rounded-xl flex flex-col justify-between">
-            <div className="flex justify-between items-start">
-              <span className="material-symbols-outlined text-primary text-xl">nights_stay</span>
-              <span className="text-[9px] text-primary bg-primary/10 px-2 py-0.5 rounded font-bold">EXCELLENT</span>
-            </div>
-            <div>
-              <p className="text-[9px] font-bold text-on-surface-variant uppercase tracking-wider">Sleep Quality</p>
-              <h4 className="text-lg font-bold text-on-surface mt-0.5">8h 15m</h4>
-              <p className="text-[8px] text-on-surface-variant font-medium mt-1">94% REM score</p>
-            </div>
-          </div>
-
-          <div className="bg-surface-container-low dark:bg-zinc-800/40 p-4 rounded-xl flex flex-col justify-between">
-            <div className="flex justify-between items-start">
-              <span className="material-symbols-outlined text-amber-500 text-xl">wb_sunny</span>
-              <span className="text-[9px] text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded font-bold">MODERATE</span>
-            </div>
-            <div>
-              <p className="text-[9px] font-bold text-on-surface-variant uppercase tracking-wider">UV Exposure</p>
-              <h4 className="text-lg font-bold text-on-surface mt-0.5">UV Index 4</h4>
-              <p className="text-[8px] text-on-surface-variant font-medium mt-1">SPF reapply in 1h</p>
-            </div>
-          </div>
-        </div>
-
         {/* Quick Actions Panel */}
-        <div className="col-span-12 md:col-span-6 lg:col-span-4 glass-card rounded-2xl p-6 flex flex-col justify-between border border-white/20">
-          <h4 className="text-xs font-bold text-on-surface uppercase tracking-wider mb-3">Quick Diagnostics</h4>
-          <div className="grid grid-cols-2 gap-2 flex-1">
+        <div className="col-span-12 glass-card rounded-2xl p-6 flex flex-col justify-between border border-white/20">
+          <h4 className="text-xs font-bold text-on-surface uppercase tracking-wider mb-4">Quick Diagnostics</h4>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 flex-1">
             <button 
               onClick={onStartScan}
-              className="p-3 bg-primary/5 hover:bg-primary/10 border border-primary/10 rounded-xl flex flex-col items-center justify-center text-center cursor-pointer transition-colors"
+              className="p-4 bg-primary/5 hover:bg-primary/10 border border-primary/10 rounded-xl flex flex-col items-center justify-center text-center cursor-pointer transition-colors"
             >
-              <span className="material-symbols-outlined text-primary mb-1 text-xl">photo_camera</span>
+              <span className="material-symbols-outlined text-primary mb-1.5 text-xl">photo_camera</span>
               <span className="text-[10px] font-bold text-primary">Camera Scan</span>
             </button>
             <button 
               onClick={() => setScreen('routine')}
-              className="p-3 bg-secondary/5 hover:bg-secondary/10 border border-secondary/10 rounded-xl flex flex-col items-center justify-center text-center cursor-pointer transition-colors"
+              className="p-4 bg-secondary/5 hover:bg-secondary/10 border border-secondary/10 rounded-xl flex flex-col items-center justify-center text-center cursor-pointer transition-colors"
             >
-              <span className="material-symbols-outlined text-secondary mb-1 text-xl">schedule</span>
+              <span className="material-symbols-outlined text-secondary mb-1.5 text-xl">schedule</span>
               <span className="text-[10px] font-bold text-secondary">Routine Logs</span>
             </button>
             <button 
               onClick={() => setScreen('products')}
-              className="p-3 bg-tertiary/5 hover:bg-tertiary/10 border border-tertiary/10 rounded-xl flex flex-col items-center justify-center text-center cursor-pointer transition-colors"
+              className="p-4 bg-tertiary/5 hover:bg-tertiary/10 border border-tertiary/10 rounded-xl flex flex-col items-center justify-center text-center cursor-pointer transition-colors"
             >
-              <span className="material-symbols-outlined text-tertiary mb-1 text-xl">shopping_cart</span>
+              <span className="material-symbols-outlined text-tertiary mb-1.5 text-xl">shopping_cart</span>
               <span className="text-[10px] font-bold text-tertiary">Buy Recommendations</span>
             </button>
             <button 
               onClick={() => setScreen('ingredients')}
-              className="p-3 bg-zinc-500/5 hover:bg-zinc-500/10 border border-zinc-500/10 rounded-xl flex flex-col items-center justify-center text-center cursor-pointer transition-colors"
+              className="p-4 bg-zinc-500/5 hover:bg-zinc-500/10 border border-zinc-500/10 rounded-xl flex flex-col items-center justify-center text-center cursor-pointer transition-colors"
             >
-              <span className="material-symbols-outlined text-on-surface-variant mb-1 text-xl">science</span>
+              <span className="material-symbols-outlined text-on-surface-variant mb-1.5 text-xl">science</span>
               <span className="text-[10px] font-bold text-on-surface-variant">Ingredient Check</span>
             </button>
-          </div>
-        </div>
-
-        {/* AI Targeted Recommendations Slider */}
-        <div className="col-span-12 glass-card rounded-2xl p-6 border border-white/20">
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h3 className="font-display text-base font-bold text-on-surface">Targeted Product Matches</h3>
-              <p className="text-xs text-on-surface-variant mt-1">Vetted formulations addressing slight cheek oxidation and T-Zone sebum profiles.</p>
-            </div>
-            <button onClick={() => setScreen('products')} className="text-xs font-bold text-primary hover:underline">View All Matches</button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Product 1 */}
-            <div className="bg-surface-container-low dark:bg-zinc-800/40 rounded-2xl p-5 border border-transparent hover:border-primary/20 transition-all cursor-pointer group flex flex-col justify-between">
-              <div>
-                <div className="h-32 bg-white dark:bg-zinc-950 rounded-xl mb-4 overflow-hidden flex items-center justify-center relative shadow-inner">
-                  <span className="material-symbols-outlined text-4xl text-primary/30 group-hover:scale-110 transition-transform duration-500">water_drop</span>
-                  <div className="absolute top-2 right-2 bg-primary/10 text-primary text-[9px] font-bold px-2 py-0.5 rounded">MATCH: 98%</div>
-                </div>
-                <h4 className="text-xs font-bold text-on-surface group-hover:text-primary transition-colors">Lumina C+ Molecular Serum</h4>
-                <p className="text-[10px] text-on-surface-variant mt-1">Target: Brightening &amp; Cellular oxidation defense</p>
-              </div>
-              <div className="flex justify-between items-center mt-4">
-                <span className="text-xs font-bold text-primary">₹1,850</span>
-                <span className="text-[9px] font-semibold text-on-surface-variant">Brand: Aetheris Bio</span>
-              </div>
-            </div>
-            {/* Product 2 */}
-            <div className="bg-surface-container-low dark:bg-zinc-800/40 rounded-2xl p-5 border border-transparent hover:border-primary/20 transition-all cursor-pointer group flex flex-col justify-between">
-              <div>
-                <div className="h-32 bg-white dark:bg-zinc-950 rounded-xl mb-4 overflow-hidden flex items-center justify-center relative shadow-inner">
-                  <span className="material-symbols-outlined text-4xl text-secondary/30 group-hover:scale-110 transition-transform duration-500">healing</span>
-                  <div className="absolute top-2 right-2 bg-secondary/10 text-secondary text-[9px] font-bold px-2 py-0.5 rounded">MATCH: 92%</div>
-                </div>
-                <h4 className="text-xs font-bold text-on-surface group-hover:text-secondary transition-colors">Barrier Bio-Complex</h4>
-                <p className="text-[10px] text-on-surface-variant mt-1">Target: Lipid repair &amp; Sensitivity calming</p>
-              </div>
-              <div className="flex justify-between items-center mt-4">
-                <span className="text-xs font-bold text-primary">₹1,250</span>
-                <span className="text-[9px] font-semibold text-on-surface-variant">Brand: Clinical Labs</span>
-              </div>
-            </div>
-            {/* Product 3 */}
-            <div className="bg-surface-container-low dark:bg-zinc-800/40 rounded-2xl p-5 border border-transparent hover:border-primary/20 transition-all cursor-pointer group flex flex-col justify-between">
-              <div>
-                <div className="h-32 bg-white dark:bg-zinc-950 rounded-xl mb-4 overflow-hidden flex items-center justify-center relative shadow-inner">
-                  <span className="material-symbols-outlined text-4xl text-tertiary/30 group-hover:scale-110 transition-transform duration-500">spa</span>
-                  <div className="absolute top-2 right-2 bg-primary/10 text-primary text-[9px] font-bold px-2 py-0.5 rounded">MATCH: 89%</div>
-                </div>
-                <h4 className="text-xs font-bold text-on-surface group-hover:text-primary transition-colors">Night Repair Essence</h4>
-                <p className="text-[10px] text-on-surface-variant mt-1">Target: Collagen support &amp; Fine Lines prevention</p>
-              </div>
-              <div className="flex justify-between items-center mt-4">
-                <span className="text-xs font-bold text-primary">₹2,450</span>
-                <span className="text-[9px] font-semibold text-on-surface-variant">Brand: Restorative Co.</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>

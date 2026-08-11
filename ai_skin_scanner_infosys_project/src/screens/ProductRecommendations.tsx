@@ -19,7 +19,13 @@ interface CartItem {
   quantity: number;
 }
 
-export const ProductRecommendations: React.FC = () => {
+import type { ScanMetrics } from '../App';
+
+interface ProductRecommendationsProps {
+  scanMetrics: ScanMetrics;
+}
+
+export const ProductRecommendations: React.FC<ProductRecommendationsProps> = ({ scanMetrics }) => {
   const [budget, setBudget] = useState(4000);
   const [selectedConcern, setSelectedConcern] = useState('All');
   const [savedProducts, setSavedProducts] = useState<number[]>([]);
@@ -106,8 +112,6 @@ export const ProductRecommendations: React.FC = () => {
     const name = `${brand} ${types[i % types.length]}`;
     const price = Math.round((1000 + (i * 23.5) % 4000) / 50) * 50; 
     const rating = parseFloat((4.0 + (i * 0.17) % 1.0).toFixed(1));
-    const match = 80 + (i * 7) % 20;
-    
     const pool = ingredientsMap[concern];
     const ingredients = [
       pool[i % pool.length],
@@ -116,6 +120,31 @@ export const ProductRecommendations: React.FC = () => {
     ];
     
     const suitableFor = `${skinTypes[i % skinTypes.length]}, ${skinTypes[(i + 3) % skinTypes.length]}`;
+
+    let match = 80;
+    if (scanMetrics) {
+      const skinType = scanMetrics.skinType || 'Normal';
+      const isSuit = suitableFor.toLowerCase().includes(skinType.toLowerCase()) || suitableFor.toLowerCase().includes('all');
+      const typePoints = isSuit ? 60 : 35;
+      
+      let severity = 50;
+      if (concern === 'Sebum Control') {
+        severity = Math.max(scanMetrics.acne || 20, scanMetrics.whiteheads || 20);
+      } else if (concern === 'Brightening') {
+        severity = scanMetrics.pigmentation || 20;
+      } else if (concern === 'Redness') {
+        severity = scanMetrics.redness || 20;
+      } else if (concern === 'Wrinkles') {
+        severity = scanMetrics.fineLines || 20;
+      } else if (concern === 'Hydration') {
+        severity = 100 - (scanMetrics.dryness || 20);
+      }
+      
+      const concernPoints = Math.round(severity * 0.4);
+      match = Math.min(99, Math.max(65, typePoints + concernPoints));
+    } else {
+      match = 80 + (i * 7) % 20;
+    }
 
     // Select category image pool based on name keywords
     const nameLower = name.toLowerCase();
@@ -202,8 +231,32 @@ export const ProductRecommendations: React.FC = () => {
 
   const filteredProducts = productsList.filter(prod => {
     const budgetOk = prod.price <= budget;
-    const concernOk = selectedConcern === 'All' || prod.concern === selectedConcern;
-    return budgetOk && concernOk;
+    const skinType = scanMetrics?.skinType || 'Normal';
+    const skinTypeOk = prod.suitableFor.toLowerCase().includes(skinType.toLowerCase()) || prod.suitableFor.toLowerCase().includes('all');
+    
+    const activeConcerns: string[] = ['Hydration'];
+    if (scanMetrics) {
+      if (scanMetrics.acneDetected || scanMetrics.acne > 25) {
+        activeConcerns.push('Sebum Control');
+      }
+      if (scanMetrics.darkSpotsDetected || scanMetrics.pigmentation > 25) {
+        activeConcerns.push('Brightening');
+      }
+      if (scanMetrics.whiteheadsDetected || (scanMetrics.whiteheads && scanMetrics.whiteheads > 30)) {
+        activeConcerns.push('Sebum Control');
+      }
+      if (scanMetrics.redness > 35) {
+        activeConcerns.push('Redness');
+      }
+      if (scanMetrics.fineLines > 35) {
+        activeConcerns.push('Wrinkles');
+      }
+    }
+
+    const concernOk = activeConcerns.includes(prod.concern);
+    const manualConcernOk = selectedConcern === 'All' || prod.concern === selectedConcern;
+    
+    return budgetOk && skinTypeOk && concernOk && manualConcernOk;
   });
 
   return (

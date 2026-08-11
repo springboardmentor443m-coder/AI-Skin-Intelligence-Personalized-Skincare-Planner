@@ -154,7 +154,8 @@ def scan_image():
                 "whiteheads": whiteheads,
                 "acneDetected": acne_detected,
                 "darkSpotsDetected": dark_spots_detected,
-                "whiteheadsDetected": whiteheads_detected
+                "whiteheadsDetected": whiteheads_detected,
+                "questionnaire": data.get("questionnaire", {})
             }
         }
         print(f"Prediction successful: {pred_class} ({confidence * 100:.2f}%)")
@@ -395,18 +396,32 @@ def consultant_recommendations():
         acne_status = "Seen" if acne_detected else "Optimal"
         dark_spots_status = "Seen" if dark_spots_detected else "Optimal"
         whiteheads_status = "Seen" if whiteheads_detected else "Optimal"
+
+        questionnaire = metrics.get("questionnaire", {})
+        sun_exposure = questionnaire.get("sunExposure", "Medium")
+        sensitivity_level = questionnaire.get("sensitivityLevel", "None")
+        skincare_goal = questionnaire.get("skincareGoal", "Brightening")
+        skincare_experience = questionnaire.get("skincareExperience", "Beginner")
         
         prompt = f"""
         You are an expert clinical dermatological skincare consultant.
-        Generate a personalized skincare recommendation based on this skin biometric analysis:
+        Generate a personalized skincare recommendation based on this skin biometric analysis and patient profile:
         - Skin Type: {skin_type}
         - Acne Severity: {acne}% ({acne_status})
         - Dark Spots Severity: {pigmentation}% ({dark_spots_status})
         - Whiteheads/Blackheads Severity: {whiteheads}% ({whiteheads_status})
         - Sensitivity Redness Level: {redness}%
         - Overall Skin Health Score: {score}/100
+
+        Patient Profile:
+        - Daily Sun Exposure: {sun_exposure}
+        - Skin Sensitivity Level: {sensitivity_level}
+        - Primary Skincare Goal: {skincare_goal}
+        - Experience with Actives: {skincare_experience}
         
         Format your response as a valid JSON object matching the following structure exactly. Do not include any text before or after the JSON. Do not wrap the JSON in markdown code blocks like ```json ... ```. Just return raw JSON.
+        
+        CRITICAL: In the "routine_7_day" morning and evening lists, do NOT reference raw ingredient names directly (e.g., do not write "Apply salicylic acid" or "Apply vitamin c"). Instead, write instructions referencing the specific recommended product names or categories (e.g., "Cleanse with the recommended Salicylic Pore Clearing Gel", "Apply 3 drops of recommended Lumina C+ Serum", or "Hydrate with the Barrier Bio-Complex Cream").
         
         Structure:
         {{
@@ -540,6 +555,9 @@ def consultant_chat():
         history = data.get("history", [])
         metrics = data.get("metrics", {})
         api_key = data.get("apiKey") or request.headers.get("X-Gemini-API-Key")
+        profile = data.get("profile", {})
+        client_name = profile.get("name", "Client")
+        client_email = profile.get("email", "praveenpamisetty@gmail.com")
         
         if not message:
             return jsonify({"error": "Message cannot be empty"}), 400
@@ -567,6 +585,12 @@ def consultant_chat():
         dark_spots_status = "Seen" if dark_spots_detected else "Optimal"
         whiteheads_status = "Seen" if whiteheads_detected else "Optimal"
 
+        questionnaire = metrics.get("questionnaire", {})
+        sun_exposure = questionnaire.get("sunExposure", "Medium")
+        sensitivity_level = questionnaire.get("sensitivityLevel", "None")
+        skincare_goal = questionnaire.get("skincareGoal", "Brightening")
+        skincare_experience = questionnaire.get("skincareExperience", "Beginner")
+        
         formatted_history = ""
         for turn in history[-6:]:
             role = "Client" if turn.get("sender") == "user" else "Consultant"
@@ -574,15 +598,25 @@ def consultant_chat():
             
         prompt = f"""
         You are Aetheris AI Skincare Consultant, an expert clinical dermatological assistant.
-        You are chatting with a client whose skin analysis shows:
+        You are chatting with a client whose personal details are:
+        - Client Name: {client_name}
+        - Client Email: {client_email}
+        
+        Client skin analysis and questionnaire profile shows:
         - Skin Type: {skin_type}
         - Acne Severity: {acne}% ({acne_status})
         - Dark Spots Severity: {pigmentation}% ({dark_spots_status})
         - Whiteheads/Blackheads Severity: {whiteheads}% ({whiteheads_status})
         - Sensitivity Redness Level: {redness}%
         - Overall Skin Health Score: {score}/100
+        
+        Patient Profile:
+        - Daily Sun Exposure: {sun_exposure}
+        - Skin Sensitivity Level: {sensitivity_level}
+        - Primary Skincare Goal: {skincare_goal}
+        - Experience with Actives: {skincare_experience}
 
-        Keep your persona helpful, precise, clinical, and empathetic. Answer the client's questions about active ingredients, routines, or skin conditions. Reference their scan results when relevant (e.g. 'Since your scan shows mild dark spots...').
+        Keep your persona helpful, precise, clinical, and empathetic. Answer the client's questions about active ingredients, routines, or skin conditions. Reference their scan results and profile when relevant (e.g. 'Since you have sensitive skin and mild dark spots...').
         
         Here is the chat history:
         {formatted_history}
@@ -621,9 +655,13 @@ def consultant_chat():
         print("Running smart local conversational fallback chatbot.")
         msg_lower = message.lower()
         
-        # Greetings
-        if any(w in msg_lower for w in ["hi", "hello", "hey", "greetings", "good morning", "good evening"]):
-            reply = f"Hello! I am your Aetheris Skincare Consultant. I have loaded your {skin_type} skin profile (Health Score: {score}/100). How can I assist you with your routine, active ingredients, or skin concerns today?"
+        # Greetings & Personal details
+        if "name" in msg_lower:
+            reply = f"Your name is {client_name}, and your registered account email is {client_email}."
+        elif "email" in msg_lower:
+            reply = f"Your account is registered under the email address: {client_email}."
+        elif any(w in msg_lower for w in ["hi", "hello", "hey", "greetings", "good morning", "good evening"]):
+            reply = f"Hello {client_name}! I am your Aetheris Skincare Consultant. I have loaded your {skin_type} skin profile (Health Score: {score}/100). How can I assist you with your routine, active ingredients, or skin concerns today?"
             
         # Active ingredients explanation
         elif "retinol" in msg_lower:

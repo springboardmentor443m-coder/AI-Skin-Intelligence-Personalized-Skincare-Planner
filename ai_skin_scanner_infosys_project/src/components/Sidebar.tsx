@@ -101,22 +101,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      {/* Pro Membership & Profile Summary */}
       <div className="p-4 border-t border-outline-variant/10 mt-auto bg-surface-container-low/20 dark:bg-zinc-900/20">
-        <div className="glass-panel p-3.5 rounded-xl border border-primary/20 bg-primary/5 mb-4">
-          <div className="flex items-center gap-1.5 mb-1">
-            <span className="material-symbols-outlined text-xs text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
-            <p className="text-[10px] font-bold text-primary uppercase tracking-wider">PRO MEMBER</p>
-          </div>
-          <p className="text-[10px] text-on-surface-variant leading-relaxed mb-3">Unlock molecular diagnostics & expert dermatologist chat.</p>
-          <button 
-            onClick={() => setScreen('profile')}
-            className="w-full py-1.5 bg-gradient-to-r from-primary to-tertiary text-white text-[10px] font-bold rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-transform"
-          >
-            Manage Membership
-          </button>
-        </div>
-
         {/* User Card */}
         <div className="flex items-center justify-between px-2 pt-2">
           <div className="flex items-center gap-3">

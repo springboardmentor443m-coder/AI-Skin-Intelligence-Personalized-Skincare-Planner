@@ -10,7 +10,19 @@ interface RoutineStep {
 
 export const SkincareRoutine: React.FC = () => {
   const [reminders, setReminders] = useState(true);
-  const [selectedDay, setSelectedDay] = useState<'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday'>('Monday');
+  
+  const days: ('Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday')[] = [
+    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+  ];
+
+  const getTodayDayName = (): 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday' => {
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const todayIndex = new Date().getDay(); // 0 is Sunday, 1 is Monday, etc.
+    const name = daysOfWeek[todayIndex];
+    return (name === 'Sunday' ? 'Sunday' : name) as any;
+  };
+
+  const [selectedDay, setSelectedDay] = useState<'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday'>(getTodayDayName());
   
   // Track step completion states per day
   const [morningSteps, setMorningSteps] = useState<Record<string, RoutineStep[]>>({});
@@ -18,10 +30,6 @@ export const SkincareRoutine: React.FC = () => {
   
   const [hasAiRoutine, setHasAiRoutine] = useState(false);
   const [targetDisease, setTargetDisease] = useState<string>('General Wellness Protocol');
-
-  const days: ('Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday')[] = [
-    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
-  ];
 
   useEffect(() => {
     const rawMetrics = localStorage.getItem('scanMetrics');

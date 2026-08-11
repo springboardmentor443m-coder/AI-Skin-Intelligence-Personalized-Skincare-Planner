@@ -9,7 +9,7 @@ Aetheris AI is a clinical-grade, web-based software-as-a-service (SaaS) platform
 - **Custom CNN Skin Classifier**: Uses a custom-trained convolutional neural network (CNN) built in TensorFlow/Keras to analyze facial photographs and classify skin into 5 primary categories: Oily, Dry, Normal, Sensitive, and Combination.
 - **Hybrid Pixel Feature Extractor**: Combines the spatial features of the CNN classifier with pixel-level computer vision statistics (RGB color ratio, specular shine highlights, grayscale luminance contrast, and Sobel edge detection) to calculate highly accurate, image-specific concern percentages (Acne, Redness, Hyperpigmentation, Dryness, and Fine Lines) for every upload.
 - **Biometric Scan History**: Logs every dermal scan session under the user's email into a persistent MongoDB database. The historical log allows patients to track variations in their Skin Health Index over time and reopen old reports.
-- **AI Skincare Consultant Chat**: A conversational clinical assistant powered by Google Gemini that references the patient's active biometric scan reports to answer questions about active ingredients, routines, and specific dermatological issues.
+- **AI Skincare Consultant Chat**: A conversational clinical assistant powered by  ollama  that references the patient's active biometric scan reports to answer questions about active ingredients, routines, and specific dermatological issues.
 - **Interactive Routine Planner**: Generates a dynamic 7-day, day-by-day morning and evening routine targeting the patient's primary skin concern (e.g. "Acne & Pore Congestion Treatment Protocol") with interactive checkboxes.
 - **Product Recommendation Engine**: Recommends clinical skincare products with matching, high-quality cosmetic photographs corresponding to the exact category (Cleanser, Serum, Moisturizer, SPF).
 
@@ -37,15 +37,15 @@ Aetheris AI is a clinical-grade, web-based software-as-a-service (SaaS) platform
   - **Query Performance**: Extremely fast document indexing on user emails to pull historical logs.
 
 ### 2.4 Custom CNN Model & Google Gemini API (Artificial Intelligence)
-- **What**: A custom convolutional neural network (CNN) trained on skin type datasets, paired with the **Google Gemini 1.5 Flash** Large Language Model (LLM).
+- **What**: A custom convolutional neural network (CNN) trained on skin type datasets, paired with the **Ollama** Large Language Model (LLM).
 - **Why**:
   - **Spatial Feature Recognition**: CNNs excel at detecting local spatial structures (pores, oil shine, redness) in raw uploaded images.
-  - **Conversational Reasoning**: Gemini 1.5 Flash provides expert clinical-grade skincare agent personas, formatting complex skincare guidelines and 7-day tables into clean JSON and text structures instantly.
+  - **Conversational Reasoning**: Ollama provides expert clinical-grade skincare agent personas, formatting complex skincare guidelines and 7-day tables into clean JSON and text structures instantly.
 
 ### 2.5 Which LLM is Used & How the Recommendation Pipeline Works
 
 #### **Which LLM is Used?**
-We use the **Google Gemini 1.5 Flash** model (`models/gemini-1.5-flash`) via the official Google Generative AI REST API endpoint. We chose **Gemini 1.5 Flash** because it is extremely fast, highly cost-effective, and natively supports **Structured JSON Outputs** (ensuring the model returns a valid JSON matching our database format, instead of conversational text).
+We use the **Ollama** model (`models/Ollama`) via the official Ollama AI REST API endpoint. We chose **Ollama qwen2.5:7b** because it is extremely fast, highly cost-effective, and natively supports **Structured JSON Outputs** (ensuring the model returns a valid JSON matching our database format, instead of conversational text).
 
 #### **How the Recommendation Pipeline Works:**
 1. **Dermal Scan & Capture**: When you upload an image, our custom CNN and pixel feature extractors analyze your skin, calculating metrics for Acne, Dark Spots, Whiteheads, Redness, and overall Skin Type (e.g. Oily, Dry).
@@ -118,15 +118,59 @@ We use the **Google Gemini 1.5 Flash** model (`models/gemini-1.5-flash`) via the
 
 1. **User Authentication**:
    - Register a new account with your email. Authentication hashes passwords and stores user documents inside MongoDB.
-2. **Setup Gemini API Key**:
-   - Go to the **AI Consultant Chat** tab.
-   - Click the **Connect Gemini API Key** button at the top right.
-   - Paste your personal `GEMINI_API_KEY` (starts with `AIzaSy...`). It will be saved in your browser's local storage and used for both recommendations and chat.
-3. **Perform a Skin Scan**:
+
+2. **Perform a Skin Scan**:
    - Navigate to **AI Skin Scan**.
    - Upload any face photograph.
    - Click **Start Dermal Analysis**. The scanner will send the image to Flask, calculate pixel-level statistics, save the record to MongoDB, and open your clinical report.
-4. **Track History**:
+3. **Track History**:
    - Go to **Scan History** in the sidebar. You will see a chronological log of all your uploads, complete with thumbnails and scores. Click **View Report** on any card to recall old details.
-5. **View Routines**:
+4. **View Routines**:
    - Open **Routine Planner** to view your active disease protocol and check off morning/evening steps.
+
+---
+
+## 5. Codebase Components Breakdown (For Mentor Reference)
+
+This section maps each frontend UI screen component and backend script to its corresponding technical purpose, facilitating code review.
+
+### 5.1 Frontend Screens & Components (`src/`)
+
+#### Central Coordinators
+* **[App.tsx](file:///c:/Users/prave/OneDrive/Documents/ai_skin_scanner_infosys_project/src/App.tsx)**:
+  - The core entry component. Orchestrates routing states, user authentication sessions, and shares states (e.g. active profile data and scan metrics) across all child pages.
+* **[Sidebar.tsx](file:///c:/Users/prave/OneDrive/Documents/ai_skin_scanner_infosys_project/src/components/Sidebar.tsx)**:
+  - Renders the primary navigation links. Integrates a logout callback and displays the current user profile summary at the bottom.
+* **[Header.tsx](file:///c:/Users/prave/OneDrive/Documents/ai_skin_scanner_infosys_project/src/components/Header.tsx)**:
+  - Top navigation bar. Houses dark mode context triggers and holds the real-time clinical alerts notifications panel.
+
+#### Dashboard & Scanner Screens
+* **[Dashboard.tsx](file:///c:/Users/prave/OneDrive/Documents/ai_skin_scanner_infosys_project/src/screens/Dashboard.tsx)**:
+  - Renders the home bento grid. Incorporates a dynamic SVG gauge for health scores, a vertical Targeted Recommendations module, routine checklists, an SVG vector trend chart mapping moisture/elasticity, and water intake counters.
+* **[CameraScan.tsx](file:///c:/Users/prave/OneDrive/Documents/ai_skin_scanner_infosys_project/src/screens/CameraScan.tsx)**:
+  - Handles image uploads. Renders the camera stream interface on the left and the **Dermal Lifestyle Profile form** (Sun exposure, Goals, Sensitivity, Actives habits) on the right.
+* **[AnalysisResults.tsx](file:///c:/Users/prave/OneDrive/Documents/ai_skin_scanner_infosys_project/src/screens/AnalysisResults.tsx)**:
+  - Opens immediately on scan completion. Displays severity progress metrics (Acne, Hyperpigmentation, Redness, Fine Lines, Sebum) and calls the Flask backend to request Gemini's clinical 7-day routine.
+
+#### Planners & Utilities
+* **[SkincareRoutine.tsx](file:///c:/Users/prave/OneDrive/Documents/ai_skin_scanner_infosys_project/src/screens/SkincareRoutine.tsx)**:
+  - Displays the 7-day protocol. Uses calendar date matching (`new Date().getDay()`) to automatically select and focus on the current day's routine steps.
+* **[ProgressTracking.tsx](file:///c:/Users/prave/OneDrive/Documents/ai_skin_scanner_infosys_project/src/screens/ProgressTracking.tsx)**:
+  - Queries MongoDB scan history to draw a dynamic, custom SVG progress trend line. Uses current system dates to display chronological evaluation logs.
+* **[ProductRecommendations.tsx](file:///c:/Users/prave/OneDrive/Documents/ai_skin_scanner_infosys_project/src/screens/ProductRecommendations.tsx)**:
+  - Real-time product store holding **210 dynamic items**. Implements matching algorithms evaluating compatibility scores (60% skin type + 40% severity concern) and matches photography categories dynamically.
+* **[ConsultantChat.tsx](file:///c:/Users/prave/OneDrive/Documents/ai_skin_scanner_infosys_project/src/screens/ConsultantChat.tsx)**:
+  - Fully offline/online chat. Pass user profiles (Name, Email) and biometric scores to the backend to get highly personalized consulting.
+* **[Ingredients.tsx](file:///c:/Users/prave/OneDrive/Documents/ai_skin_scanner_infosys_project/src/screens/Ingredients.tsx)**:
+  - Matches cosmetic ingredients (like *Salicylic Acid*, *Alcohol*) against a chemical toxicity index to label them Safe, Caution, or Alert.
+
+### 5.2 Backend APIs (`server.py`)
+
+* **`POST /api/scan`**:
+  - Preprocesses face photographs, passes them through the TensorFlow CNN (`skin_type_model.keras`) to determine skin type, and extracts local features (redness masking, contrast standard deviation, Sobel edge detectors) for secondary scores. Inserts the completed record into MongoDB.
+* **`POST /api/consultant/recommendations`**:
+  - Compiles skin type and lifestyle questionnaire options into a structured system prompt, calls Gemini/Ollama, parses the structured JSON payload containing the custom products list and 7-day protocol, and returns it to the client.
+* **`POST /api/consultant/chat`**:
+  - Context-aware chatbot endpoint. Feeds client details (Name, Email, History, Biometrics) to the LLM, and implements local keyword-matching NLP rules offline as a Tier-3 backup.
+* **`GET /api/scan/history`**:
+  - Retrieves all historical documents logged under the user's email address from MongoDB, sorted descending by timestamp.
