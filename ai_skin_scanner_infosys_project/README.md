@@ -36,7 +36,7 @@ Aetheris AI is a clinical-grade, web-based software-as-a-service (SaaS) platform
   - **Schema Flexibility**: Skincare analysis metrics change frequently as we add features. MongoDB stores nested JSON metrics alongside base64 image strings without requiring complex migration scripts.
   - **Query Performance**: Extremely fast document indexing on user emails to pull historical logs.
 
-### 2.4 Custom CNN Model & Google Gemini API (Artificial Intelligence)
+### 2.4 Custom CNN Model & Ollama API (Artificial Intelligence)
 - **What**: A custom convolutional neural network (CNN) trained on skin type datasets, paired with the **Ollama** Large Language Model (LLM).
 - **Why**:
   - **Spatial Feature Recognition**: CNNs excel at detecting local spatial structures (pores, oil shine, redness) in raw uploaded images.
