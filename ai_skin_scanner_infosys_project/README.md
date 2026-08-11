@@ -51,7 +51,7 @@ We use the **Ollama** model (`models/Ollama`) via the official Ollama AI REST AP
 1. **Dermal Scan & Capture**: When you upload an image, our custom CNN and pixel feature extractors analyze your skin, calculating metrics for Acne, Dark Spots, Whiteheads, Redness, and overall Skin Type (e.g. Oily, Dry).
 2. **LLM Prompt Compilation**: The backend server compiles a detailed clinical prompt containing all these numeric metrics and skin condition statuses.
 3. **Structured JSON Mode Call**:
-   - The Flask server sends a `POST` request containing the compiled prompt to the Google Gemini API.
+   - The Flask server sends a `POST` request containing the compiled prompt to the Ollama API.
    - We set the `"responseMimeType": "application/json"` parameter in the API payload. This forces Gemini to respond strictly in a valid JSON format conforming to our requested structure.
 4. **Target Schema Structure**:
    Gemini is instructed to return a structured JSON matching:
