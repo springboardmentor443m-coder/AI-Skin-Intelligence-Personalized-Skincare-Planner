@@ -33,6 +33,7 @@ class SkinProfile(Base):
     skin_type_scores = Column(JSONB, nullable=True)
 
     skin_health_score = Column(Integer, nullable=True)
+    scanned_at = Column(DateTime(timezone=True), nullable=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())

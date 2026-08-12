@@ -6,11 +6,12 @@ to run predictions on uploaded images:
 """
 
 import os
-import io
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+import io
 import cv2
 import numpy as np
-import tensorflow as tf
 from PIL import Image
 
 _MODEL_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -22,7 +23,8 @@ _TYPE_CLASSES_PATH = os.path.join(_MODEL_DIR, "skin_type_classes_v3.txt")
 IMG_SIZE = (224, 224)
 CONFIDENCE_THRESHOLD = 0.50
 
-# Loaded once when the server starts — NOT reloaded per-request (too slow)
+# Loaded lazily / in background thread — NOT reloaded per-request
+tf = None
 _concern_model = None
 _concern_classes = None
 _type_model = None
@@ -30,8 +32,11 @@ _type_classes = None
 
 
 def load_model():
-    """Called once at server startup (see main.py). Loads BOTH models."""
-    global _concern_model, _concern_classes, _type_model, _type_classes
+    """Loads BOTH models lazily or in background thread."""
+    global _concern_model, _concern_classes, _type_model, _type_classes, tf
+    if tf is None:
+        import tensorflow as _tf
+        tf = _tf
     if _concern_model is None:
         _concern_model = tf.keras.models.load_model(_CONCERN_MODEL_PATH)
         with open(_CONCERN_CLASSES_PATH) as f:

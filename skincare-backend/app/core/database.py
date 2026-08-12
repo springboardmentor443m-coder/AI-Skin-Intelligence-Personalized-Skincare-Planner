@@ -27,3 +27,23 @@ def get_db():
     finally:
         db.close()
 
+
+def auto_migrate():
+    """Ensure missing columns in existing tables are created automatically."""
+    from sqlalchemy import inspect, text
+    try:
+        insp = inspect(engine)
+        existing_tables = insp.get_table_names()
+        with engine.begin() as conn:
+            for table in Base.metadata.tables.values():
+                if table.name in existing_tables:
+                    existing_cols = {c["name"] for c in insp.get_columns(table.name)}
+                    for col in table.columns:
+                        if col.name not in existing_cols:
+                            col_type = col.type.compile(engine.dialect)
+                            conn.execute(text(f'ALTER TABLE "{table.name}" ADD COLUMN "{col.name}" {col_type}'))
+                            print(f"Auto-migrated: Added missing column '{col.name}' to '{table.name}' table.")
+    except Exception as e:
+        print(f"Auto-migration warning: {e}")
+
+

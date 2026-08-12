@@ -26,6 +26,7 @@ class SkinProfileOut(SkinProfileCreate):
     concern_scores: Optional[dict] = None
     skin_type_scores: Optional[dict] = None
     skin_health_score: Optional[int] = None
+    scanned_at: Optional[datetime] = None
     created_at: datetime
 
     class Config:

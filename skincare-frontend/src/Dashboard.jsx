@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import {
   getMyProfile,
   saveProfile,
+  clearScanData,
   getRecommendations,
   getWeeklyPlan,
   queryRAGAdvisor,
@@ -51,7 +52,7 @@ const emptyForm = {
   allergies: "", sensitivities: "", sleep_quality: "", water_intake_liters: "",
 };
 
-function ProfileTab({ token, profile, onProfileSaved, t, lang }) {
+function ProfileTab({ token, profile, onProfileSaved, onGoToScan, onClearScan, t, lang }) {
   const [editing, setEditing] = useState(!profile);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
@@ -98,27 +99,69 @@ function ProfileTab({ token, profile, onProfileSaved, t, lang }) {
     return (e) => setForm({ ...form, [key]: e.target.value });
   }
 
+  const hasScanScore = profile?.skin_health_score != null;
+
   return (
     <div className="dash-grid section-reveal">
       {/* Left Score Card */}
       <div className="card glass score-card">
         <div className="score-card-label">{t.scoreLabel}</div>
         <ScoreRing score={profile?.skin_health_score ?? null} />
-        <p className="score-pending">{t.scoreSub}</p>
+        
+        {hasScanScore ? (
+          <>
+            <div style={{ marginTop: 12, padding: "8px 12px", background: "rgba(239, 246, 255, 0.9)", border: "1px solid rgba(191, 219, 254, 0.9)", borderRadius: 10, fontSize: 11.5, color: "#1e40af", textAlign: "center", width: "100%" }}>
+              <div style={{ fontWeight: 700 }}>📌 Saved Previous AI Scan</div>
+              <div style={{ fontSize: 10.5, marginTop: 2, opacity: 0.85 }}>
+                {profile.scanned_at
+                  ? `Scanned: ${new Date(profile.scanned_at).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}`
+                  : "Saved from past session"}
+              </div>
+            </div>
+            <p className="score-pending" style={{ fontSize: 11, marginTop: 8 }}>
+              This score was saved from your previous AI photo scan. Upload a new photo to get fresh results.
+            </p>
+          </>
+        ) : (
+          <p className="score-pending">{t.scoreSub}</p>
+        )}
 
         {profile && (
-          <div style={{ marginTop: 24, width: "100%" }}>
-            <div className="divider-label" style={{ margin: "0 0 14px" }}>{t.aiDetected}</div>
+          <div style={{ marginTop: 18, width: "100%" }}>
+            <div className="divider-label" style={{ margin: "0 0 12px" }}>{t.aiDetected}</div>
             <div className="tag-row" style={{ justifyContent: "center" }}>
-              <span className={`tag ${!profile.detected_skin_type ? "tag--pending" : "tag--rose"}`}>
-                {profile.detected_skin_type ? `🧬 ${translateSkinType(profile.detected_skin_type, lang)}` : "Skin type: pending"}
+              <span className={`tag ${hasScanScore && profile.detected_skin_type ? "tag--rose" : "tag--pending"}`}>
+                {hasScanScore && profile.detected_skin_type ? `🧬 ${translateSkinType(profile.detected_skin_type)}` : "Skin type: Pending scan"}
               </span>
-              <span className={`tag ${!profile.detected_concern ? "tag--pending" : "tag--emerald"}`}>
-                {profile.detected_concern ? `⚡ ${translateConcern(profile.detected_concern, lang)}` : "Concern: pending"}
+              <span className={`tag ${hasScanScore && profile.detected_concern ? "tag--emerald" : "tag--pending"}`}>
+                {hasScanScore && profile.detected_concern ? `⚡ ${translateConcern(profile.detected_concern)}` : "Concern: Pending scan"}
               </span>
             </div>
           </div>
         )}
+
+        {/* Action Buttons */}
+        <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 8, width: "100%" }}>
+          <button
+            type="button"
+            className="btn-primary"
+            style={{ fontSize: 12.5, padding: "9px 14px", borderRadius: 9, width: "100%" }}
+            onClick={onGoToScan}
+          >
+            {hasScanScore ? "📸 Upload New Photo / Re-Scan" : "📷 Start AI Photo Scan"}
+          </button>
+          
+          {hasScanScore && (
+            <button
+              type="button"
+              className="btn-ghost"
+              style={{ fontSize: 11.5, color: "#dc2626", border: "1px solid rgba(220,38,38,0.2)", padding: "7px 12px", borderRadius: 8, width: "100%" }}
+              onClick={onClearScan}
+            >
+              🗑️ Clear Saved Scan Data
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Right Details */}
@@ -143,7 +186,12 @@ function ProfileTab({ token, profile, onProfileSaved, t, lang }) {
           <>
             <div className="detail-grid">
               {[
-                [t.skinType, translateSkinType(profile.skin_type, lang)],
+                [
+                  t.skinType,
+                  profile.detected_skin_type
+                    ? `${translateSkinType(profile.detected_skin_type, lang)} (⚡ AI Detected)`
+                    : (profile.skin_type ? translateSkinType(profile.skin_type, lang) : "Pending AI Scan")
+                ],
                 [t.ageGroup, profile.age_group],
                 [t.sleepQuality, profile.sleep_quality],
                 [t.waterIntake, profile.water_intake_liters ? `${profile.water_intake_liters} L / day` : null],
@@ -156,7 +204,12 @@ function ProfileTab({ token, profile, onProfileSaved, t, lang }) {
             </div>
 
             {["skin_concerns", "allergies", "sensitivities"].map((key) => {
-              const items = profile[key] || [];
+              let items = profile[key] || [];
+              if (key === "skin_concerns" && profile.detected_concern) {
+                // Prepend AI detected concern if present
+                const detectedTag = `${translateConcern(profile.detected_concern, lang)} (⚡ AI Detected)`;
+                items = [detectedTag, ...items.filter(c => c.toLowerCase() !== profile.detected_concern.toLowerCase())];
+              }
               const labels = { skin_concerns: t.skinConcerns, allergies: t.allergies, sensitivities: t.sensitivities };
               return (
                 <div key={key} style={{ marginTop: 18 }}>
@@ -165,12 +218,24 @@ function ProfileTab({ token, profile, onProfileSaved, t, lang }) {
                   </label>
                   <div className="tag-row">
                     {items.length ? items.map((c) => (
-                      <span className="tag" key={c}>{translateConcern(c, lang)}</span>
+                      <span className="tag" key={c}>{c.includes("⚡") ? c : translateConcern(c, lang)}</span>
                     )) : <span className="tag tag--pending">None listed</span>}
                   </div>
                 </div>
               );
             })}
+
+            {/* Skin Profile & Health Score Explanation */}
+            <div style={{ marginTop: 22, padding: "16px", background: "rgba(240,253,244,0.85)", borderRadius: 12, border: "1px solid rgba(187,247,208,0.9)", fontSize: 12.5, color: "#166534", lineHeight: 1.6 }}>
+              <div style={{ fontWeight: 700, marginBottom: 6, display: "flex", alignItems: "center", gap: 6 }}>
+                <span>💡 What is the Skin Profile & Health Score?</span>
+              </div>
+              <ul style={{ margin: "4px 0 0 16px", padding: 0 }}>
+                <li><strong>Skin Health Score (0-100):</strong> Evaluates overall skin clarity and barrier health. Automatically updates after your AI Photo Scan.</li>
+                <li><strong>7-Day Personalized Routine:</strong> Uses your skin type, age, sleep, and water metrics to customize your routine and filter out allergens.</li>
+                <li><strong>RAG AI Advisor:</strong> Reads your exact profile metrics to provide accurate, grounded answers tailored to your skin!</li>
+              </ul>
+            </div>
           </>
         )}
 
@@ -178,7 +243,7 @@ function ProfileTab({ token, profile, onProfileSaved, t, lang }) {
           <form className="form-card" onSubmit={handleSave}>
             <div className="form-grid">
               <div className="field">
-                <label>{t.skinType}</label>
+                <label>{t.skinType} <span style={{ fontSize: 11, fontStyle: "italic", fontWeight: 400, opacity: 0.75 }}>(Optional — Auto-detected by AI Scan)</span></label>
                 <select value={form.skin_type} onChange={f("skin_type")}>
                   <option value="">Select…</option>
                   {["oily", "dry", "normal", "combination"].map((v) => (
@@ -191,16 +256,22 @@ function ProfileTab({ token, profile, onProfileSaved, t, lang }) {
                 <input type="text" placeholder="e.g. 20-25" value={form.age_group} onChange={f("age_group")} />
               </div>
               <div className="field field--full">
-                <label>{t.skinConcerns}</label>
-                <input type="text" placeholder="acne, dark_spots, redness" value={form.skin_concerns} onChange={f("skin_concerns")} />
+                <label>{t.skinConcerns} <span style={{ fontSize: 11, fontStyle: "italic", fontWeight: 400, opacity: 0.75 }}>(Optional — Auto-detected by AI Scan)</span></label>
+                <input type="text" placeholder="e.g. Wrinkles, Prevention (Auto-detected from photo scan)" value={form.skin_concerns} onChange={f("skin_concerns")} />
               </div>
               <div className="field">
                 <label>{t.allergies}</label>
-                <input type="text" placeholder="fragrance, nuts" value={form.allergies} onChange={f("allergies")} />
+                <input type="text" placeholder="e.g. Fragrance, Nuts, or 'None'" value={form.allergies} onChange={f("allergies")} />
+                <span style={{ fontSize: 11, color: "var(--ink-soft)", opacity: 0.8, marginTop: 2, display: "block" }}>
+                  Enter 'None' or leave blank if you have no known allergies.
+                </span>
               </div>
               <div className="field">
                 <label>{t.sensitivities}</label>
-                <input type="text" placeholder="alcohol, sulfates" value={form.sensitivities} onChange={f("sensitivities")} />
+                <input type="text" placeholder="e.g. Strong Perfumes, Sunscreen, or 'None'" value={form.sensitivities} onChange={f("sensitivities")} />
+                <span style={{ fontSize: 11, color: "var(--ink-soft)", opacity: 0.8, marginTop: 2, display: "block" }}>
+                  Enter 'None' if your skin rarely gets irritated.
+                </span>
               </div>
               <div className="field">
                 <label>{t.sleepQuality}</label>
@@ -255,7 +326,7 @@ function PlannerTab({ token, t, lang, profile, onGoToScan }) {
   if (error) return <div className="error-banner">{error}</div>;
   if (!plan) return null;
 
-  const hasDetectedConcern = Boolean(plan?.detected_concern || profile?.detected_concern);
+  const hasDetectedConcern = Boolean((plan?.has_scan || profile?.skin_health_score != null) && (plan?.detected_concern || profile?.detected_concern));
 
   if (!hasDetectedConcern) {
     return (
@@ -565,8 +636,8 @@ function ProductsTab({ token, t }) {
             {Object.entries(based.weighted_concerns || {})
               .sort((a, b) => b[1] - a[1])
               .slice(0, 4)
-              .map(([c, w]) => (
-                <span className="tag" key={c}>{c}: {w}%</span>
+              .map(([c]) => (
+                <span className="tag tag--rose" key={c}>Targeting: {translateConcern(c)}</span>
               ))}
           </div>
         )}
@@ -585,10 +656,8 @@ function ProductsTab({ token, t }) {
 
 // ── Dataset RAG AI Skincare Advisor Widget ─────────────────────────────
 // ── Dataset RAG AI Skincare Advisor Widget ─────────────────────────────
-function RAGSkincareAdvisor({ t, userConcern, userSkinType, profile }) {
+function RAGSkincareAdvisor({ t, userConcern, userSkinType, profile, lang = "en" }) {
   const [open, setOpen] = useState(false);
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem("gemini_api_key") || "");
-  const [showKeyInput, setShowKeyInput] = useState(false);
 
   const scanAnalysis = profile ? {
     concern_scores: profile.concern_scores,
@@ -598,24 +667,18 @@ function RAGSkincareAdvisor({ t, userConcern, userSkinType, profile }) {
     detected_skin_type: profile.detected_skin_type || userSkinType,
   } : null;
 
+  const initialWelcome = "Hello! I am your RAG AI Skincare Advisor powered by Groq LLM & RAG. Connected to your AI photo scan output & product dataset! Ask me anything about your skin concerns, ingredient compatibility, custom routines, or general questions 🌿";
+
   const [messages, setMessages] = useState([
     {
       sender: "ai",
-      text: `Hello! I am your RAG AI Skincare Advisor. I am connected to your AI photo scan output & 1,138 product dataset! Ask me anything about your scan scores, ingredient compatibility (e.g., mixing Retinol with Vitamin C), custom routines, or natural remedies 🌿`,
-      source: "RAG Dataset Engine + Scan Context",
+      text: initialWelcome,
+      source: "Groq LLM (llama-3.3-70b) + Dataset RAG Engine",
       products: []
     }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-
-  function handleSaveKey(e) {
-    e.preventDefault();
-    const cleanKey = apiKey.replace(/["']/g, "").trim();
-    setApiKey(cleanKey);
-    localStorage.setItem("gemini_api_key", cleanKey);
-    setShowKeyInput(false);
-  }
 
   async function submitQuestion(userText) {
     if (!userText || loading) return;
@@ -630,8 +693,8 @@ function RAGSkincareAdvisor({ t, userConcern, userSkinType, profile }) {
         query: qText,
         userConcern: userConcern,
         userSkinType: userSkinType,
-        apiKey: apiKey,
-        scanAnalysis: scanAnalysis
+        scanAnalysis: scanAnalysis,
+        lang: lang
       });
 
       setLoading(false);
@@ -640,7 +703,7 @@ function RAGSkincareAdvisor({ t, userConcern, userSkinType, profile }) {
         {
           sender: "ai",
           text: res.answer || "No response generated.",
-          source: res.rag_source || "RAG Vector Engine",
+          source: res.rag_source || "Groq LLM + Dataset RAG Engine",
           products: res.retrieved_products || []
         }
       ]);
@@ -675,17 +738,10 @@ function RAGSkincareAdvisor({ t, userConcern, userSkinType, profile }) {
             <div>
               <strong>{t.ragTitle || "✦ Dataset RAG AI Skincare Advisor"}</strong>
               <div style={{ fontSize: 11, opacity: 0.85 }}>
-                {apiKey ? "🔑 Live LLM + RAG Active" : (t.ragSub || "1,138 Product Dataset Grounded RAG")}
+                ⚡ Groq LLM (llama-3.3-70b) RAG Engine Active
               </div>
             </div>
-            <div style={{ display: "flex", gap: 6 }}>
-              <button
-                className="btn-ghost"
-                style={{ padding: "3px 8px", fontSize: 11 }}
-                onClick={() => setShowKeyInput(!showKeyInput)}
-              >
-                🔑 Key
-              </button>
+            <div>
               <button className="btn-ghost" style={{ padding: "3px 8px" }} onClick={() => setOpen(false)}>
                 ✕
               </button>
@@ -704,58 +760,53 @@ function RAGSkincareAdvisor({ t, userConcern, userSkinType, profile }) {
             </div>
           )}
 
-          {showKeyInput && (
-            <form onSubmit={handleSaveKey} style={{ padding: 10, background: "#fff", borderBottom: "1px solid var(--border)" }}>
-              <label style={{ fontSize: 11, fontWeight: 700, color: "var(--ink-soft)" }}>{t.enterApiKey || "Gemini API Key (Optional)"}</label>
-              <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
-                <input
-                  type="password"
-                  placeholder="AIzaSy... Paste Gemini API Key"
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
-                  style={{ flex: 1, padding: "6px 8px", fontSize: 12, borderRadius: 6, border: "1px solid var(--border-hi)" }}
-                />
-                <button type="submit" className="btn-primary" style={{ width: "auto", padding: "6px 12px", fontSize: 12 }}>Save</button>
-              </div>
-            </form>
-          )}
-
           <div className="chatbot-messages">
             {messages.map((m, idx) => (
               <div key={idx} className={`chat-bubble ${m.sender}`}>
                 <div style={{ whiteSpace: "pre-line" }}>{m.text}</div>
                 {m.source && m.sender === "ai" && (
-                  <div style={{ fontSize: 10, marginTop: 6, opacity: 0.75, fontStyle: "italic", borderTop: "1px stroke var(--border)", paddingTop: 4 }}>
+                  <div style={{ fontSize: 10, marginTop: 6, opacity: 0.75, fontStyle: "italic", borderTop: "1px solid var(--border)", paddingTop: 4 }}>
                     Source: {m.source}
                   </div>
                 )}
                 {m.products && m.products.length > 0 && (
-                  <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6 }}>
-                    <span style={{ fontSize: 11, fontWeight: 700, color: "var(--ink-soft)" }}>🛍️ RAG Retrieved Dataset Products:</span>
-                    {m.products.slice(0, 2).map((prod, pIdx) => (
-                      <a
-                        key={pIdx}
-                        href={prod.purchase_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                          padding: 6,
-                          background: "#f0ede8",
-                          borderRadius: 6,
-                          textDecoration: "none",
-                          color: "var(--ink)"
-                        }}
-                      >
-                        <img src={prod.image_url} alt={prod.name} style={{ width: 32, height: 32, objectFit: "cover", borderRadius: 4 }} />
-                        <div style={{ flex: 1, minWidth: 0, fontSize: 11 }}>
-                          <div style={{ fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{prod.name}</div>
-                          <div style={{ fontSize: 10, color: "#166534", fontWeight: 700 }}>₹{prod.price_inr} • Amazon</div>
-                        </div>
-                      </a>
-                    ))}
+                  <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 6 }}>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: "var(--ink-soft)" }}>🛍️ Matched Skincare Products (from Dataset):</span>
+                    {m.products.slice(0, 3).map((prod, pIdx) => {
+                      const buyUrl = prod.purchase_url || `https://www.amazon.in/s?k=${encodeURIComponent(prod.name)}`;
+                      return (
+                        <a
+                          key={pIdx}
+                          href={buyUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 10,
+                            padding: "8px 10px",
+                            background: "linear-gradient(135deg, #faf7f2, #f5f0e8)",
+                            borderRadius: 8,
+                            border: "1px solid rgba(196,130,106,0.2)",
+                            textDecoration: "none",
+                            color: "var(--ink)"
+                          }}
+                        >
+                          <div style={{ width: 34, height: 34, borderRadius: 6, background: "var(--rose-tint)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>
+                            🧴
+                          </div>
+                          <div style={{ flex: 1, minWidth: 0, fontSize: 11.5 }}>
+                            <div style={{ fontWeight: 700, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "var(--ink)" }}>{prod.name}</div>
+                            <div style={{ fontSize: 10.5, color: "#166534", fontWeight: 700, marginTop: 2 }}>
+                              {prod.brand ? `${prod.brand} • ` : ""}₹{prod.price_inr || 999}
+                            </div>
+                          </div>
+                          <span style={{ fontSize: 10.5, fontWeight: 700, background: "#f59e0b", color: "#fff", padding: "3px 7px", borderRadius: 6 }}>
+                            Buy 🛒
+                          </span>
+                        </a>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -821,9 +872,9 @@ export default function Dashboard({ token, onLogout }) {
   const [scanPreview, setScanPreview] = useState(null);
   const [scanResult, setScanResult] = useState(null);
 
-  // ── Multilingual State (en | te | hi) ──
-  const [lang, setLang] = useState("en");
-  const t = translations[lang] || translations.en;
+  // ── English Language Reference ──
+  const t = translations.en;
+  const lang = "en";
 
   const loadProfile = useCallback(() => {
     return getMyProfile(token)
@@ -846,6 +897,19 @@ export default function Dashboard({ token, onLogout }) {
     }
     loadProfile();
     setAnalysisKey((k) => k + 1);
+  }
+
+  async function handleClearScan() {
+    if (!window.confirm("Are you sure you want to clear your saved AI scan data? This will reset your score to Awaiting Scan.")) return;
+    try {
+      const updated = await clearScanData(token);
+      setProfile(updated);
+      setScanPreview(null);
+      setScanResult(null);
+      setAnalysisKey((k) => k + 1);
+    } catch (err) {
+      alert("Failed to clear scan data: " + err.message);
+    }
   }
 
   const tabs = [
@@ -877,28 +941,9 @@ export default function Dashboard({ token, onLogout }) {
         </div>
 
         <div className="topbar-right">
-          {/* Language Selector */}
-          <select
-            value={lang}
-            onChange={(e) => setLang(e.target.value)}
-            style={{
-              padding: "6px 12px",
-              borderRadius: 8,
-              border: "1px solid var(--border-hi)",
-              background: "var(--surface)",
-              fontSize: 13,
-              fontWeight: 600,
-              cursor: "pointer"
-            }}
-          >
-            <option value="en">English 🇬🇧</option>
-            <option value="te">తెలుగు 🇮🇳</option>
-            <option value="hi">हिंदी 🇮🇳</option>
-          </select>
-
-          {profile?.detected_concern && (
+          {profile?.skin_health_score != null && profile?.detected_concern && (
             <span className="tag tag--rose" style={{ fontSize: 12 }}>
-              ⚡ {translateConcern(profile.detected_concern, lang)}
+              ⚡ {translateConcern(profile.detected_concern)}
             </span>
           )}
           <button className="btn-ghost" onClick={handleLogout}>{t.signOut}</button>
@@ -925,7 +970,15 @@ export default function Dashboard({ token, onLogout }) {
         ) : (
           <>
             {tab === "profile" && (
-              <ProfileTab token={token} profile={profile} onProfileSaved={setProfile} t={t} lang={lang} />
+              <ProfileTab
+                token={token}
+                profile={profile}
+                onProfileSaved={setProfile}
+                onGoToScan={() => setTab("scan")}
+                onClearScan={handleClearScan}
+                t={t}
+                lang={lang}
+              />
             )}
 
             {tab === "scan" && (

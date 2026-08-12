@@ -123,6 +123,21 @@ def get_recommendations(
         elif profile.skin_concerns:
             concern_scores = {c: 80 for c in profile.skin_concerns}
 
+    # Extract user declared allergens and sensitivities
+    user_allergies = [a.lower().strip() for a in (profile.allergies if profile and profile.allergies else []) if a and a.lower() != "no"]
+    user_sensitivities = [s.lower().strip() for s in (profile.sensitivities if profile and profile.sensitivities else []) if s and s.lower() != "no"]
+    forbidden_terms = set(user_allergies + user_sensitivities)
+
+    def is_safe_product(p_obj: dict) -> bool:
+        if not forbidden_terms:
+            return True
+        ingreds_str = " ".join(p_obj.get("ingredients", [])).lower()
+        p_name = p_obj.get("name", "").lower()
+        for term in forbidden_terms:
+            if term in ingreds_str or term in p_name:
+                return False
+        return True
+
     sorted_concerns = sorted(concern_scores.items(), key=lambda x: x[1], reverse=True)
     sorted_concerns = [(c, w) for c, w in sorted_concerns if w >= MIN_CONCERN_WEIGHT]
     sorted_concerns = sorted_concerns[:MAX_CONCERNS_CONSIDERED]
@@ -137,19 +152,25 @@ def get_recommendations(
         query=f"{main_concern} {skin_type or ''}",
         user_concern=main_concern,
         user_skin_type=skin_type,
-        top_k=8
+        top_k=12
     )
 
     for rp in rag_retrieved:
-        if rp["name"] not in seen_names:
+        if rp["name"] not in seen_names and is_safe_product(rp):
             seen_names.add(rp["name"])
             matched_results.append(_product_to_dict(rp, rp.get("matched_because", f"Recommended for '{main_concern}'")))
+            if len(matched_results) >= 8:
+                break
 
     # 2. Database Fallback directly from Product DB table if needed
     if len(matched_results) < 6:
         db_products = db.query(Product).all()
         for p in db_products:
-            if p.name not in seen_names:
+            p_dict = {
+                "name": p.name,
+                "ingredients": p.ingredients or [],
+            }
+            if p.name not in seen_names and is_safe_product(p_dict):
                 seen_names.add(p.name)
                 matched_results.append(_product_to_dict(p, "Top dataset recommendation"))
                 if len(matched_results) >= 8:
@@ -160,5 +181,6 @@ def get_recommendations(
         "based_on": {
             "weighted_concerns": dict(sorted_concerns),
             "skin_type": skin_type,
+            "excluded_allergens": list(forbidden_terms),
         },
     }

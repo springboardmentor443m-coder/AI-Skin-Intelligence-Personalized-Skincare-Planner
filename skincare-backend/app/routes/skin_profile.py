@@ -511,6 +511,30 @@ def get_my_profile(
     return profile
 
 
+@router.delete("/scan", response_model=SkinProfileOut)
+def clear_scan_data(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    profile = db.query(SkinProfile).filter(SkinProfile.user_id == current_user.id).first()
+    if not profile:
+        raise HTTPException(status_code=404, detail="No skin profile found yet")
+
+    profile.detected_skin_tone = None
+    profile.detected_skin_type = None
+    profile.detected_acne_severity = None
+    profile.detected_concern = None
+    profile.detected_concern_confidence = None
+    profile.concern_scores = None
+    profile.skin_type_scores = None
+    profile.skin_health_score = None
+    profile.scanned_at = None
+
+    db.commit()
+    db.refresh(profile)
+    return profile
+
+
 from app.services.routine_generator import generate_dynamic_weekly_plan
 
 
@@ -523,7 +547,9 @@ def get_weekly_plan(
 
     concern = None
     skin_type = None
-    if profile:
+    has_scan = False
+    if profile and profile.skin_health_score is not None:
+        has_scan = True
         concern = profile.detected_concern
         if not concern and profile.skin_concerns:
             concern = profile.skin_concerns[0] if profile.skin_concerns else None
@@ -532,11 +558,12 @@ def get_weekly_plan(
     plan = generate_dynamic_weekly_plan(concern, skin_type)
 
     return {
+        "has_scan": has_scan,
         "plan_key": plan["plan_key"],
         "concern_label": plan["concern_label"],
         "goal": plan["goal"],
         "key_actives": plan.get("key_actives", []),
-        "detected_concern": concern or "acne",
+        "detected_concern": concern if has_scan else None,
         "detected_skin_type": skin_type or "Normal",
         "clinical_days": plan["clinical_days"],
         "natural_days": plan["natural_days"],

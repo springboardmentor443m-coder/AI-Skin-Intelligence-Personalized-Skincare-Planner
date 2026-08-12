@@ -18,21 +18,24 @@ function ScanOverlay({ t }) {
   );
 }
 
-function ScoreBarList({ scores, type, lang }) {
+function ScoreBarList({ scores, type }) {
   const sorted = Object.entries(scores || {})
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5);
 
   return (
     <div className="score-bar-list">
-      {sorted.map(([name, value]) => {
+      {sorted.map(([name, value], idx) => {
         const translatedName = type === "skin_type" 
-          ? translateSkinType(name, lang) 
-          : translateConcern(name, lang);
+          ? translateSkinType(name) 
+          : translateConcern(name);
+        const statusLabel = idx === 0 ? "Primary Detected" : "Secondary";
         return (
           <div className="score-bar" key={name}>
             <span className="score-bar__label">{translatedName}</span>
-            <span className="score-bar__value">{value}%</span>
+            <span className="score-bar__value">
+              <strong>{Math.round(value)}%</strong> <span style={{ opacity: 0.75, fontStyle: "italic", fontSize: 11, marginLeft: 4 }}>({statusLabel})</span>
+            </span>
             <div className="score-bar__track">
               <div
                 className="score-bar__fill"
@@ -46,12 +49,12 @@ function ScoreBarList({ scores, type, lang }) {
   );
 }
 
-function ResultBlock({ title, result, labelKey, type, lang }) {
+function ResultBlock({ title, result, labelKey, type }) {
   if (!result) return null;
   const topVal = result[labelKey];
   const translatedBadge = type === "skin_type"
-    ? translateSkinType(topVal, lang)
-    : translateConcern(topVal, lang);
+    ? translateSkinType(topVal)
+    : translateConcern(topVal);
 
   return (
     <div className="result-block">
@@ -59,13 +62,13 @@ function ResultBlock({ title, result, labelKey, type, lang }) {
         <span className="result-block__title">{title}</span>
         {result.is_confident ? (
           <span className="tag tag--rose">
-            {translatedBadge} · {result.confidence}%
+            ⚡ {translatedBadge}
           </span>
         ) : (
           <span className="tag tag--pending">Inconclusive</span>
         )}
       </div>
-      <ScoreBarList scores={result.all_scores} type={type} lang={lang} />
+      <ScoreBarList scores={result.all_scores} type={type} />
     </div>
   );
 }

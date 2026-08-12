@@ -56,6 +56,14 @@ export async function saveProfile(token, profile) {
   return handleResponse(res);
 }
 
+export async function clearScanData(token) {
+  const res = await fetch(`${BASE_URL}/skin-profile/scan`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return handleResponse(res);
+}
+
 export async function analyzePhoto(token, file) {
   const formData = new FormData();
   formData.append("file", file);
@@ -82,7 +90,7 @@ export async function getWeeklyPlan(token) {
   return handleResponse(res);
 }
 
-export async function queryRAGAdvisor({ query, userConcern, userSkinType, apiKey, scanAnalysis }) {
+export async function queryRAGAdvisor({ query, userConcern, userSkinType, apiKey, scanAnalysis, lang }) {
   const res = await fetch(`${BASE_URL}/rag/query`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -92,6 +100,7 @@ export async function queryRAGAdvisor({ query, userConcern, userSkinType, apiKey
       user_skin_type: userSkinType,
       api_key: apiKey,
       scan_analysis: scanAnalysis,
+      lang: lang || "en",
     }),
   });
   return handleResponse(res);

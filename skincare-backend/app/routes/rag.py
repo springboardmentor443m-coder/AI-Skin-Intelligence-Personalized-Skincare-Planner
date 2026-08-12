@@ -13,6 +13,7 @@ class RAGQueryRequest(BaseModel):
     user_skin_type: Optional[str] = None
     api_key: Optional[str] = None
     scan_analysis: Optional[Dict] = None
+    lang: Optional[str] = "en"
 
 
 class RAGRecommendationRequest(BaseModel):
@@ -32,7 +33,8 @@ def query_rag_model(req: RAGQueryRequest):
         user_concern=req.user_concern,
         user_skin_type=req.user_skin_type,
         api_key=req.api_key,
-        scan_analysis=req.scan_analysis
+        scan_analysis=req.scan_analysis,
+        lang=req.lang or "en"
     )
     return res
 

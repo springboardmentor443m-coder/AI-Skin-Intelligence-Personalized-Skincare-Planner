@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 
@@ -68,10 +70,20 @@ async def analyze_photo(
     profile.concern_scores = {k: round(v * 100, 1) for k, v in concern["all_scores"].items()}
     profile.skin_type_scores = {k: round(v * 100, 1) for k, v in skin_type["all_scores"].items()}
 
+    # Calculate composite Skin Health Score (0-100)
+    top_conf = concern["confidence"]
+    all_scores_vals = list(concern["all_scores"].values())
+    avg_severity = sum(all_scores_vals) / len(all_scores_vals) if all_scores_vals else 0.2
+    penalty = (top_conf * 30.0) + (avg_severity * 20.0)
+    calculated_health_score = max(50, min(98, round(100 - penalty)))
+    profile.skin_health_score = calculated_health_score
+    profile.scanned_at = datetime.now(timezone.utc)
+
     db.commit()
     db.refresh(profile)
 
     return {
+        "skin_health_score": calculated_health_score,
         "concern": {
             "top_concern": concern["top_label"],
             "confidence": round(concern["confidence"] * 100, 1),
@@ -84,4 +96,4 @@ async def analyze_photo(
             "is_confident": skin_type["is_confident"],
             "all_scores": profile.skin_type_scores,
         },
-    }
+    }
