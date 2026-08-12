@@ -22,7 +22,16 @@ def get_groq_client() -> Groq:
 
     return Groq(api_key=api_key)
 
+
 def generate_weekly_plan(skin_type, products, user_profile=None):
+    """
+    Generate a personalized 7-day skincare plan using only
+    products supplied by the ML recommendation pipeline.
+
+    The LLM creates the plan, but the backend validates all
+    product names before returning the result.
+    """
+
     user_profile = user_profile or {}
 
     age = user_profile.get("age")
@@ -31,84 +40,168 @@ def generate_weekly_plan(skin_type, products, user_profile=None):
     budget = user_profile.get("budget")
     skin_goals = user_profile.get("skin_goals")
     additional_details = user_profile.get("additional_details")
+
+    # ---------------------------------------------------------
+    # Prepare ML-ranked product candidates
+    # ---------------------------------------------------------
+
     product_context = []
 
-    for rank, product in enumerate(products, start=1):
-        name = product.get("product_name", "")
-        brand = product.get("brand_name", "")
+    for rank, product in enumerate(products or [], start=1):
+        product_name = str(product.get("product_name") or "").strip()
+
+        if not product_name:
+            continue
 
         product_context.append(
             f"""
 Product #{rank}
-Product Name: {name}
-Brand: {brand}
-Category: {product.get("category")}
-Subcategory: {product.get("subcategory")}
-Rating: {product.get("rating")}
-Reviews: {product.get("reviews")}
-Price: ${product.get("price_usd")}
-ML Recommendation Score: {product.get("recommendation_score")}
+Product Name: {product_name}
+Brand: {product.get("brand_name") or "Unknown"}
+Category: {product.get("category") or "Unknown"}
+Subcategory: {product.get("subcategory") or "Unknown"}
+Rating: {product.get("rating") or "Not available"}
+Reviews: {product.get("reviews") or "Not available"}
+Price: ${product.get("price_usd") or "Not available"}
+ML Recommendation Score: {product.get("recommendation_score") or "Not available"}
 """
         )
 
     products_text = "\n".join(product_context)
 
-    profile_context = f"""
-User Profile:
-Age: {user_profile.get("age") or "Not provided"}
-Gender: {user_profile.get("gender") or "Not provided"}
-Skin Type: {user_profile.get("skin_type") or "Not provided"}
-Budget: {user_profile.get("budget") or "Not provided"}
-Skin Goals: {user_profile.get("skin_goals") or "Not provided"}
-Additional Details: {user_profile.get("additional_details") or "Not provided"}
-"""
-    prompt = f"""
-Create a 7-day skincare plan for the detected concern.
+    # Exact product names allowed by the ML pipeline.
+    allowed_products = [
+        str(product.get("product_name")).strip()
+        for product in (products or [])
+        if product.get("product_name")
+    ]
 
-Detected concern:
+    # ---------------------------------------------------------
+    # User profile
+    # ---------------------------------------------------------
+
+    profile_context = f"""
+Age: {age or "Not provided"}
+Gender: {gender or "Not provided"}
+Self-reported Skin Type: {profile_skin_type or "Not provided"}
+Monthly Budget: {budget or "Not provided"}
+Skin Goals: {skin_goals or "Not provided"}
+Additional Details: {additional_details or "Not provided"}
+"""
+
+    # ---------------------------------------------------------
+    # LLM prompt
+    # ---------------------------------------------------------
+
+    prompt = f"""
+You are the weekly skincare planning engine of an
+AI-powered personalized skincare application.
+
+Your job is to create a realistic, conservative and personalized
+7-day skincare routine.
+
+The plan MUST be based on:
+
+1. The image-detected skin concern.
+2. The user's self-reported profile.
+3. The ML-ranked product candidates.
+
+============================================================
+PRIMARY IMAGE ANALYSIS
+============================================================
+
+Detected skin concern:
 {skin_type}
+
+============================================================
+USER PROFILE
+============================================================
 
 {profile_context}
 
-ML-ranked product candidates:
+============================================================
+ML-RANKED PRODUCT CANDIDATES
+============================================================
+
 {products_text}
 
-USER PROFILE:
+============================================================
+PERSONALIZATION RULES
+============================================================
 
-Age: {age}
-Gender: {gender}
-Self-reported Skin Type: {profile_skin_type}
-Budget: {budget}
-Skin Goals: {skin_goals}
-Additional Details: {additional_details}
+1. The image-detected concern is the primary analysis result.
 
-PERSONALIZATION RULES:
+2. Use the user's self-reported skin type as supporting context.
 
-1. Consider the user's profile when structuring the weekly routine.
-2. Prioritize the user's stated skin goals.
-3. Respect the user's stated budget when choosing among the supplied products.
-4. Consider the self-reported skin type together with the image-detected concern.
-5. Use additional details when they are provided.
-6. Do not invent medical diagnoses or treatments.
-7. The image-detected concern remains the primary image-analysis result.
+3. Prioritize the user's stated skin goals.
 
-STRICT PRODUCT GROUNDING RULES:
+4. Respect the user's stated budget.
 
-1. ONLY mention products whose exact Product Name appears
-   in the ML-ranked product candidates.
+5. Consider age and additional details when useful.
 
-2. NEVER invent products, ingredients, treatments,
-   cleansers, moisturizers, sunscreens, or serums.
+6. The routine should be practical for a normal user.
 
-3. If the provided products are insufficient for a routine,
-   use exactly:
-   "No additional product selected"
+7. Prefer a simple routine over a complicated routine.
 
-4. Do not change the ML ranking.
+8. Do not overload the user with many products.
 
-5. Do not claim that any product medically treats a condition.
+9. Prefer higher-ranked ML recommendations when multiple
+   suitable candidates are available.
 
-Create plans for exactly these seven days:
+10. Do not randomly introduce products simply to create variety.
+
+11. A product can appear on multiple days if it is appropriate.
+
+12. Recovery / simpler days are allowed and encouraged.
+
+13. Do not invent medical diagnoses.
+
+14. Do not claim that a product medically treats or cures
+    a condition.
+
+15. Do not recommend prescription medicines.
+
+============================================================
+STRICT PRODUCT GROUNDING
+============================================================
+
+This is extremely important.
+
+You may ONLY use product names that appear EXACTLY in the
+ML-ranked product candidates above.
+
+Never:
+
+- invent a product
+- invent a brand
+- invent an ingredient
+- invent a serum
+- invent a cleanser
+- invent a moisturizer
+- invent a sunscreen
+- invent a treatment
+- modify a product name
+- create a product by combining names
+
+If an appropriate product is unavailable, return exactly:
+
+"No additional product selected"
+
+Morning and night MUST contain either:
+
+A) an exact Product Name from the candidate list
+
+OR
+
+B) "No additional product selected"
+
+Do NOT place explanations inside morning or night.
+
+============================================================
+WEEKLY STRUCTURE
+============================================================
+
+Create exactly these seven days:
 
 Monday
 Tuesday
@@ -118,70 +211,151 @@ Friday
 Saturday
 Sunday
 
-Each day MUST contain:
+The week should feel like ONE coherent routine.
 
-- morning
-- night
-- tip
+Do not make every day identical.
 
-Morning and night should contain either an exact product
-name from the candidates or:
-"No additional product selected"
+Possible day purposes include:
 
-The tip should be a short, general skincare-care tip.
+- Foundation
+- Targeted care
+- Maintenance
+- Gentle/recovery day
+- Barrier-support day
+- Targeted care
+- Weekly review/recovery
 
-Return ONLY valid JSON in exactly this structure:
+Only use these concepts when appropriate to the
+available products and detected concern.
+
+============================================================
+DAILY FIELDS
+============================================================
+
+Every day MUST contain:
+
+morning
+night
+tip
+focus
+reason
+avoid
+
+morning:
+Exact product name OR "No additional product selected"
+
+night:
+Exact product name OR "No additional product selected"
+
+tip:
+Short, general skincare-care advice.
+
+focus:
+Short description of the day's main purpose.
+
+reason:
+One concise explanation of why the day fits the user's
+profile, detected concern, goals or routine progression.
+
+avoid:
+One short general caution about avoiding excessive skincare,
+overuse or unnecessary product switching.
+
+Do not provide medical treatment instructions.
+
+============================================================
+OUTPUT REQUIREMENTS
+============================================================
+
+Return ONLY valid JSON.
+
+Do not use Markdown.
+
+Do not use code fences.
+
+Do not add explanations outside the JSON.
+
+Return exactly this structure:
 
 {{
   "Monday": {{
-    "morning": "product name or No additional product selected",
-    "night": "product name or No additional product selected",
-    "tip": "short skincare tip"
+    "morning": "exact product name or No additional product selected",
+    "night": "exact product name or No additional product selected",
+    "tip": "short skincare tip",
+    "focus": "main purpose of the day",
+    "reason": "why this day fits the user",
+    "avoid": "short general caution"
   }},
   "Tuesday": {{
-    "morning": "product name or No additional product selected",
-    "night": "product name or No additional product selected",
-    "tip": "short skincare tip"
+    "morning": "exact product name or No additional product selected",
+    "night": "exact product name or No additional product selected",
+    "tip": "short skincare tip",
+    "focus": "main purpose of the day",
+    "reason": "why this day fits the user",
+    "avoid": "short general caution"
   }},
   "Wednesday": {{
-    "morning": "product name or No additional product selected",
-    "night": "product name or No additional product selected",
-    "tip": "short skincare tip"
+    "morning": "exact product name or No additional product selected",
+    "night": "exact product name or No additional product selected",
+    "tip": "short skincare tip",
+    "focus": "main purpose of the day",
+    "reason": "why this day fits the user",
+    "avoid": "short general caution"
   }},
   "Thursday": {{
-    "morning": "product name or No additional product selected",
-    "night": "product name or No additional product selected",
-    "tip": "short skincare tip"
+    "morning": "exact product name or No additional product selected",
+    "night": "exact product name or No additional product selected",
+    "tip": "short skincare tip",
+    "focus": "main purpose of the day",
+    "reason": "why this day fits the user",
+    "avoid": "short general caution"
   }},
   "Friday": {{
-    "morning": "product name or No additional product selected",
-    "night": "product name or No additional product selected",
-    "tip": "short skincare tip"
+    "morning": "exact product name or No additional product selected",
+    "night": "exact product name or No additional product selected",
+    "tip": "short skincare tip",
+    "focus": "main purpose of the day",
+    "reason": "why this day fits the user",
+    "avoid": "short general caution"
   }},
   "Saturday": {{
-    "morning": "product name or No additional product selected",
-    "night": "product name or No additional product selected",
-    "tip": "short skincare tip"
+    "morning": "exact product name or No additional product selected",
+    "night": "exact product name or No additional product selected",
+    "tip": "short skincare tip",
+    "focus": "main purpose of the day",
+    "reason": "why this day fits the user",
+    "avoid": "short general caution"
   }},
   "Sunday": {{
-    "morning": "product name or No additional product selected",
-    "night": "product name or No additional product selected",
-    "tip": "short skincare tip"
+    "morning": "exact product name or No additional product selected",
+    "night": "exact product name or No additional product selected",
+    "tip": "short skincare tip",
+    "focus": "main purpose of the day",
+    "reason": "why this day fits the user",
+    "avoid": "short general caution"
   }}
 }}
 """
+
+    # ---------------------------------------------------------
+    # Call Groq
+    # ---------------------------------------------------------
 
     client = get_groq_client()
 
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
+        temperature=0.2,
+        max_completion_tokens=2200,
         messages=[
             {
                 "role": "system",
                 "content": (
-                    "You are a skincare planning assistant. "
-                    "You must strictly ground all product mentions "
-                    "in the supplied ML-ranked product list. "
+                    "You are a careful skincare planning engine. "
+                    "You must strictly ground every product name "
+                    "in the supplied ML-ranked product candidates. "
+                    "Never invent products, ingredients, diagnoses "
+                    "or medical treatments. "
                     "Return valid JSON only."
                 ),
             },
@@ -197,75 +371,86 @@ Return ONLY valid JSON in exactly this structure:
 
     content = response.choices[0].message.content
 
+    if not content:
+        return {
+            "error": "Weekly plan generation returned an empty response"
+        }
+
+    # ---------------------------------------------------------
+    # Parse JSON
+    # ---------------------------------------------------------
+
     try:
-        return json.loads(content)
+        plan = json.loads(content)
     except json.JSONDecodeError:
         return {
-            "error": "Weekly plan generation failed",
+            "error": "Weekly plan generation returned invalid JSON",
             "raw": content,
         }
-def test_groq():
-    client = get_groq_client()
 
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {
-                "role": "user",
-                "content": "Say hello."
-            }
-        ]
-    )
+    # ---------------------------------------------------------
+    # Backend validation
+    # ---------------------------------------------------------
 
-    return response.choices[0].message.content
+    required_days = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    ]
 
-def chat_with_skin_assistant(
-    message,
-    skin_type,
-    recommendations
-):
-    prompt = f"""
-You are a skincare planning assistant.
+    required_fields = [
+        "morning",
+        "night",
+        "tip",
+        "focus",
+        "reason",
+        "avoid",
+    ]
 
-Detected skin concern:
-{skin_type}
+    fallback_product = "No additional product selected"
 
-Recommended products:
-{", ".join(recommendations)}
+    for day in required_days:
 
-User question:
-{message}
+        # Missing day
+        if not isinstance(plan.get(day), dict):
+            plan[day] = {}
 
-Rules:
-1. Give safe, general skincare information.
-2. Base your response on the detected concern.
-3. Only mention products from the supplied recommended products.
-4. Do not recommend prescription medicines.
-5. Do not claim that a product medically treats a condition.
-6. Keep the answer under 150 words.
-7. If the question requires medical diagnosis or treatment,
-   recommend consulting a qualified dermatologist.
+        day_plan = plan[day]
 
-Answer:
-"""
+        # Ensure every required field exists
+        for field in required_fields:
+            value = day_plan.get(field)
 
-    client = get_groq_client()
-
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are a safe skincare assistant. "
-                    "Stay grounded in the supplied information."
+            if not isinstance(value, str) or not value.strip():
+                day_plan[field] = (
+                    fallback_product
+                    if field in ["morning", "night"]
+                    else "Keep the routine simple and consistent."
                 )
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ]
-    )
 
-    return response.choices[0].message.content
+        # -----------------------------------------------------
+        # Validate morning product
+        # -----------------------------------------------------
+
+        if day_plan["morning"] not in allowed_products:
+            day_plan["morning"] = fallback_product
+
+        # -----------------------------------------------------
+        # Validate night product
+        # -----------------------------------------------------
+
+        if day_plan["night"] not in allowed_products:
+            day_plan["night"] = fallback_product
+
+    # ---------------------------------------------------------
+    # Return only the seven expected days
+    # ---------------------------------------------------------
+
+    return {
+        day: plan[day]
+        for day in required_days
+    }
