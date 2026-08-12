@@ -13,11 +13,17 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     password = Column(String)
 
-    predictions = relationship(
-    "Prediction",
-    back_populates="user"
-)
+    age = Column(Integer, nullable=True)
+    gender = Column(String, nullable=True)
+    skin_type = Column(String, nullable=True)
+    budget = Column(String, nullable=True)
+    skin_goals = Column(Text, nullable=True)
+    additional_details = Column(Text, nullable=True)
 
+    predictions = relationship(
+        "Prediction",
+        back_populates="user"
+    )
 class Prediction(Base):
     __tablename__ = "predictions"
 

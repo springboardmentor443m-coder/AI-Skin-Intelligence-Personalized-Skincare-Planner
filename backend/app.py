@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Form
 from pathlib import Path
 import shutil
 import json
@@ -48,7 +48,30 @@ UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 
-def _build_product_recommendation_query(predicted_class: str) -> str:
+def _build_product_recommendation_query(
+    predicted_class: str,
+    skin_type: Optional[str] = None,
+    skin_goals: Optional[str] = None,
+    additional_details: Optional[str] = None,
+) -> str:
+
+    parts = []
+
+    if predicted_class:
+        parts.append(predicted_class)
+
+    if skin_type:
+        parts.append(f"{skin_type} skin")
+
+    if skin_goals:
+        parts.append(skin_goals)
+
+    if additional_details:
+        parts.append(additional_details)
+
+    query = " ".join(parts).strip()
+
+    return query or "skincare moisturizer"
     normalized_class = (predicted_class or "").strip().lower()
 
     adapter_map = {
@@ -64,11 +87,19 @@ def _build_product_recommendation_query(predicted_class: str) -> str:
 def _get_product_recommendations(
     predicted_class: str,
     engine: Optional[RecommendationEngine],
+    skin_type: Optional[str] = None,
+    skin_goals: Optional[str] = None,
+    additional_details: Optional[str] = None,
 ) -> list[dict]:
     if engine is None:
         return []
 
-    query_text = _build_product_recommendation_query(predicted_class)
+    query_text = _build_product_recommendation_query(
+        predicted_class=predicted_class,
+        skin_type=skin_type,
+        skin_goals=skin_goals,
+        additional_details=additional_details,
+    )
 
     try:
         return engine.recommend_products(
@@ -111,10 +142,32 @@ def health():
 @app.post("/predict")
 async def predict(
     file: UploadFile = File(...),
+    age: Optional[int] = Form(None),
+    gender: Optional[str] = Form(None),
+    skin_type: Optional[str] = Form(None),
+    budget: Optional[str] = Form(None),
+    skin_goals: Optional[str] = Form(None),
+    additional_details: Optional[str] = Form(None),
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
+        # Use saved profile values when the frontend does not provide them
+    age = age if age is not None else current_user.age
+    gender = gender if gender else current_user.gender
+    skin_type = skin_type if skin_type else current_user.skin_type
+    budget = budget if budget else current_user.budget
 
+    skin_goals = (
+        skin_goals
+        if skin_goals
+        else current_user.skin_goals
+    )
+
+    additional_details = (
+        additional_details
+        if additional_details
+        else current_user.additional_details
+    )
     image_path = UPLOAD_DIR / file.filename
 
     with open(image_path, "wb") as buffer:
@@ -125,13 +178,24 @@ async def predict(
 
     product_engine = getattr(app.state, "recommendation_engine", None)
     product_recommendations = _get_product_recommendations(
-        result["predicted_class"],
-        product_engine,
+        predicted_class=result["predicted_class"],
+        engine=product_engine,
+        skin_type=skin_type,
+        skin_goals=skin_goals,
+        additional_details=additional_details,
     )
 
     weekly_plan = generate_weekly_plan(
-    result["predicted_class"],
-    product_recommendations
+        result["predicted_class"],
+        product_recommendations,
+        user_profile={
+            "age": age,
+            "gender": gender,
+            "skin_type": skin_type,
+            "budget": budget,
+            "skin_goals": skin_goals,
+            "additional_details": additional_details,
+        },
     )
 
     prediction = Prediction(
@@ -255,7 +319,13 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
     new_user = User(
         name=user.name,
         email=user.email,
-        password=hash_password(user.password)
+        password=hash_password(user.password),
+        age=user.age,
+        gender=user.gender,
+        skin_type=user.skin_type,
+        budget=user.budget,
+        skin_goals=user.skin_goals,
+        additional_details=user.additional_details,
     )
 
     db.add(new_user)

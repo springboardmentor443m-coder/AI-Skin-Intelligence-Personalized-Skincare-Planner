@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { ProtectedLayout } from '@/components/protected-layout'
+import { useAuthStore } from '@/lib/auth-store'
 import { uploadImageForAnalysis, useAnalysisHistory, askDermatologist } from '@/hooks/use-skin-analysis'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Upload, X, CheckCircle, AlertCircle, Loader, Sparkles, ChevronDown, SunMedium, MoonStar, Lightbulb, Droplets } from 'lucide-react'
@@ -10,6 +11,7 @@ import Link from 'next/link'
 import AIChat from '@/components/AIChat'
 
 export default function UploadPage() {
+  const { user } = useAuthStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
@@ -22,6 +24,32 @@ export default function UploadPage() {
   const [chatInput, setChatInput] = useState('')
   const [chatMessages, setChatMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([])
   const [chatLoading, setChatLoading] = useState(false)
+   // Personalization inputs
+  const [skinType, setSkinType] = useState('')
+  const [budget, setBudget] = useState('')
+  const [skinGoals, setSkinGoals] = useState<string[]>([])
+  const [additionalDetails, setAdditionalDetails] = useState('')
+
+  const skinGoalOptions = [
+    'Acne & breakouts',
+    'Dark spots',
+    'Pigmentation',
+    'Dryness',
+    'Oil control',
+    'Pores',
+    'Fine lines & wrinkles',
+    'Skin texture',
+    'Sensitivity',
+    'Overall skin health',
+  ]
+
+  const toggleSkinGoal = (goal: string) => {
+    setSkinGoals((prev) =>
+      prev.includes(goal)
+        ? prev.filter((item) => item !== goal)
+        : [...prev, goal]
+    )
+  }
 
   const handleFileSelect = (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -63,7 +91,14 @@ export default function UploadPage() {
     setError('')
 
     try {
-      const response = await uploadImageForAnalysis(selectedFile)
+      const response = await uploadImageForAnalysis(selectedFile, {
+        age: user?.age,
+        gender: user?.gender,
+        skin_type: skinType,
+        budget,
+        skin_goals: skinGoals,
+        additional_details: additionalDetails,
+      })
       setResult(response.analysis)
       mutateHistory()
     } catch (err: any) {
@@ -209,6 +244,160 @@ export default function UploadPage() {
               )}
 
               {preview && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="glass-card p-6 sm:p-8"
+                >
+                  <div className="mb-6">
+                    <span className="section-kicker">Personalize your analysis</span>
+
+                    <h3 className="mt-3 text-2xl font-semibold text-[#3b2f2f]">
+                      Tell us a little about your skin
+                    </h3>
+
+                    <p className="mt-2 text-sm leading-6 text-[#8a736f]">
+                      These details help us make your recommendations and weekly routine more relevant to you.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-5 md:grid-cols-2">
+
+                    {/* Skin Type */}
+                    <div>
+                      <label
+                        htmlFor="skinType"
+                        className="mb-2 block text-sm font-semibold text-[#3b2f2f]"
+                      >
+                        Skin type
+                      </label>
+
+                      <select
+                        id="skinType"
+                        value={skinType}
+                        onChange={(e) => setSkinType(e.target.value)}
+                        className="w-full rounded-[14px] border border-[#f3e3da] bg-white px-4 py-3 text-sm text-[#3b2f2f] outline-none transition focus:border-[#d89c8b] focus:ring-2 focus:ring-[#d89c8b]/10"
+                      >
+                        <option value="">Select your skin type</option>
+                        <option value="normal">Normal</option>
+                        <option value="dry">Dry</option>
+                        <option value="oily">Oily</option>
+                        <option value="combination">Combination</option>
+                        <option value="sensitive">Sensitive</option>
+                        <option value="not_sure">I'm not sure</option>
+                      </select>
+                    </div>
+
+                    {/* Budget */}
+                    <div>
+                      <label
+                        htmlFor="budget"
+                        className="mb-2 block text-sm font-semibold text-[#3b2f2f]"
+                      >
+                        Monthly skincare budget
+                      </label>
+
+                      <select
+                        id="budget"
+                        value={budget}
+                        onChange={(e) => setBudget(e.target.value)}
+                        className="w-full rounded-[14px] border border-[#f3e3da] bg-white px-4 py-3 text-sm text-[#3b2f2f] outline-none transition focus:border-[#d89c8b] focus:ring-2 focus:ring-[#d89c8b]/10"
+                      >
+                        <option value="">Select your budget</option>
+                        <option value="under_500">Under ₹500</option>
+                        <option value="500_1000">₹500 – ₹1,000</option>
+                        <option value="1000_2000">₹1,000 – ₹2,000</option>
+                        <option value="2000_3000">₹2,000 – ₹3,000</option>
+                        <option value="3000_plus">₹3,000+</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Skin Goals */}
+                  <div className="mt-6">
+                    <label className="mb-3 block text-sm font-semibold text-[#3b2f2f]">
+                      What would you like to improve?
+                    </label>
+
+                    <div className="flex flex-wrap gap-2">
+                      {skinGoalOptions.map((goal) => {
+                        const selected = skinGoals.includes(goal)
+
+                        return (
+                          <button
+                            key={goal}
+                            type="button"
+                            onClick={() => toggleSkinGoal(goal)}
+                            className={`rounded-full border px-3.5 py-2 text-sm transition ${
+                              selected
+                                ? 'border-[#d89c8b] bg-[#fff0e9] text-[#b96f5d] shadow-sm'
+                                : 'border-[#f3e3da] bg-white text-[#8a736f] hover:border-[#d89c8b] hover:bg-[#fff8f3]'
+                            }`}
+                          >
+                            {selected && '✓ '}
+                            {goal}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Additional Details */}
+                  <div className="mt-6">
+                    <label
+                      htmlFor="additionalDetails"
+                      className="mb-2 block text-sm font-semibold text-[#3b2f2f]"
+                    >
+                      Additional details
+                      <span className="ml-2 font-normal text-[#a58f89]">
+                        Optional
+                      </span>
+                    </label>
+
+                    <textarea
+                      id="additionalDetails"
+                      value={additionalDetails}
+                      onChange={(e) => setAdditionalDetails(e.target.value)}
+                      rows={4}
+                      placeholder="Tell us anything important about your skin, current routine, allergies, products you use, or concerns..."
+                      className="w-full resize-none rounded-[14px] border border-[#f3e3da] bg-white px-4 py-3 text-sm text-[#3b2f2f] outline-none placeholder:text-[#b7a7a2] transition focus:border-[#d89c8b] focus:ring-2 focus:ring-[#d89c8b]/10"
+                    />
+                  </div>
+
+                  {/* Selection Summary */}
+                  {(skinType || budget || skinGoals.length > 0) && (
+                    <div className="mt-5 rounded-[14px] border border-[#f3e3da] bg-[#fffaf7] p-4">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a58f89]">
+                        Your analysis profile
+                      </p>
+
+                      <div className="mt-3 flex flex-wrap gap-2 text-sm">
+                        {skinType && (
+                          <span className="rounded-full bg-white px-3 py-1.5 text-[#6f5c57]">
+                            {skinType === 'not_sure'
+                              ? "Skin type: Not sure"
+                              : `Skin type: ${skinType}`}
+                          </span>
+                        )}
+
+                        {budget && (
+                          <span className="rounded-full bg-white px-3 py-1.5 text-[#6f5c57]">
+                            Budget: {budget.replaceAll('_', ' ')}
+                          </span>
+                        )}
+
+                        {skinGoals.length > 0 && (
+                          <span className="rounded-full bg-white px-3 py-1.5 text-[#6f5c57]">
+                            {skinGoals.length} goal{skinGoals.length > 1 ? 's' : ''}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+
+              {preview && (
                 <motion.button
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -222,7 +411,10 @@ export default function UploadPage() {
                       Analyzing...
                     </>
                   ) : (
-                    'Start Analysis'
+                    <>
+                      <Sparkles className="h-5 w-5" />
+                      Analyze My Skin
+                    </>
                   )}
                 </motion.button>
               )}

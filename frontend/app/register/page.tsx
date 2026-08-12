@@ -4,23 +4,26 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { apiClient } from '@/lib/api'
-import { useAuthStore } from '@/lib/auth-store'
-import { AuthResponse } from '@/lib/types'
 import { motion } from 'framer-motion'
 
 export default function RegisterPage() {
   const router = useRouter()
-  const { setUser, setToken } = useAuthStore()
+
   const [formData, setFormData] = useState({
     email: '',
     name: '',
+    age: '',
+    gender: '',
     password: '',
     confirmPassword: '',
   })
+
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
@@ -39,26 +42,35 @@ export default function RegisterPage() {
       return
     }
 
+    if (formData.age && (Number(formData.age) < 1 || Number(formData.age) > 120)) {
+      setError('Please enter a valid age')
+      return
+    }
+
     setIsLoading(true)
 
     try {
-      const response = await apiClient.post('/register', {
+      await apiClient.post('/register', {
         email: formData.email,
         name: formData.name,
         password: formData.password,
+        age: formData.age ? Number(formData.age) : null,
+        gender: formData.gender || null,
       })
 
-     // Registration successful
       router.push('/login')
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Registration failed. Please try again.')
+      setError(
+        err.response?.data?.detail ||
+        'Registration failed. Please try again.'
+      )
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-secondary/20 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-secondary/20 px-4 py-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -67,13 +79,16 @@ export default function RegisterPage() {
       >
         <div className="glass-card p-8">
           <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold text-white mb-2">Create Account</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">
+              Create Account
+            </h1>
             <p className="text-muted-foreground text-sm">
               Join AI Skin Intelligence today
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
                 Full Name
@@ -84,7 +99,7 @@ export default function RegisterPage() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground"
                 placeholder="John Doe"
               />
             </div>
@@ -99,9 +114,47 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground"
                 placeholder="you@example.com"
               />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Age
+                </label>
+                <input
+                  type="number"
+                  name="age"
+                  value={formData.age}
+                  onChange={handleChange}
+                  min="1"
+                  max="120"
+                  className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground"
+                  placeholder="21"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Gender
+                </label>
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground"
+                >
+                  <option value="">Select</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                  <option value="Prefer not to say">
+                    Prefer not to say
+                  </option>
+                </select>
+              </div>
             </div>
 
             <div>
@@ -114,7 +167,7 @@ export default function RegisterPage() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground"
                 placeholder="••••••••"
               />
             </div>
@@ -129,7 +182,7 @@ export default function RegisterPage() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground"
                 placeholder="••••••••"
               />
             </div>
@@ -147,10 +200,11 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition disabled:opacity-50"
             >
               {isLoading ? 'Creating account...' : 'Create Account'}
             </button>
+
           </form>
 
           <div className="mt-6 text-center">

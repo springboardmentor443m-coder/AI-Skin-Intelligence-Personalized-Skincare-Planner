@@ -2,6 +2,14 @@ export interface User {
   id: string
   email: string
   name: string
+
+  age?: number | null
+  gender?: string | null
+  skin_type?: string | null
+  budget?: string | null
+  skin_goals?: string | null
+  additional_details?: string | null
+
   created_at: string
   updated_at: string
 }

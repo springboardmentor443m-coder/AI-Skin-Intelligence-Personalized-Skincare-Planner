@@ -22,7 +22,15 @@ def get_groq_client() -> Groq:
 
     return Groq(api_key=api_key)
 
-def generate_weekly_plan(skin_type, products):
+def generate_weekly_plan(skin_type, products, user_profile=None):
+    user_profile = user_profile or {}
+
+    age = user_profile.get("age")
+    gender = user_profile.get("gender")
+    profile_skin_type = user_profile.get("skin_type")
+    budget = user_profile.get("budget")
+    skin_goals = user_profile.get("skin_goals")
+    additional_details = user_profile.get("additional_details")
     product_context = []
 
     for rank, product in enumerate(products, start=1):
@@ -45,14 +53,44 @@ ML Recommendation Score: {product.get("recommendation_score")}
 
     products_text = "\n".join(product_context)
 
+    profile_context = f"""
+User Profile:
+Age: {user_profile.get("age") or "Not provided"}
+Gender: {user_profile.get("gender") or "Not provided"}
+Skin Type: {user_profile.get("skin_type") or "Not provided"}
+Budget: {user_profile.get("budget") or "Not provided"}
+Skin Goals: {user_profile.get("skin_goals") or "Not provided"}
+Additional Details: {user_profile.get("additional_details") or "Not provided"}
+"""
     prompt = f"""
 Create a 7-day skincare plan for the detected concern.
 
 Detected concern:
 {skin_type}
 
+{profile_context}
+
 ML-ranked product candidates:
 {products_text}
+
+USER PROFILE:
+
+Age: {age}
+Gender: {gender}
+Self-reported Skin Type: {profile_skin_type}
+Budget: {budget}
+Skin Goals: {skin_goals}
+Additional Details: {additional_details}
+
+PERSONALIZATION RULES:
+
+1. Consider the user's profile when structuring the weekly routine.
+2. Prioritize the user's stated skin goals.
+3. Respect the user's stated budget when choosing among the supplied products.
+4. Consider the self-reported skin type together with the image-detected concern.
+5. Use additional details when they are provided.
+6. Do not invent medical diagnoses or treatments.
+7. The image-detected concern remains the primary image-analysis result.
 
 STRICT PRODUCT GROUNDING RULES:
 
