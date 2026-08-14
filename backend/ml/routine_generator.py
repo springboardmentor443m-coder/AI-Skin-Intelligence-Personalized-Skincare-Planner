@@ -1,4 +1,41 @@
-def generate_routine(profile):
+def adapt_daily_routine(daily_routine, condition):
+    harsh_actives = [
+        "Niacinamide Serum", 
+        "Vitamin C Serum", 
+        "AHA/BHA Exfoliant", 
+        "Salicylic Acid Serum", 
+        "Alpha Arbutin Serum", 
+        "Retinol Serum"
+    ]
+    
+    adapted = {"morning": [], "night": []}
+    
+    # Filter out harsh actives
+    for time_of_day in ["morning", "night"]:
+        for product in daily_routine[time_of_day]:
+            if product not in harsh_actives:
+                adapted[time_of_day].append(product)
+                
+    condition = condition.lower()
+    
+    # Inject recovery products
+    if condition in ["irritation", "redness"]:
+        # Insert after cleanser
+        adapted["morning"].insert(1, "Soothing Centella/Aloe Serum")
+        adapted["night"].insert(1, "Soothing Centella/Aloe Serum")
+    elif condition == "dryness":
+        adapted["morning"].insert(1, "Hydrating Toner / Barrier Serum")
+        if "Hydrating Toner / Barrier Serum" not in adapted["night"]:
+            adapted["night"].insert(1, "Hydrating Toner / Barrier Serum")
+        if "Sleeping Mask / Facial Oil" not in adapted["night"]:
+            adapted["night"].append("Sleeping Mask / Facial Oil")
+            
+    return adapted
+
+def generate_routine(profile, adaptations=None):
+    if adaptations is None:
+        adaptations = {}
+        
     weekly_routine = {}
     
     concerns = profile.skin_concerns.lower() if profile.skin_concerns else ""
@@ -62,5 +99,14 @@ def generate_routine(profile):
             "morning": morning,
             "night": night
         }
+        
+        # Apply adaptation if requested for this day
+        if f"Day {day}" in adaptations:
+            condition = adaptations[f"Day {day}"]
+            if condition and condition.lower() != "normal":
+                weekly_routine[f"Day {day}"] = adapt_daily_routine(
+                    weekly_routine[f"Day {day}"], 
+                    condition
+                )
 
     return weekly_routine

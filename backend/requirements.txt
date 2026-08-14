@@ -24,3 +24,4 @@ tensorflow
 scikit-learn
 joblib
 pandas
+requests

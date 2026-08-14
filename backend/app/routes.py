@@ -1,9 +1,10 @@
 import os
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app import schemas, crud
+from app import schemas, crud, ollama_service
 from ml.recommender import (
     recommend_products,
     recommend_by_skin_condition
@@ -88,6 +89,32 @@ def update_skin_profile(
 
     return updated_profile
 
+@router.get("/skin-profile/{user_id}", response_model=schemas.SkinProfileResponse)
+def get_skin_profile_endpoint(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    profile = crud.get_skin_profile(db, user_id)
+    if not profile:
+        raise HTTPException(
+            status_code=404,
+            detail="Skin profile not found"
+        )
+    return profile
+
+@router.get("/lifestyle/{user_id}", response_model=schemas.LifestyleResponse)
+def get_lifestyle_endpoint(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    lifestyle = crud.get_lifestyle(db, user_id)
+    if not lifestyle:
+        raise HTTPException(
+            status_code=404,
+            detail="Lifestyle not found"
+        )
+    return lifestyle
+
 @router.get("/recommend-by-profile")
 def recommend_by_profile(
     user_id: int,
@@ -122,6 +149,26 @@ def create_lifestyle(
 
     return crud.create_lifestyle(db, lifestyle)
 
+@router.put("/lifestyle/{user_id}", response_model=schemas.LifestyleResponse)
+def update_lifestyle_endpoint(
+    user_id: int,
+    lifestyle: schemas.LifestyleCreate,
+    db: Session = Depends(get_db)
+):
+    updated_lifestyle = crud.update_lifestyle(
+        db,
+        user_id,
+        lifestyle
+    )
+
+    if not updated_lifestyle:
+        raise HTTPException(
+            status_code=404,
+            detail="Lifestyle not found"
+        )
+
+    return updated_lifestyle
+
 @router.get("/routine/{user_id}")
 def get_routine(
     user_id: int,
@@ -137,6 +184,28 @@ def get_routine(
         )
 
     routine = generate_routine(profile)
+
+    return {
+        "user_id": user_id,
+        "routine": routine
+    }
+
+@router.post("/routine/{user_id}/adapt")
+def adapt_routine(
+    user_id: int,
+    request: schemas.RoutineAdaptationRequest,
+    db: Session = Depends(get_db)
+):
+
+    profile = crud.get_skin_profile(db, user_id)
+
+    if not profile:
+        raise HTTPException(
+            status_code=404,
+            detail="Skin profile not found"
+        )
+
+    routine = generate_routine(profile, adaptations=request.adaptations)
 
     return {
         "user_id": user_id,
@@ -192,3 +261,44 @@ def analyze_image(
     **result,
     "recommended_products": recommendations
 }
+
+@router.post("/skinmate")
+def ask_skinmate(
+    request: schemas.SkinMateRequest,
+    db: Session = Depends(get_db)
+):
+    profile = crud.get_skin_profile(db, request.user_id)
+    if not profile:
+        raise HTTPException(
+            status_code=404,
+            detail="Skin profile not found"
+        )
+
+    recent_history = request.chat_history[-6:]
+    history_text = "\n".join([f"{'User' if msg.role == 'user' else 'SkinMate'}: {msg.content}" for msg in recent_history])
+
+    prompt = f"""You are SkinMate, Skinly's AI skincare assistant.
+
+Instructions:
+- Answer the user's actual question directly first.
+- Keep your answer concise (ideally under 120 words).
+- Avoid unnecessary greetings, repetition, long explanations, and generic disclaimers.
+- Prioritize the user's current skin condition over generic advice.
+- If the skin is Irritated, Red, or highly Sensitive, do NOT recommend exfoliation, including AHA/BHA or physical scrubs.
+- Never recommend an ingredient listed in the user's allergies.
+- Do not diagnose diseases or medical conditions.
+- If symptoms are severe, persistent, painful, infected-looking, or concerning, recommend consulting a dermatologist/healthcare professional.
+
+User Profile:
+- Skin Type: {profile.skin_type}
+- Skin Concerns: {profile.skin_concerns}
+- Allergies: {profile.allergies}
+- Sensitive Skin: {profile.sensitive_skin}
+- Current condition: {request.skin_condition}
+
+Conversation History:
+{history_text}
+
+User Question: {request.message}"""
+
+    return StreamingResponse(ollama_service.ask_llama_stream(prompt), media_type="text/plain")

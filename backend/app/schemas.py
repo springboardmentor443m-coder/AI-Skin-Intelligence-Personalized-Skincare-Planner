@@ -83,6 +83,9 @@ class ProgressResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class RoutineAdaptationRequest(BaseModel):
+    adaptations: dict[str, str]
+
 from typing import List
 
 class ProductRecommendation(BaseModel):
@@ -98,3 +101,16 @@ class ImagePredictionResponse(BaseModel):
     prediction: str
     confidence: float
     recommended_products: List[ProductRecommendation]
+
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+class SkinMateRequest(BaseModel):
+    user_id: int
+    message: str
+    skin_condition: str = "Normal"
+    chat_history: List[ChatMessage] = []
+
+class SkinMateResponse(BaseModel):
+    response: str

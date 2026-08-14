@@ -69,6 +69,7 @@ button {
   box-shadow: var(--glass-shadow);
   border-radius: var(--radius);
   padding: 2rem;
+  min-width: 0;
 }
 
 /* Form Elements */
@@ -192,4 +193,36 @@ select.input-field option {
 
 .text-center {
   text-align: center;
+}
+
+/* File Input Styling */
+.file-input::file-selector-button {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.file-input::file-selector-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Dashboard Grid Layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  align-items: stretch;
+}
+
+@media (max-width: 992px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
 }

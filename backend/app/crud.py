@@ -106,6 +106,27 @@ def get_lifestyle(db: Session, user_id: int):
         .first()
     )
 
+def update_lifestyle(
+    db: Session,
+    user_id: int,
+    lifestyle: schemas.LifestyleCreate
+):
+    db_lifestyle = get_lifestyle(db, user_id)
+
+    if not db_lifestyle:
+        return None
+
+    db_lifestyle.sleep_hours = lifestyle.sleep_hours
+    db_lifestyle.water_intake = lifestyle.water_intake
+    db_lifestyle.stress_level = lifestyle.stress_level
+    db_lifestyle.diet = lifestyle.diet
+
+    db.commit()
+    db.refresh(db_lifestyle)
+
+    return db_lifestyle
+
+
 def create_progress(db: Session, progress: schemas.ProgressCreate):
 
     db_progress = models.Progress(
