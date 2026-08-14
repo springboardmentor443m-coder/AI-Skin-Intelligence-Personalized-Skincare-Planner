@@ -17,7 +17,6 @@ An end-to-end AI-powered skincare platform that leverages Computer Vision deep l
 * **📅 Dynamic AM/PM Routine Planner**: Automatically builds custom morning and evening skincare regimens based on AI skin analysis, user age, skin goals, climate/environment, and budget preferences.
 * **🧪 Ingredient-Aware Product Recommendation Engine**: Matches user skin profiles with suitable skincare products while preventing ingredient conflicts (e.g., Retinol + AHA/BHA) and cross-checking known allergies.
 * **💬 RAG-Powered AI Skincare Assistant**: Intelligent chatbot utilizing Retrieval-Augmented Generation to answer skincare questions, explain ingredient benefits, and give evidence-backed advice.
-* **🌍 Multi-Language Localization**: Full UI localization supporting multiple languages including English, Hindi (हिंदी), Telugu (తెలుగు), Tamil (தமிழ்), Marathi (मराठी), Bengali (বাংলা), Spanish (Español), French (Français), and more.
 * **🔒 Enterprise Authentication & Security**: JWT bearer authentication, bcrypt password hashing, automatic schema migrations, and Role-Based Access Control (User, Consultant, Dermatologist, Admin).
 
 ---
