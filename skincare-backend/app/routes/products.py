@@ -123,10 +123,9 @@ def get_recommendations(
         elif profile.skin_concerns:
             concern_scores = {c: 80 for c in profile.skin_concerns}
 
-    # Extract user declared allergens and sensitivities
+    # Extract user declared allergens
     user_allergies = [a.lower().strip() for a in (profile.allergies if profile and profile.allergies else []) if a and a.lower() != "no"]
-    user_sensitivities = [s.lower().strip() for s in (profile.sensitivities if profile and profile.sensitivities else []) if s and s.lower() != "no"]
-    forbidden_terms = set(user_allergies + user_sensitivities)
+    forbidden_terms = set(user_allergies)
 
     def is_safe_product(p_obj: dict) -> bool:
         if not forbidden_terms:

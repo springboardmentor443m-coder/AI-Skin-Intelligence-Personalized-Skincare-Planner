@@ -439,7 +439,7 @@ class SkincareRAGEngine:
 - Skin Type: {scan_analysis.get('detected_skin_type') or user_skin_type or 'Combination'}
 """
 
-        system_prompt = f"""You are an expert AI Dermatologist & Skincare Specialist powering an end-to-end RAG system for our application.
+        system_prompt = f"""You are DermaSense AI, an expert AI Dermatologist & Skincare Specialist powering an end-to-end RAG system for our application.
 User Query: "{user_query}"
 User Detected Concern: "{user_concern or 'General Care'}"
 User Skin Type: "{user_skin_type or 'Combination'}"

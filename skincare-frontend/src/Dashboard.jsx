@@ -49,7 +49,7 @@ function ScoreRing({ score }) {
 // ── Profile Tab ────────────────────────────────────────────
 const emptyForm = {
   skin_type: "", age_group: "", skin_concerns: "",
-  allergies: "", sensitivities: "", sleep_quality: "", water_intake_liters: "",
+  allergies: "", sleep_quality: "", water_intake_liters: "",
 };
 
 function ProfileTab({ token, profile, onProfileSaved, onGoToScan, onClearScan, t, lang }) {
@@ -64,7 +64,6 @@ function ProfileTab({ token, profile, onProfileSaved, onGoToScan, onClearScan, t
       age_group: profile?.age_group || "",
       skin_concerns: (profile?.skin_concerns || []).join(", "),
       allergies: (profile?.allergies || []).join(", "),
-      sensitivities: (profile?.sensitivities || []).join(", "),
       sleep_quality: profile?.sleep_quality || "",
       water_intake_liters: profile?.water_intake_liters ?? "",
     });
@@ -82,7 +81,6 @@ function ProfileTab({ token, profile, onProfileSaved, onGoToScan, onClearScan, t
         age_group: form.age_group || null,
         skin_concerns: toList(form.skin_concerns),
         allergies: toList(form.allergies),
-        sensitivities: toList(form.sensitivities),
         sleep_quality: form.sleep_quality || null,
         water_intake_liters: form.water_intake_liters ? Number(form.water_intake_liters) : null,
       });
@@ -203,14 +201,14 @@ function ProfileTab({ token, profile, onProfileSaved, onGoToScan, onClearScan, t
               ))}
             </div>
 
-            {["skin_concerns", "allergies", "sensitivities"].map((key) => {
+            {["skin_concerns", "allergies"].map((key) => {
               let items = profile[key] || [];
               if (key === "skin_concerns" && profile.detected_concern) {
                 // Prepend AI detected concern if present
                 const detectedTag = `${translateConcern(profile.detected_concern, lang)} (⚡ AI Detected)`;
                 items = [detectedTag, ...items.filter(c => c.toLowerCase() !== profile.detected_concern.toLowerCase())];
               }
-              const labels = { skin_concerns: t.skinConcerns, allergies: t.allergies, sensitivities: t.sensitivities };
+              const labels = { skin_concerns: t.skinConcerns, allergies: t.allergies };
               return (
                 <div key={key} style={{ marginTop: 18 }}>
                   <label style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--ink-faint)", fontWeight: 700 }}>
@@ -225,17 +223,6 @@ function ProfileTab({ token, profile, onProfileSaved, onGoToScan, onClearScan, t
               );
             })}
 
-            {/* Skin Profile & Health Score Explanation */}
-            <div style={{ marginTop: 22, padding: "16px", background: "rgba(240,253,244,0.85)", borderRadius: 12, border: "1px solid rgba(187,247,208,0.9)", fontSize: 12.5, color: "#166534", lineHeight: 1.6 }}>
-              <div style={{ fontWeight: 700, marginBottom: 6, display: "flex", alignItems: "center", gap: 6 }}>
-                <span>💡 What is the Skin Profile & Health Score?</span>
-              </div>
-              <ul style={{ margin: "4px 0 0 16px", padding: 0 }}>
-                <li><strong>Skin Health Score (0-100):</strong> Evaluates overall skin clarity and barrier health. Automatically updates after your AI Photo Scan.</li>
-                <li><strong>7-Day Personalized Routine:</strong> Uses your skin type, age, sleep, and water metrics to customize your routine and filter out allergens.</li>
-                <li><strong>RAG AI Advisor:</strong> Reads your exact profile metrics to provide accurate, grounded answers tailored to your skin!</li>
-              </ul>
-            </div>
           </>
         )}
 
@@ -264,13 +251,6 @@ function ProfileTab({ token, profile, onProfileSaved, onGoToScan, onClearScan, t
                 <input type="text" placeholder="e.g. Fragrance, Nuts, or 'None'" value={form.allergies} onChange={f("allergies")} />
                 <span style={{ fontSize: 11, color: "var(--ink-soft)", opacity: 0.8, marginTop: 2, display: "block" }}>
                   Enter 'None' or leave blank if you have no known allergies.
-                </span>
-              </div>
-              <div className="field">
-                <label>{t.sensitivities}</label>
-                <input type="text" placeholder="e.g. Strong Perfumes, Sunscreen, or 'None'" value={form.sensitivities} onChange={f("sensitivities")} />
-                <span style={{ fontSize: 11, color: "var(--ink-soft)", opacity: 0.8, marginTop: 2, display: "block" }}>
-                  Enter 'None' if your skin rarely gets irritated.
                 </span>
               </div>
               <div className="field">
@@ -311,11 +291,12 @@ function PlannerTab({ token, t, lang, profile, onGoToScan }) {
   const [checkedSteps, setCheckedSteps] = useState({});
 
   useEffect(() => {
+    setLoading(true);
     getWeeklyPlan(token)
       .then(setPlan)
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-  }, [token]);
+  }, [token, profile]);
 
   function toggleStep(dayName, stepIdx) {
     const key = `${mode}-${dayName}-${stepIdx}`;
@@ -326,17 +307,23 @@ function PlannerTab({ token, t, lang, profile, onGoToScan }) {
   if (error) return <div className="error-banner">{error}</div>;
   if (!plan) return null;
 
-  const hasDetectedConcern = Boolean((plan?.has_scan || profile?.skin_health_score != null) && (plan?.detected_concern || profile?.detected_concern));
+  const hasDetectedConcern = Boolean(
+    plan?.has_scan ||
+    profile?.skin_health_score != null ||
+    profile?.detected_concern ||
+    (profile?.skin_concerns && profile.skin_concerns.length > 0) ||
+    plan?.concern_label
+  );
 
   if (!hasDetectedConcern) {
     return (
       <div className="card glass section-reveal" style={{ padding: 40, textAlign: "center", maxWidth: 620, margin: "40px auto", borderRadius: 20 }}>
         <div style={{ fontSize: 52, marginBottom: 16 }}>📷</div>
         <h2 className="section-title" style={{ fontSize: 24, marginBottom: 12 }}>
-          AI Photo Scan Required
+          AI Photo Scan or Profile Setup Required
         </h2>
         <p style={{ color: "var(--ink-soft)", fontSize: 14.5, lineHeight: 1.6, marginBottom: 24 }}>
-          Please upload your face photo in the <strong>Scan & Analyze</strong> tab first. Our AI will detect your exact skin type & concerns to unlock your custom 7-Day Skincare Routine!
+          Please complete your <strong>Skin Profile</strong> or run an <strong>AI Photo Scan</strong> to unlock your personalized 7-Day Skincare Routine!
         </p>
         <button
           className="btn-primary"
@@ -354,6 +341,60 @@ function PlannerTab({ token, t, lang, profile, onGoToScan }) {
 
   return (
     <div className="section-reveal">
+      {/* 💧 Low Water Intake Alert Banner */}
+      {plan.hydration_alert && (
+        <div
+          className="card glass"
+          style={{
+            padding: "16px 20px",
+            marginBottom: 20,
+            borderLeft: "4px solid #e07a5f",
+            background: "rgba(224, 122, 95, 0.12)",
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 14,
+            borderRadius: 14,
+          }}
+        >
+          <span style={{ fontSize: 26, lineHeight: 1 }}>💧</span>
+          <div>
+            <strong style={{ color: "var(--rose-deep)", fontSize: 15, display: "block", marginBottom: 4 }}>
+              Dehydration Warning ({plan.water_intake_liters ?? "Low"} L/day)
+            </strong>
+            <p style={{ margin: 0, fontSize: 13.5, color: "var(--ink-soft)", lineHeight: 1.5 }}>
+              {plan.hydration_alert}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* 😴 Sleep Quality Alert Banner */}
+      {plan.sleep_alert && (
+        <div
+          className="card glass"
+          style={{
+            padding: "16px 20px",
+            marginBottom: 20,
+            borderLeft: "4px solid #3a86ff",
+            background: "rgba(58, 134, 255, 0.10)",
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 14,
+            borderRadius: 14,
+          }}
+        >
+          <span style={{ fontSize: 26, lineHeight: 1 }}>😴</span>
+          <div>
+            <strong style={{ color: "#3a86ff", fontSize: 15, display: "block", marginBottom: 4 }}>
+              Sleep & Recovery Alert
+            </strong>
+            <p style={{ margin: 0, fontSize: 13.5, color: "var(--ink-soft)", lineHeight: 1.5 }}>
+              {plan.sleep_alert}
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="planner-header card glass" style={{ padding: 24, marginBottom: 24 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
           <div>
@@ -364,6 +405,19 @@ function PlannerTab({ token, t, lang, profile, onGoToScan }) {
               {t.plannerSub} <strong style={{ color: "var(--rose-deep)" }}>{translateRoutineText(plan.concern_label, lang)}</strong>
             </p>
             <div className="planner-goal">🎯 {translateRoutineText(plan.goal, lang)}</div>
+
+            {plan.water_intake_liters != null && (
+              <div style={{ marginTop: 12, display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+                <span className={`tag ${plan.water_intake_liters < 3.0 ? "tag--pending" : "tag--rose"}`} style={{ fontSize: 12, fontWeight: 600 }}>
+                  💧 Water Intake: {plan.water_intake_liters} L/day {plan.water_intake_liters < 3.0 ? "(Target: 3.0L)" : "✓ Optimal"}
+                </span>
+                {plan.sleep_quality && (
+                  <span className="tag tag--rose" style={{ fontSize: 12, fontWeight: 600 }}>
+                    😴 Sleep: {plan.sleep_quality}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Routine Mode Switcher — Natural First */}
@@ -667,7 +721,7 @@ function RAGSkincareAdvisor({ t, userConcern, userSkinType, profile, lang = "en"
     detected_skin_type: profile.detected_skin_type || userSkinType,
   } : null;
 
-  const initialWelcome = "Hello! I am your RAG AI Skincare Advisor powered by Groq LLM & RAG. Connected to your AI photo scan output & product dataset! Ask me anything about your skin concerns, ingredient compatibility, custom routines, or general questions 🌿";
+  const initialWelcome = "Hello! I am your DermaSense AI Skincare Advisor powered by Groq LLM & RAG. Connected to your AI photo scan output & product dataset! Ask me anything about your skin concerns, ingredient compatibility, custom routines, or general questions 🌿";
 
   const [messages, setMessages] = useState([
     {
@@ -729,14 +783,14 @@ function RAGSkincareAdvisor({ t, userConcern, userSkinType, profile, lang = "en"
   return (
     <>
       <button className="chatbot-trigger" onClick={() => setOpen(!open)}>
-        {t.askSkinAI || "💬 RAG AI Advisor"}
+        {t.askSkinAI || "💬 DermaSense AI"}
       </button>
 
       {open && (
         <div className="chatbot-window card">
           <div className="chatbot-header">
             <div>
-              <strong>{t.ragTitle || "✦ Dataset RAG AI Skincare Advisor"}</strong>
+              <strong>{t.ragTitle || "✦ DermaSense AI Skincare Advisor"}</strong>
               <div style={{ fontSize: 11, opacity: 0.85 }}>
                 ⚡ Groq LLM (llama-3.3-70b) RAG Engine Active
               </div>
@@ -879,8 +933,12 @@ export default function Dashboard({ token, onLogout }) {
   const loadProfile = useCallback(() => {
     return getMyProfile(token)
       .then((data) => setProfile(data))
-      .catch(() => {});
-  }, [token]);
+      .catch((err) => {
+        if (err?.message && (err.message.includes("Could not validate credentials") || err.message.includes("Unauthorized") || err.message.includes("401"))) {
+          onLogout();
+        }
+      });
+  }, [token, onLogout]);
 
   useEffect(() => {
     setLoading(true);
@@ -997,7 +1055,7 @@ export default function Dashboard({ token, onLogout }) {
 
             {tab === "planner" && (
               <PlannerTab
-                key={`planner-${analysisKey}-${lang}`}
+                key={`planner-${analysisKey}-${lang}-${profile?.water_intake_liters}-${profile?.updated_at}`}
                 token={token}
                 t={t}
                 lang={lang}

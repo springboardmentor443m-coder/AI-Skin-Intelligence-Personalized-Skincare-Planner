@@ -17,7 +17,6 @@ class SkinProfile(Base):
     age_group = Column(String, nullable=True)
     skin_concerns = Column(ARRAY(String), default=list)
     allergies = Column(ARRAY(String), default=list)
-    sensitivities = Column(ARRAY(String), default=list)
 
     sleep_quality = Column(String, nullable=True)
     water_intake_liters = Column(Float, nullable=True)

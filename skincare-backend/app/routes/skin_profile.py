@@ -547,24 +547,43 @@ def get_weekly_plan(
 
     concern = None
     skin_type = None
+    water_intake = None
+    sleep_quality = None
+    allergies = []
     has_scan = False
-    if profile and profile.skin_health_score is not None:
-        has_scan = True
-        concern = profile.detected_concern
-        if not concern and profile.skin_concerns:
-            concern = profile.skin_concerns[0] if profile.skin_concerns else None
-        skin_type = profile.detected_skin_type or profile.skin_type
 
-    plan = generate_dynamic_weekly_plan(concern, skin_type)
+    if profile:
+        if profile.skin_health_score is not None:
+            has_scan = True
+            concern = profile.detected_concern
+        if not concern and profile.skin_concerns:
+            concern = profile.skin_concerns[0] if len(profile.skin_concerns) > 0 else None
+        skin_type = profile.detected_skin_type or profile.skin_type
+        water_intake = profile.water_intake_liters
+        sleep_quality = profile.sleep_quality
+        allergies = profile.allergies or []
+
+    plan = generate_dynamic_weekly_plan(
+        concern=concern,
+        skin_type=skin_type,
+        water_intake_liters=water_intake,
+        sleep_quality=sleep_quality,
+        allergies=allergies,
+    )
 
     return {
         "has_scan": has_scan,
-        "plan_key": plan["plan_key"],
-        "concern_label": plan["concern_label"],
-        "goal": plan["goal"],
+        "plan_key": plan.get("plan_key", "acne"),
+        "concern_label": plan.get("concern_label", "Acne & Breakouts"),
+        "goal": plan.get("goal", ""),
         "key_actives": plan.get("key_actives", []),
-        "detected_concern": concern if has_scan else None,
+        "detected_concern": concern,
         "detected_skin_type": skin_type or "Normal",
-        "clinical_days": plan["clinical_days"],
-        "natural_days": plan["natural_days"],
+        "water_intake_liters": water_intake,
+        "sleep_quality": sleep_quality,
+        "allergies": allergies,
+        "hydration_alert": plan.get("hydration_alert"),
+        "sleep_alert": plan.get("sleep_alert"),
+        "clinical_days": plan.get("clinical_days", []),
+        "natural_days": plan.get("natural_days", []),
     }

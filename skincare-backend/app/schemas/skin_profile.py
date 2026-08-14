@@ -10,7 +10,6 @@ class SkinProfileCreate(BaseModel):
     age_group: Optional[str] = None
     skin_concerns: list[str] = []
     allergies: list[str] = []
-    sensitivities: list[str] = []
     sleep_quality: Optional[str] = None
     water_intake_liters: Optional[float] = None
 

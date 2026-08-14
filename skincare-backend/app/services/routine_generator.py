@@ -8,40 +8,79 @@ and skin type (Oily, Dry, Sensitive, Combination, Normal).
 from typing import Dict, List, Optional
 
 
-def generate_dynamic_weekly_plan(concern: Optional[str], skin_type: Optional[str]) -> Dict:
+def generate_dynamic_weekly_plan(
+    concern: Optional[str],
+    skin_type: Optional[str],
+    water_intake_liters: Optional[float] = None,
+    sleep_quality: Optional[str] = None,
+    allergies: Optional[List[str]] = None,
+) -> Dict:
     c_clean = (concern or "acne").lower().strip()
     s_type = (skin_type or "Normal").capitalize()
 
     # Determine primary category
     if "redness" in c_clean or "sensitive" in c_clean or "rosacea" in c_clean:
-        category = "redness"
+        plan = _build_redness_plan(s_type)
     elif "dark" in c_clean or "spot" in c_clean or "pigment" in c_clean:
-        category = "dark_spots"
+        plan = _build_dark_spots_plan(s_type)
     elif "wrinkle" in c_clean or "aging" in c_clean or "line" in c_clean:
-        category = "wrinkles"
+        plan = _build_wrinkles_plan(s_type)
     elif "blackhead" in c_clean or "whitehead" in c_clean or "pore" in c_clean or "non_inflammatory" in c_clean:
-        category = "pores_blackheads"
+        plan = _build_pores_blackheads_plan(s_type)
     elif "dry" in c_clean or "dehydrat" in c_clean or "flak" in c_clean:
-        category = "dryness"
+        plan = _build_dryness_plan(s_type)
     elif "oil" in c_clean or "sebum" in c_clean or "shine" in c_clean:
-        category = "oiliness"
+        plan = _build_oiliness_plan(s_type)
     else:
-        category = "acne"
+        plan = _build_acne_plan(s_type)
 
-    if category == "redness":
-        return _build_redness_plan(s_type)
-    elif category == "dark_spots":
-        return _build_dark_spots_plan(s_type)
-    elif category == "wrinkles":
-        return _build_wrinkles_plan(s_type)
-    elif category == "pores_blackheads":
-        return _build_pores_blackheads_plan(s_type)
-    elif category == "dryness":
-        return _build_dryness_plan(s_type)
-    elif category == "oiliness":
-        return _build_oiliness_plan(s_type)
-    else:
-        return _build_acne_plan(s_type)
+    import copy
+    plan = copy.deepcopy(plan)
+
+    # 💧 WATER INTAKE CUSTOMIZATION (< 3.0 Litres)
+    if water_intake_liters is not None and water_intake_liters < 3.0:
+        deficit = round(3.0 - float(water_intake_liters), 1)
+        plan["hydration_alert"] = (
+            f"Your recorded water intake is {water_intake_liters}L/day, which is {deficit}L below the recommended 3.0L daily target! "
+            f"Dehydration slows down skin cell turnover, increases sebum viscosity (clogging pores), and weakens your moisture barrier. "
+            f"Specialized internal & external hydration steps have been added below."
+        )
+
+        for d in plan.get("natural_days", []):
+            d["tip"] = f"💧 Hydration Note: You logged {water_intake_liters}L water. Drink an extra {deficit}L today to hit 3.0L! " + d.get("tip", "")
+            d["am"].append(f"Step 4 (Hydration Boost): Drink 500ml of fresh room-temperature water immediately upon waking.")
+
+        for d in plan.get("clinical_days", []):
+            d["tip"] = f"💧 Hydration Note: You logged {water_intake_liters}L water. Drink an extra {deficit}L today to hit 3.0L! " + d.get("tip", "")
+            d["am"].append(f"Step 5 (Hydration Boost): Drink 500ml water to flush out cellular toxins and replenish skin moisture.")
+
+    # 😴 SLEEP QUALITY CUSTOMIZATION
+    if sleep_quality and any(term in sleep_quality.lower() for term in ["poor", "bad", "less", "5", "6", "insomnia"]):
+        plan["sleep_alert"] = (
+            f"Poor sleep quality ({sleep_quality}) increases stress hormones (cortisol), leading to skin inflammation and dark circles. "
+            f"Overnight Cica recovery steps and soothing remedies have been reinforced."
+        )
+
+    # 🚫 ALLERGIES FILTERING
+    if allergies:
+        alg_set = {a.lower().strip() for a in allergies if a.strip()}
+        if alg_set:
+            for list_name in ["natural_days", "clinical_days"]:
+                for day in plan.get(list_name, []):
+                    for time_of_day in ["am", "pm"]:
+                        filtered_steps = []
+                        for step in day[time_of_day]:
+                            subbed = False
+                            for alg in alg_set:
+                                if alg in step.lower():
+                                    step = step.replace(alg.capitalize(), "Aloe Vera").replace(alg, "aloe vera")
+                                    subbed = True
+                            if subbed:
+                                step += " ⚠️ (Ingredient substituted due to allergy preference)"
+                            filtered_steps.append(step)
+                        day[time_of_day] = filtered_steps
+
+    return plan
 
 
 def _build_redness_plan(skin_type: str) -> Dict:
