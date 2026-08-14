@@ -1,14 +1,29 @@
-# Virtual Environment
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
 venv/
 .venv/
+env/
 
-# Environment Variables
+# Environment variables / secrets
 .env
+.env.*
+!.env.example
 
-# Python / PyCache
-__pycache__/
-*.pyc
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
 
-# OS generated files
+# Python generated files
+.ipynb_checkpoints/
+
+# OS files
 .DS_Store
 Thumbs.db
+
+# IDE
+.vscode/
