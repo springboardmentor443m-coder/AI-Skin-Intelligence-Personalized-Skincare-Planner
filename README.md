@@ -7,7 +7,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14%2B-4169E1.svg?style=flat&logo=postgresql)](https://www.postgresql.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-An end-to-end AI-powered skincare platform that leverages Computer Vision deep learning models, Retrieval-Augmented Generation (RAG), and intelligent recommendation engines to provide personalized skin diagnostics, AM/PM skincare routines, multi-language support, and tailored product recommendations.
+An end-to-end AI-powered skincare platform that leverages Computer Vision deep learning models, Retrieval-Augmented Generation (RAG), and intelligent recommendation engines to provide personalized skin diagnostics, AM/PM skincare routines, and tailored product recommendations.
 
 ---
 
