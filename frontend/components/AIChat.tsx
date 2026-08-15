@@ -7,9 +7,10 @@ import { Sparkles, Send } from 'lucide-react'
 type AIChatProps = {
   skinType: string
   recommendations: any[]
+  weeklyPlan?: Record<string, any>
 }
 
-export default function AIChat({ skinType, recommendations }: AIChatProps) {
+export default function AIChat({ skinType, recommendations, weeklyPlan }: AIChatProps) {
   const [messages, setMessages] = useState<any[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -31,7 +32,7 @@ export default function AIChat({ skinType, recommendations }: AIChatProps) {
     setLoading(true)
 
     try {
-      const response = await askDermatologist(userMessage, skinType, recommendations.map((r) => r.description))
+      const response = await askDermatologist(userMessage, skinType, recommendations.map((r) => r.description), weeklyPlan )
 
       setMessages((prev) => [
         ...prev,

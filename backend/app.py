@@ -8,7 +8,7 @@ from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from backend.database import get_db
 from backend.models import AnalysisResult, User, Prediction
-from backend.schemas import UserCreate, UserResponse, UserLogin
+from backend.schemas import UserCreate, UserResponse, UserLogin, ProfileUpdate
 from backend.auth import hash_password, verify_password
 models.Base.metadata.create_all(bind=engine)
 from backend.predict import predict_image
@@ -27,7 +27,8 @@ class ChatRequest(BaseModel):
     message: str
     skin_type: Optional[str] = None
     recommendations: Optional[List[str]] = None
-
+    weekly_plan: Optional[dict] = None
+    
 app = FastAPI(
     title="AI Skin Intelligence API",
     description="Backend API for Personalized Skincare Planner",
@@ -363,6 +364,34 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         "token_type": "bearer"
     }
 
+@app.patch("/profile")
+def update_profile(
+    profile: ProfileUpdate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    name = profile.name.strip()
+
+    if not name:
+        raise HTTPException(
+            status_code=400,
+            detail="Name cannot be empty",
+        )
+
+    current_user.name = name
+
+    db.commit()
+    db.refresh(current_user)
+
+    return {
+        "message": "Profile updated successfully",
+        "user": {
+            "id": current_user.id,
+            "name": current_user.name,
+            "email": current_user.email,
+        },
+    }
+
 @app.get("/history")
 def get_history(
     current_user: User = Depends(get_current_user),
@@ -421,7 +450,9 @@ def assistant(chat: ChatRequest):
 
         skin_type=chat.skin_type,
 
-        recommendations=chat.recommendations
+        recommendations=chat.recommendations,
+
+        weekly_plan=chat.weekly_plan
 
     )
 

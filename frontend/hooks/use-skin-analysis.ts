@@ -85,12 +85,14 @@ export async function uploadImageForAnalysis(
 export async function askDermatologist(
   message: string,
   skinType: string,
-  recommendations: string[]
+  recommendations: string[],
+  weeklyPlan?: Record<string, any>
 ) {
   const response = await apiClient.post("/assistant", {
     message,
     skin_type: skinType,
     recommendations,
+    weekly_plan: weeklyPlan,
   })
 
   return response.data

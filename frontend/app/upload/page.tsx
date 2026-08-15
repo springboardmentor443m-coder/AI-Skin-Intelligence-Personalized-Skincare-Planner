@@ -100,6 +100,17 @@ export default function UploadPage() {
         additional_details: additionalDetails,
       })
       setResult(response.analysis)
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'latest_skin_analysis',
+          JSON.stringify({
+            analysis: response.analysis,
+            analyzedAt: new Date().toISOString(),
+          })
+        )
+      }
+
       mutateHistory()
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Failed to analyze image. Please try again.')
@@ -556,29 +567,77 @@ export default function UploadPage() {
                                   transition={{ duration: 0.2 }}
                                   className="overflow-hidden border-t border-[#f3e3da]"
                                 >
-                                  <div className="grid gap-3 p-4 sm:grid-cols-3 sm:p-5">
+                                  <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-5">
                                     <div className="rounded-[16px] border border-[#f3e3da] bg-white p-4 shadow-sm">
                                       <div className="flex items-center gap-2">
                                         <SunMedium className="h-4 w-4 text-[#d89c8b]" />
-                                        <h4 className="text-sm font-semibold text-[#3b2f2f]">Morning Routine</h4>
+                                        <h4 className="text-sm font-semibold text-[#3b2f2f]">
+                                          Morning Routine
+                                        </h4>
                                       </div>
-                                      <p className="mt-3 text-sm leading-6 text-[#8a736f]">{routine.morning}</p>
+                                      <p className="mt-3 text-sm leading-6 text-[#8a736f]">
+                                        {routine.morning}
+                                      </p>
                                     </div>
 
                                     <div className="rounded-[16px] border border-[#f3e3da] bg-white p-4 shadow-sm">
                                       <div className="flex items-center gap-2">
                                         <MoonStar className="h-4 w-4 text-[#d89c8b]" />
-                                        <h4 className="text-sm font-semibold text-[#3b2f2f]">Night Routine</h4>
+                                        <h4 className="text-sm font-semibold text-[#3b2f2f]">
+                                          Night Routine
+                                        </h4>
                                       </div>
-                                      <p className="mt-3 text-sm leading-6 text-[#8a736f]">{routine.night}</p>
+                                      <p className="mt-3 text-sm leading-6 text-[#8a736f]">
+                                        {routine.night}
+                                      </p>
                                     </div>
 
                                     <div className="rounded-[16px] border border-[#f3e3da] bg-white p-4 shadow-sm">
                                       <div className="flex items-center gap-2">
                                         <Lightbulb className="h-4 w-4 text-[#d89c8b]" />
-                                        <h4 className="text-sm font-semibold text-[#3b2f2f]">Daily Tip</h4>
+                                        <h4 className="text-sm font-semibold text-[#3b2f2f]">
+                                          Daily Tip
+                                        </h4>
                                       </div>
-                                      <p className="mt-3 text-sm leading-6 text-[#8a736f]">{routine.tip}</p>
+                                      <p className="mt-3 text-sm leading-6 text-[#8a736f]">
+                                        {routine.tip}
+                                      </p>
+                                    </div>
+
+                                    <div className="rounded-[16px] border border-[#f3e3da] bg-white p-4 shadow-sm">
+                                      <div className="flex items-center gap-2">
+                                        <Sparkles className="h-4 w-4 text-[#d89c8b]" />
+                                        <h4 className="text-sm font-semibold text-[#3b2f2f]">
+                                          Focus
+                                        </h4>
+                                      </div>
+                                      <p className="mt-3 text-sm leading-6 text-[#8a736f]">
+                                        {routine.focus}
+                                      </p>
+                                    </div>
+
+                                    <div className="rounded-[16px] border border-[#f3e3da] bg-white p-4 shadow-sm">
+                                      <div className="flex items-center gap-2">
+                                        <Droplets className="h-4 w-4 text-[#d89c8b]" />
+                                        <h4 className="text-sm font-semibold text-[#3b2f2f]">
+                                          Why This Routine
+                                        </h4>
+                                      </div>
+                                      <p className="mt-3 text-sm leading-6 text-[#8a736f]">
+                                        {routine.reason}
+                                      </p>
+                                    </div>
+
+                                    <div className="rounded-[16px] border border-[#f3e3da] bg-white p-4 shadow-sm">
+                                      <div className="flex items-center gap-2">
+                                        <AlertCircle className="h-4 w-4 text-[#d89c8b]" />
+                                        <h4 className="text-sm font-semibold text-[#3b2f2f]">
+                                          Keep in Mind
+                                        </h4>
+                                      </div>
+                                      <p className="mt-3 text-sm leading-6 text-[#8a736f]">
+                                        {routine.avoid}
+                                      </p>
                                     </div>
                                   </div>
                                 </motion.div>
@@ -592,7 +651,11 @@ export default function UploadPage() {
                 </div>
               )}
 
-              <AIChat skinType={result.skin_type} recommendations={result.recommendations} />
+              <AIChat
+                skinType={result.skin_type}
+                recommendations={result.recommendations}
+                weeklyPlan={result.weekly_plan}
+              />
 
               <div className="flex flex-col gap-3 sm:flex-row">
                 <button onClick={reset} className="flex-1 rounded-[16px] border border-[#f3e3da] bg-white px-4 py-3 font-semibold text-[#3b2f2f] transition hover:bg-[#fff8f3]">

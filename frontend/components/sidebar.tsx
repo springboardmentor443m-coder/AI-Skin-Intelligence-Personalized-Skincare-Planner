@@ -8,7 +8,6 @@ import {
   LayoutDashboard,
   Upload,
   History,
-  MessageCircle,
   BarChart3,
   Settings,
   LogOut,
@@ -20,7 +19,6 @@ const navigationItems = [
   { href: '/upload', label: 'Analyze Skin', icon: Upload },
   { href: '/history', label: 'History', icon: History },
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '/assistant', label: 'Assistant', icon: MessageCircle },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 

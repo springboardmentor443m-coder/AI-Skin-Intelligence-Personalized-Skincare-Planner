@@ -1,18 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+import { apiClient } from '@/lib/api'
 import { ProtectedLayout } from '@/components/protected-layout'
 import { useAuthStore } from '@/lib/auth-store'
+import { generateAnalysisReport } from '@/lib/report-generator'
 import { motion } from 'framer-motion'
 import {
   User,
   Lock,
   Bell,
   Eye,
-  Sun,
   Download,
   LogOut,
-  ChevronRight,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -54,9 +54,36 @@ export default function SettingsPage() {
   const { user, logout } = useAuthStore()
   const router = useRouter()
   const [activeSection, setActiveSection] = useState('profile')
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark')
   const [emailNotifications, setEmailNotifications] = useState(true)
   const [analysisReminders, setAnalysisReminders] = useState(true)
+  const [name, setName] = useState(user?.name || '')
+  const [savingProfile, setSavingProfile] = useState(false)
+  const [profileMessage, setProfileMessage] = useState('')
+
+  const handleSaveProfile = async () => {
+    if (!name.trim()) {
+      setProfileMessage('Please enter your name.')
+      return
+    }
+
+    setSavingProfile(true)
+    setProfileMessage('')
+
+    try {
+      const response = await apiClient.patch('/profile', {
+        name: name.trim(),
+      })
+
+      useAuthStore.getState().setUser(response.data.user)
+
+      setProfileMessage('Profile updated successfully.')
+    } catch (error) {
+      console.error(error)
+      setProfileMessage('Unable to update your profile.')
+    } finally {
+      setSavingProfile(false)
+    }
+  }
 
   const handleLogout = () => {
     logout()
@@ -152,7 +179,8 @@ export default function SettingsPage() {
                       </label>
                       <input
                         type="text"
-                        defaultValue={user?.name || ''}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
                       />
                     </div>
@@ -188,9 +216,21 @@ export default function SettingsPage() {
                       />
                     </div>
 
-                    <button className="px-6 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition">
-                      Save Changes
-                    </button>
+                    <div className="flex items-center gap-4">
+                      <button
+                        onClick={handleSaveProfile}
+                        disabled={savingProfile}
+                        className="px-6 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition disabled:opacity-60"
+                      >
+                        {savingProfile ? 'Saving...' : 'Save Changes'}
+                      </button>
+
+                      {profileMessage && (
+                        <p className="text-sm text-muted-foreground">
+                          {profileMessage}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 )}
 
@@ -330,13 +370,22 @@ export default function SettingsPage() {
                       </div>
 
                       <div className="p-4 bg-white/5 rounded-lg border border-border space-y-3">
-                        <p className="font-medium text-foreground">Data Download</p>
-                        <p className="text-sm text-muted-foreground">
-                          Download a copy of all your skin analysis data and history.
+                        <p className="font-medium text-foreground">
+                          Analysis Report
                         </p>
-                        <button className="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-secondary/90 text-foreground rounded-lg transition font-medium text-sm">
+
+                        <p className="text-sm text-muted-foreground">
+                          Download your latest AI skin analysis, personalized product
+                          recommendations, product details, and 7-day skincare plan as a
+                          printable report.
+                        </p>
+
+                        <button
+                          onClick={generateAnalysisReport}
+                          className="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-secondary/90 text-foreground rounded-lg transition font-medium text-sm"
+                        >
                           <Download className="w-4 h-4" />
-                          Download My Data
+                          Download Analysis Report
                         </button>
                       </div>
                     </div>
