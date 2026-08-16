@@ -52,7 +52,8 @@ export const Sidebar = ({ isOpen, onClose }) => {
   const navLinks = getNavLinks();
 
   const activeStyle = "flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl bg-brand-500 text-white shadow-md shadow-brand-500/10 transition-all duration-200";
-  const inactiveStyle = "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:text-brand-500 hover:bg-brand-50/50 dark:text-slate-400 dark:hover:text-brand-400 dark:hover:bg-slate-800/40 transition-all duration-200";
+  const inactiveStyle = "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:text-brand-500 hover:bg-brand-50/50 dark:text-slate-350 dark:hover:text-brand-400 dark:hover:bg-slate-800/40 transition-all duration-200";
+
 
   return (
     <>

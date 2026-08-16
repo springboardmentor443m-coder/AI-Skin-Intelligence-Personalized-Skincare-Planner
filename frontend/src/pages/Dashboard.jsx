@@ -725,7 +725,7 @@ export const Dashboard = () => {
                     </h4>
                     <ul className="space-y-2">
                       {dynDetails.risk_factors.map((rf, idx) => (
-                        <li key={idx} className="text-xs p-2.5 bg-red-50/50 dark:bg-red-950/10 border-l-4 border-red-500 text-slate-650 dark:text-slate-400 rounded-r-lg">
+                        <li key={idx} className="text-xs p-2.5 bg-red-50/50 dark:bg-red-950/10 border-l-4 border-red-500 text-slate-700 dark:text-slate-300 rounded-r-lg">
                           {rf}
                         </li>
                       ))}
@@ -741,10 +741,11 @@ export const Dashboard = () => {
                     </h4>
                     <ul className="space-y-2">
                       {dynDetails.recommendations.map((rec, idx) => (
-                        <li key={idx} className="text-xs p-2.5 bg-emerald-50/50 dark:bg-emerald-950/10 border-l-4 border-emerald-500 text-slate-650 dark:text-slate-400 rounded-r-lg">
+                        <li key={idx} className="text-xs p-2.5 bg-emerald-50/50 dark:bg-emerald-950/10 border-l-4 border-emerald-500 text-slate-700 dark:text-slate-300 rounded-r-lg">
                           {rec}
                         </li>
                       ))}
+
                     </ul>
                   </div>
                 </Card>
