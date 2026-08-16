@@ -42,3 +42,4 @@ class Progress(Base):
     user_id = Column(Integer, ForeignKey("users.user_id"))
     image_path = Column(String)
     notes = Column(Text)
+    created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))

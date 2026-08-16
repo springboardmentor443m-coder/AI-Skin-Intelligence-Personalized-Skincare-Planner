@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
+from datetime import datetime
 
 
 class UserCreate(BaseModel):
@@ -79,6 +80,7 @@ class ProgressResponse(BaseModel):
     user_id: int
     image_path: str
     notes: str
+    created_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True
@@ -114,3 +116,7 @@ class SkinMateRequest(BaseModel):
 
 class SkinMateResponse(BaseModel):
     response: str
+
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+    new_password: str

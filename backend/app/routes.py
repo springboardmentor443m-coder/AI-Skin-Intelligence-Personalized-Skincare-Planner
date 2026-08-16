@@ -2,6 +2,7 @@ import os
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
+from typing import List
 
 from app.database import get_db
 from app import schemas, crud, ollama_service
@@ -60,6 +61,18 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
         "email": authenticated_user.email,
         "role": authenticated_user.role
     }
+
+@router.post("/reset-password")
+def reset_password(
+    request: schemas.PasswordResetRequest,
+    db: Session = Depends(get_db)
+):
+    if len(request.new_password) < 8:
+        raise HTTPException(status_code=400, detail="Password must be at least 8 characters")
+
+    crud.reset_user_password(db, request.email, request.new_password)
+    
+    return {"message": "If an account with that email exists, the password has been successfully reset."}
 
 @router.post("/skin-profile", response_model=schemas.SkinProfileResponse)
 def create_skin_profile(
@@ -220,6 +233,13 @@ def create_progress(
 
     return crud.create_progress(db, progress)
 
+@router.get("/progress/{user_id}", response_model=List[schemas.ProgressResponse])
+def get_progress_endpoint(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    return crud.get_user_progress(db, user_id)
+
 @router.post(
     "/analyze-image",
     response_model=schemas.ImagePredictionResponse
@@ -254,6 +274,15 @@ def analyze_image(
         age=profile.age,
         gender=profile.gender
     )
+
+    # Automatically create a progress record
+    progress_note = f"Automated check-in: Detected {result['prediction']} skin condition."
+    progress_data = schemas.ProgressCreate(
+        user_id=user_id,
+        image_path=file.filename,
+        notes=progress_note
+    )
+    crud.create_progress(db, progress_data)
 
     os.remove(temp_path)
 

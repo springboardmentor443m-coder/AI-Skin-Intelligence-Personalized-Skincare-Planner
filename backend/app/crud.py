@@ -140,3 +140,22 @@ def create_progress(db: Session, progress: schemas.ProgressCreate):
     db.refresh(db_progress)
 
     return db_progress
+
+
+def get_user_progress(db: Session, user_id: int):
+    return (
+        db.query(models.Progress)
+        .filter(models.Progress.user_id == user_id)
+        .order_by(models.Progress.created_at.asc())
+        .all()
+    )
+
+def reset_user_password(db: Session, email: str, new_password: str):
+    user = get_user_by_email(db, email)
+    if not user:
+        return False
+    
+    hashed_password = pwd_context.hash(new_password)
+    user.password_hash = hashed_password
+    db.commit()
+    return True
