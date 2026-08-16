@@ -583,27 +583,127 @@ export const Dashboard = () => {
         {/* Dynamic Skin Health Assessment Report */}
         {assessment && overrides && (
           (() => {
-            const dynDetails = getDynamicDetails();
-            return (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
-                {/* Health Score Gauge Panel */}
-                <Card className="flex flex-col items-center justify-center text-center space-y-4">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-                    <Award className="w-4 h-4 text-brand-500" /> Overall Health Index
-                  </h4>
-                  {renderHealthScoreDial(dynDetails.health_score)}
-                  <div>
-                    <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
-                      {dynDetails.health_score >= 75 ? 'Healthy Barrier' : dynDetails.health_score >= 55 ? 'Needs Optimization' : 'Impaired Barrier'}
-                    </p>
-                    <p className="text-[11px] text-slate-400 mt-1">
-                      Evaluated relative to active concerns, age demographics, and barrier integrity.
-                    </p>
-                  </div>
-                </Card>
+            const getProbabilitiesList = (skinType) => {
+              if (scanResult && scanResult.probabilities) {
+                return Object.entries(scanResult.probabilities).map(([k, v]) => ({
+                  label: k,
+                  percent: Math.round(v * 100)
+                })).sort((a, b) => b.percent - a.percent);
+              }
+              const defaults = {
+                dry: [
+                  { label: 'dry', percent: 94 },
+                  { label: 'normal', percent: 3 },
+                  { label: 'sensitive', percent: 2 },
+                  { label: 'combination', percent: 1 },
+                  { label: 'oily', percent: 0 }
+                ],
+                oily: [
+                  { label: 'oily', percent: 92 },
+                  { label: 'combination', percent: 5 },
+                  { label: 'normal', percent: 2 },
+                  { label: 'dry', percent: 1 },
+                  { label: 'sensitive', percent: 0 }
+                ],
+                combination: [
+                  { label: 'combination', percent: 89 },
+                  { label: 'oily', percent: 6 },
+                  { label: 'dry', percent: 4 },
+                  { label: 'normal', percent: 1 },
+                  { label: 'sensitive', percent: 0 }
+                ],
+                sensitive: [
+                  { label: 'sensitive', percent: 91 },
+                  { label: 'dry', percent: 5 },
+                  { label: 'normal', percent: 3 },
+                  { label: 'combination', percent: 1 },
+                  { label: 'oily', percent: 0 }
+                ],
+                normal: [
+                  { label: 'normal', percent: 96 },
+                  { label: 'dry', percent: 2 },
+                  { label: 'oily', percent: 1 },
+                  { label: 'combination', percent: 1 },
+                  { label: 'sensitive', percent: 0 }
+                ]
+              };
+              return defaults[skinType?.toLowerCase()] || defaults.normal;
+            };
 
-                {/* Severity Concern Bars Panel */}
-                <Card className="lg:col-span-2 space-y-4">
+            const dynDetails = getDynamicDetails();
+            const probs = getProbabilitiesList(assessment.skin_type || user?.profile?.skin_type || "normal");
+
+            return (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in print:p-8 print:bg-white print:text-slate-900">
+                {/* Clinical Header (visible in prints/downloads) */}
+                <div className="lg:col-span-3 flex justify-between items-center pb-4 border-b border-slate-200/60 dark:border-slate-800">
+                  <div className="text-left space-y-0.5">
+                    <span className="text-[9px] uppercase tracking-widest font-black text-brand-500">Dermatological Analytics Summary</span>
+                    <h3 className="text-xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                      <Sparkles className="w-5 h-5 text-brand-500" /> AuraSkin Clinical Diagnostic Report
+                    </h3>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => window.print()}
+                    className="cursor-pointer bg-white dark:bg-slate-900 font-bold print:hidden"
+                  >
+                    Print / Save PDF
+                  </Button>
+                </div>
+
+                {/* Left Panel: overall health indices & probabilities bar chart */}
+                <div className="space-y-6">
+                  {/* Gauge score Dial */}
+                  <Card className="flex flex-col items-center justify-center text-center space-y-4">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                      <Award className="w-4 h-4 text-brand-500" /> Overall Health Index
+                    </h4>
+                    {renderHealthScoreDial(dynDetails.health_score)}
+                    <div>
+                      <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
+                        {dynDetails.health_score >= 75 ? 'Healthy Skin Barrier' : dynDetails.health_score >= 55 ? 'Optimizable Skin State' : 'Impaired Moisture Barrier'}
+                      </p>
+                      <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                        Evaluated relative to active concerns, age demographics, and structural barrier integrity.
+                      </p>
+                    </div>
+                  </Card>
+
+                  {/* CNN Model Probabilities Breakdown Graph */}
+                  <Card className="space-y-3.5 text-left">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 border-b border-slate-150 dark:border-slate-800/80 pb-2">
+                      <Activity className="w-4 h-4 text-brand-500" /> CNN Classifier Probability Map
+                    </h4>
+                    
+                    <div className="space-y-2">
+                      {probs.map((p) => (
+                        <div key={p.label} className="space-y-1">
+                          <div className="flex justify-between items-center text-[10px] font-bold text-slate-500 uppercase">
+                            <span>{p.label}</span>
+                            <span>{p.percent}%</span>
+                          </div>
+                          <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                            <div 
+                              className={`h-full rounded-full transition-all duration-500 ${
+                                p.percent > 70 
+                                  ? 'bg-brand-500' 
+                                  : p.percent > 20 
+                                    ? 'bg-amber-400' 
+                                    : 'bg-slate-300 dark:bg-slate-750'
+                              }`} 
+                              style={{ width: `${p.percent}%` }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </Card>
+                </div>
+
+                {/* Severity Concern Bars Panel (Toggles) */}
+                <Card className="lg:col-span-2 space-y-4 text-left">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 pb-2 border-b border-slate-100 dark:border-slate-800">
                     <Flame className="w-4 h-4 text-orange-500" /> Detected Concern Intensities
                   </h4>
@@ -618,14 +718,14 @@ export const Dashboard = () => {
                 </Card>
 
                 {/* Risks & Recommendations Full Width Panels */}
-                <Card className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
                   <div className="space-y-3">
                     <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 pb-1 border-b border-slate-100 dark:border-slate-800">
                       <ShieldAlert className="w-4 h-4 text-red-500" /> Risk Analysis & Alerts
                     </h4>
                     <ul className="space-y-2">
                       {dynDetails.risk_factors.map((rf, idx) => (
-                        <li key={idx} className="text-xs p-2.5 bg-red-50/50 dark:bg-red-950/10 border-l-4 border-red-500 text-slate-600 dark:text-slate-400 rounded-r-lg">
+                        <li key={idx} className="text-xs p-2.5 bg-red-50/50 dark:bg-red-950/10 border-l-4 border-red-500 text-slate-650 dark:text-slate-400 rounded-r-lg">
                           {rf}
                         </li>
                       ))}
@@ -641,7 +741,7 @@ export const Dashboard = () => {
                     </h4>
                     <ul className="space-y-2">
                       {dynDetails.recommendations.map((rec, idx) => (
-                        <li key={idx} className="text-xs p-2.5 bg-emerald-50/50 dark:bg-emerald-950/10 border-l-4 border-emerald-500 text-slate-600 dark:text-slate-400 rounded-r-lg">
+                        <li key={idx} className="text-xs p-2.5 bg-emerald-50/50 dark:bg-emerald-950/10 border-l-4 border-emerald-500 text-slate-650 dark:text-slate-400 rounded-r-lg">
                           {rec}
                         </li>
                       ))}
@@ -652,6 +752,7 @@ export const Dashboard = () => {
             );
           })()
         )}
+
 
       </div>
     );

@@ -20,23 +20,30 @@ export const Navbar = ({ onMenuToggle }) => {
         
         <div className="flex items-center gap-2">
           <span className="text-xl md:text-2xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-orange-400 bg-clip-text text-transparent">
-            DermaAI
+            AuraSkin AI
           </span>
           <span className="hidden md:inline-block px-2 py-0.5 text-xs font-semibold bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 rounded-full border border-brand-200/30">
-            Skin Intelligence
+            Precision Skin Health
           </span>
         </div>
       </div>
 
       <div className="flex items-center gap-4">
-        {/* Theme Switcher */}
-        <button
+        {/* Theme Switcher Sliding Capsule */}
+        <div 
           onClick={toggleTheme}
-          className="p-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition-all duration-200 cursor-pointer"
-          aria-label="Toggle Theme"
+          className="relative w-14 h-8 bg-slate-100 dark:bg-slate-800 rounded-full p-1 cursor-pointer flex items-center justify-between transition-all duration-300 border border-slate-200/40 dark:border-slate-700/40 shadow-inner select-none"
+          title="Toggle between normal and dark screens"
         >
-          {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-        </button>
+          <Sun className="w-3.5 h-3.5 text-amber-500 z-10 ml-0.5" />
+          <Moon className="w-3.5 h-3.5 text-blue-400 z-10 mr-0.5" />
+          <div 
+            className={`absolute w-6 h-6 rounded-full bg-white dark:bg-slate-900 shadow-md transform transition-transform duration-300 ${
+              theme === 'dark' ? 'translate-x-6' : 'translate-x-0'
+            }`}
+          />
+        </div>
+
 
         {/* User Card */}
         {user && (

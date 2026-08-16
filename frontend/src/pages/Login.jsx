@@ -39,13 +39,33 @@ export const Login = () => {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-tr from-slate-100 via-brand-50 to-brand-100/50 dark:from-slate-950 dark:via-slate-900 dark:to-brand-950/20 px-4">
-      <div className="absolute top-10 flex items-center gap-2">
-        <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-500 to-orange-400 flex items-center justify-center text-white text-xl font-bold shadow-md shadow-brand-500/20">
-          ✨
+      <div className="absolute top-10 flex items-center justify-between w-full max-w-7xl px-8">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-500 to-orange-400 flex items-center justify-center text-white text-xl font-bold shadow-md shadow-brand-500/20">
+            ✨
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xl md:text-2xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-orange-400 bg-clip-text text-transparent">
+              AuraSkin AI
+            </span>
+            <span className="hidden md:inline-block px-2 py-0.5 text-xs font-semibold bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 rounded-full border border-brand-200/30">
+              Precision Skin Health
+            </span>
+          </div>
         </div>
-        <span className="text-2xl font-bold bg-gradient-to-r from-brand-600 to-orange-400 bg-clip-text text-transparent">
-          DermaAI
-        </span>
+        <div 
+          onClick={toggleTheme}
+          className="relative w-14 h-8 bg-slate-100 dark:bg-slate-800 rounded-full p-1 cursor-pointer flex items-center justify-between transition-all duration-300 border border-slate-200/40 dark:border-slate-700/40 shadow-inner select-none"
+          title="Toggle between normal and dark screens"
+        >
+          <Sun className="w-3.5 h-3.5 text-amber-500 z-10 ml-0.5" />
+          <Moon className="w-3.5 h-3.5 text-blue-400 z-10 mr-0.5" />
+          <div 
+            className={`absolute w-6 h-6 rounded-full bg-white dark:bg-slate-900 shadow-md transform transition-transform duration-300 ${
+              theme === 'dark' ? 'translate-x-6' : 'translate-x-0'
+            }`}
+          />
+        </div>
       </div>
 
       <Card className="w-full max-w-md p-8 glass-card border border-white/40 dark:border-slate-800/40 shadow-xl relative overflow-hidden" glass>

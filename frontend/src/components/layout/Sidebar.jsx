@@ -111,7 +111,8 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
         {/* Footer */}
         <div className="mt-auto pt-4 border-t border-slate-200/50 dark:border-slate-800/50 text-[11px] text-slate-400 dark:text-slate-500 text-center">
-          DermaAI Intelligence v1.0.0
+          AuraSkin AI v1.0.0
+
         </div>
       </aside>
     </>

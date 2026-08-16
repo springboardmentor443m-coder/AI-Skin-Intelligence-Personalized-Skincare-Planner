@@ -1,6 +1,7 @@
-# AI Skin Intelligence & Personalized Skincare Planner
+# AuraSkin AI: Precision Skin Health Planner
 
 An enterprise-ready AI-powered skincare application designed to analyze facial skin scans, identify skin types and concerns, and generate highly personalized routines and ingredient matches.
+
 
 ---
 
