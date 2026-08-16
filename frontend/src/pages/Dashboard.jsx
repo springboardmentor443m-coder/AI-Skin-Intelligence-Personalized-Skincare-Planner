@@ -20,8 +20,11 @@ import {
   ArrowRight,
   ShieldAlert,
   Flame,
-  Award
+  Award,
+  Droplet,
+  Moon
 } from 'lucide-react';
+
 
 export const Dashboard = () => {
   const { user, refreshUser } = useAuth();
@@ -289,54 +292,84 @@ export const Dashboard = () => {
 
   // Helper for circular progress
   const renderHealthScoreDial = (score) => {
-    const radius = 45;
-    const stroke = 6;
+    const radius = 52;
+    const stroke = 7;
     const normalizedRadius = radius - stroke * 2;
     const circumference = normalizedRadius * 2 * Math.PI;
     const strokeDashoffset = circumference - (score / 100) * circumference;
 
-    const getColor = (s) => {
-      if (s < 55) return '#f43f5e'; // rose-500
-      if (s < 75) return '#f59e0b'; // amber-500
-      return '#10b981'; // emerald-500
+    const getGradientId = (s) => {
+      if (s < 55) return 'health-poor';
+      if (s < 75) return 'health-fair';
+      return 'health-excellent';
     };
 
-    const getBgColor = (s) => {
-      if (s < 55) return 'rgba(244, 63, 94, 0.1)';
-      if (s < 75) return 'rgba(245, 158, 11, 0.1)';
-      return 'rgba(16, 185, 129, 0.1)';
+    const getGlowShadow = (s) => {
+      if (s < 55) return 'shadow-rose-500/10 dark:shadow-rose-500/5';
+      if (s < 75) return 'shadow-amber-500/10 dark:shadow-amber-500/5';
+      return 'shadow-emerald-500/10 dark:shadow-emerald-500/5';
     };
 
-    const color = getColor(score);
+    const gradId = getGradientId(score);
 
     return (
-      <div className="relative flex flex-col items-center justify-center p-4 rounded-2xl" style={{ backgroundColor: getBgColor(score) }}>
-        <svg height={105} width={105} className="transform -rotate-90">
-          {/* Background circle */}
+      <div className={`relative flex flex-col items-center justify-center p-6 rounded-full bg-slate-50/20 dark:bg-slate-900/30 border border-slate-200/30 dark:border-slate-800/30 shadow-xl ${getGlowShadow(score)} backdrop-blur-xs w-36 h-36`}>
+        <svg height={110} width={110} className="transform -rotate-90">
+          <defs>
+            <linearGradient id="health-excellent" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#10b981" />
+              <stop offset="100%" stopColor="#06b6d4" />
+            </linearGradient>
+            <linearGradient id="health-fair" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f59e0b" />
+              <stop offset="100%" stopColor="#eab308" />
+            </linearGradient>
+            <linearGradient id="health-poor" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f43f5e" />
+              <stop offset="100%" stopColor="#e11d48" />
+            </linearGradient>
+          </defs>
+          
+          {/* Background Track circle */}
           <circle
-            stroke="rgba(200, 200, 200, 0.15)"
+            stroke="rgba(200, 200, 200, 0.08)"
             fill="transparent"
             strokeWidth={stroke}
             r={normalizedRadius}
-            cx={52.5}
-            cy={52.5}
+            cx={55}
+            cy={55}
           />
-          {/* Progress circle */}
+          
+          {/* Glow Layer (Blur) */}
           <circle
-            stroke={color}
+            stroke={`url(#${gradId})`}
+            fill="transparent"
+            strokeWidth={stroke}
+            strokeDasharray={circumference + ' ' + circumference}
+            style={{ strokeDashoffset, filter: 'blur(4px)', opacity: 0.45, transition: 'stroke-dashoffset 1s ease-in-out' }}
+            strokeLinecap="round"
+            r={normalizedRadius}
+            cx={55}
+            cy={55}
+          />
+
+          {/* Core Progress circle */}
+          <circle
+            stroke={`url(#${gradId})`}
             fill="transparent"
             strokeWidth={stroke}
             strokeDasharray={circumference + ' ' + circumference}
             style={{ strokeDashoffset, transition: 'stroke-dashoffset 1s ease-in-out' }}
             strokeLinecap="round"
             r={normalizedRadius}
-            cx={52.5}
-            cy={52.5}
+            cx={55}
+            cy={55}
           />
         </svg>
+        
         <div className="absolute flex flex-col items-center justify-center">
-          <span className="text-2xl font-black text-slate-800 dark:text-slate-100">{score}</span>
-          <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Score</span>
+          <span className="text-3xl font-black tracking-tight text-slate-800 dark:text-slate-100">{score}</span>
+          <span className="text-[8px] uppercase font-extrabold tracking-widest text-slate-400 dark:text-slate-500">INDEX</span>
         </div>
       </div>
     );
@@ -345,41 +378,53 @@ export const Dashboard = () => {
   // Helper to map severity levels to styled interactive bars
   const renderConcernBar = (label, key, level) => {
     const levelConfigs = {
-      none: { width: '8%', color: 'bg-slate-200 dark:bg-slate-700', text: 'None', textClass: 'text-slate-400' },
-      mild: { width: '33%', color: 'bg-emerald-500', text: 'Mild', textClass: 'text-emerald-500 font-bold' },
-      moderate: { width: '66%', color: 'bg-amber-500', text: 'Moderate', textClass: 'text-amber-500 font-bold' },
-      severe: { width: '100%', color: 'bg-rose-500', text: 'Severe', textClass: 'text-rose-500 font-bold' }
+      none: { width: '8%', color: 'bg-gradient-to-r from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600', text: 'None', textClass: 'text-slate-400 font-extrabold' },
+      mild: { width: '33%', color: 'bg-gradient-to-r from-emerald-400 to-teal-500', text: 'Mild', textClass: 'text-emerald-500 font-extrabold' },
+      moderate: { width: '66%', color: 'bg-gradient-to-r from-amber-400 to-orange-500', text: 'Moderate', textClass: 'text-amber-500 font-extrabold' },
+      severe: { width: '100%', color: 'bg-gradient-to-r from-rose-400 to-red-500', text: 'Severe', textClass: 'text-rose-500 font-extrabold' }
     };
 
+    const keyIcons = {
+      acne: Activity,
+      dryness: Droplet,
+      oiliness: Flame,
+      pigmentation: Sparkles,
+      sensitivity: AlertTriangle,
+      wrinkles: Clock
+    };
+
+    const Icon = keyIcons[key] || Activity;
     const cfg = levelConfigs[level] || levelConfigs.none;
 
     return (
-      <div className="space-y-2.5 p-3.5 bg-slate-50/50 dark:bg-slate-900/30 rounded-2xl border border-slate-200/50 dark:border-slate-800/40 hover:border-brand-500/20 hover:shadow-md hover:shadow-brand-500/2 transition-all duration-300">
+      <div className="space-y-3.5 p-4 bg-white/40 dark:bg-slate-900/40 border border-slate-200/50 dark:border-slate-800/60 rounded-2xl shadow-xs hover:shadow-md hover:border-brand-500/20 dark:hover:border-brand-500/20 transition-all duration-300 backdrop-blur-xs flex flex-col justify-between">
         <div className="flex justify-between items-center text-xs">
-          <span className="font-bold text-slate-700 dark:text-slate-350 capitalize">{label}</span>
-          <span className={`text-[10px] uppercase tracking-wider ${cfg.textClass}`}>{cfg.text}</span>
+          <span className="font-extrabold text-slate-850 dark:text-slate-200 flex items-center gap-1.5 capitalize">
+            <Icon className="w-3.5 h-3.5 text-brand-500" /> {label}
+          </span>
+          <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100/50 dark:bg-slate-850/50 ${cfg.textClass}`}>{cfg.text}</span>
         </div>
         
         {/* Progress line indicator */}
-        <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+        <div className="w-full bg-slate-100 dark:bg-slate-800/80 h-2 rounded-full overflow-hidden p-0.5 border border-slate-200/20 dark:border-slate-700/20">
           <div className={`h-full rounded-full transition-all duration-550 ease-out ${cfg.color}`} style={{ width: cfg.width }} />
         </div>
         
         {/* Interactive manual tuning switches */}
-        <div className="flex justify-between gap-1.5 pt-1">
+        <div className="flex justify-between gap-1 pt-1.5 border-t border-slate-150/40 dark:border-slate-800/30">
           {['none', 'mild', 'moderate', 'severe'].map((lvl) => {
             const isActive = level === lvl;
             const buttonColors = {
-              none: isActive ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-black' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/80',
-              mild: isActive ? 'bg-emerald-500 text-white font-black shadow-sm shadow-emerald-500/10' : 'text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 hover:text-emerald-500',
-              moderate: isActive ? 'bg-amber-500 text-white font-black shadow-sm shadow-amber-500/10' : 'text-slate-400 hover:bg-amber-50 dark:hover:bg-amber-950/20 hover:text-amber-500',
-              severe: isActive ? 'bg-rose-500 text-white font-black shadow-sm shadow-rose-500/10' : 'text-slate-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 hover:text-rose-500'
+              none: isActive ? 'bg-slate-200 dark:bg-slate-750 text-slate-700 dark:text-slate-200 font-extrabold shadow-inner' : 'text-slate-400 dark:text-slate-500 hover:bg-slate-100/50 dark:hover:bg-slate-800/40',
+              mild: isActive ? 'bg-emerald-500 text-white font-extrabold shadow-sm shadow-emerald-500/20' : 'text-slate-400 dark:text-slate-500 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20 hover:text-emerald-500',
+              moderate: isActive ? 'bg-amber-500 text-white font-extrabold shadow-sm shadow-amber-500/20' : 'text-slate-400 dark:text-slate-500 hover:bg-amber-50/50 dark:hover:bg-amber-950/20 hover:text-amber-500',
+              severe: isActive ? 'bg-rose-500 text-white font-extrabold shadow-sm shadow-rose-500/20' : 'text-slate-400 dark:text-slate-500 hover:bg-rose-50/50 dark:hover:bg-rose-950/20 hover:text-rose-500'
             };
             return (
               <button
                 key={lvl}
                 onClick={() => handleOverrideChange(key, lvl)}
-                className={`flex-1 py-1 text-[9px] uppercase font-bold rounded-lg transition-all duration-150 cursor-pointer ${buttonColors[lvl]}`}
+                className={`flex-1 py-1 text-[9px] uppercase font-bold rounded-lg transition-all duration-150 cursor-pointer select-none ${buttonColors[lvl]}`}
               >
                 {lvl}
               </button>
@@ -387,6 +432,7 @@ export const Dashboard = () => {
           })}
         </div>
       </div>
+
     );
   };
 
