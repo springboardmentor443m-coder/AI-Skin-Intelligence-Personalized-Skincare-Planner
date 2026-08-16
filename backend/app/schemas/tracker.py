@@ -15,6 +15,8 @@ class SkinLogBase(BaseModel):
     
     notes: Optional[str] = None
     photo_url: Optional[str] = None
+    logged_at: Optional[datetime] = None
+
 
 class SkinLogCreate(SkinLogBase):
     pass

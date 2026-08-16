@@ -33,14 +33,16 @@ def log_daily_metrics(
     Add a daily skin log entry. If a log already exists for today (in UTC),
     it updates the existing log to prevent chart duplication.
     """
-    now = datetime.now(timezone.utc)
-    # Define start of today in UTC
-    start_of_today = datetime(now.year, now.month, now.day, tzinfo=timezone.utc)
+    log_time = payload.logged_at or datetime.now(timezone.utc)
+    # Define start of today in UTC relative to log_time
+    start_of_today = datetime(log_time.year, log_time.month, log_time.day, tzinfo=timezone.utc)
+    end_of_today = start_of_today + timedelta(days=1)
     
-    # Check if user already logged today
+    # Check if user already logged on that target day
     existing = db.query(SkinLog).filter(
         SkinLog.user_id == current_user.id,
-        SkinLog.logged_at >= start_of_today
+        SkinLog.logged_at >= start_of_today,
+        SkinLog.logged_at < end_of_today
     ).first()
     
     # Sync health score from latest AI assessment if available
@@ -71,7 +73,7 @@ def log_daily_metrics(
         # Create new
         new_log = SkinLog(
             user_id=current_user.id,
-            logged_at=now,
+            logged_at=log_time,
             health_score=health_score,
             hydration_level=payload.hydration_level,
             sleep_hours=payload.sleep_hours,
@@ -86,6 +88,7 @@ def log_daily_metrics(
         db.commit()
         db.refresh(new_log)
         return new_log
+
 
 @router.get("/stats")
 def get_tracker_stats(
