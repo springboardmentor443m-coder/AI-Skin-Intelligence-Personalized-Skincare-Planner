@@ -53,65 +53,96 @@ Twacha.ai processes user facial portraits through custom-trained Convolutional N
     B -->|Displays Analytics & Plan| A
 ------------------------
 
-📋 Step-by-Step Execution FlowIntake & Authentication: 
-- Users register/login and set their demographic and lifestyle parameters (Budget, Water Goal, Sleep Target).
-- Vision Diagnostics (Visit 1):A selfie is uploaded and routed to FastAPI.OpenCV detects the face, crops it to remove background noise, and normalizes the tensor.EfficientNetB0 classifies the Skin Type. ConvNeXt-Tiny evaluates 7 concern classes using temperature-scaled Softmax logits.
-- Product Recommendation:The primary concern is mapped to clinical active ingredients.The TF-IDF engine vectorizes a catalog of skincare products, matching safe ingredients under the user's budget, outputting the Top 5 products + budget-friendly dupes.
-- LLM Routine Synthesis:Llama-3.3-70B analyzes the vision metrics, product list, and lifestyle inputs to generate a highly descriptive, non-repeating 7-Day AM/PM routine strictly formatted in JSON.
-- Progress Tracking (Visit 2+):The user uploads a follow-up photo. The system calculates the clinical Delta ($\Delta$) between the baseline and follow-up scans.
-- Adaptive Logic: If "Clear Skin" > 85%, the system shifts to a preventative maintenance plan. If < 85%, it re-calibrates the recommendations for the remaining primary concern.
-
---------------------------
+## 📋 Comprehensive System Workflow & Architectural Features
 
 
-## 🌟 Key Features
-### 📷 1. Instant Skin Health Scan (Visit 1)
-- **OpenCV Face Crop & Alignment**: Automatically detects facial boundaries using Haar Cascades (`cv2.CascadeClassifier`) and resizes inputs to $224 \times 224$ pixels.
-- **Keras Deep Learning Diagnostics**: Evaluates unscaled float32 pixel tensors ($0-255$) through trained Keras neural network models (`skin_type_model.keras` & `skin_concern_model.keras`).
-- **Temperature-Scaled Probability Scoring ($T=0.45$)**: Maps raw logits across 7 clinical concern classes (*Redness, Acne, Clear Skin, Dark Spots, Pigmentation, Pores, Wrinkles*).
-- **YCrCb Morphological Blemish Analysis**: Employs YCrCb skin region color masking and morphological black top-hat filtering (`cv2.MORPH_BLACKHAT`) to accurately distinguish localized dark spots/blemishes from global lighting gradients.
-### 🛍️ 2. Two-Stage ML E-Commerce Recommender
-- **Strict CSV Metadata Rendering**: Extracts products exclusively from `final_skincare_v13_complete.csv` to render **Brand Name**, **Product Name**, **Type/Category**, **Rating Norm** (`⭐ 4.5 / 5.0`), **Untruncated Ingredients List**, **Price ($)**, and **Calculated Savings**.
-- **Stage 1 (Candidate Retrieval)**: Blends TF-IDF active ingredient cosine suitability ($60\%$) with user profile vector similarity ($40\%$) to retrieve top candidates matching skin type and budget limits.
-- **Stage 2 (LightGBM Two-Stage ML Ranking)**: Reranks candidate pool using an offline `LGBMRegressor` model blending $75\%$ clinical suitability with $25\%$ market popularity metrics.
-- **Budget Dupes Matcher**: Dynamically identifies and ranks up to 3 cheaper alternative products (dupings) matching the same product category and skin safety profile.
-### 📅 3. Hyper-Personalized Adaptive 7-Day Care Plans
-- **Real-Time LLM Synthesis**: Powered by Groq LLM (`llama-3.3-70b-versatile`), integrating user demographics (Age, Gender, Country, Budget), lifestyle habits (Water Intake $L$, Sleep Hours $h$), and ML vision analytics.
-- **Prescribed Clinical Targets**: Analyzes current daily habits and prescribes new optimal clinical targets (e.g. current 5h sleep $\rightarrow$ prescribed 8h target) in daily routine steps.
-- **Strict CSV Product Incorporation**: Schedules and instructs the exact application of all recommended CSV products across 7 days of non-repeating morning and evening routines.
-### 📈 4. Clinical Progress Tracker & Comparative Delta Matrix
-- **Follow-up Scan Comparison**: Compares follow-up portraits against baseline scans using identical OpenCV + Keras vision pipelines.
-- **Net Delta Progress Table ($\Delta$)**: Displays structured markdown progress table:
-  $$\Delta = \text{Followup \%} - \text{Baseline \%}$$
-- **Automated Clinical Status Tagging**: Automatically tags concerns as `Improved ✅`, `Needs Attention ⚠️`, or `Stable/Maintained 🌱`.
-### 💬 5. Dr. Twacha | Real-Time Dermatologist AI Chatbot
-- **Interactive Conversational AI**: Answers any skin-related question, ingredient inquiry, or routine application query.
-- **Real-Time Context Injection**: Automatically injects patient demographics, water/sleep habits, ML concern percentages, and matched CSV products into conversation context.
-- **Session Memory Management**: Maintains multi-turn conversation memory for active sessions with a one-click `🗑️ Clear Chat Memory` reset option.
-### 🔄 6. Dynamic One-Click Re-Analysis Controls
-- Enables instant one-click routine and progress re-calibration (**`🚀 Re-Analyze Skin with Updated Profile Parameters`**) whenever profile habits are edited in the sidebar.
 ---
-## 🏗️ System Architecture & Technology Stack
-```
-Twacha.ai Platform Architecture
-│
-├── 🎨 Frontend Layer (Streamlit)
-│   ├── app.py (Native Theme UI, Multi-Tab Workflow, Chatbot Interface)
-│
-├── ⚡ Backend API Layer (FastAPI)
-│   ├── main.py (REST API Routes, Pydantic Schemas, CORS, Upload Handlers)
-│   ├── database.py (SQLAlchemy ORM, SQLite Storage for Users & ScanRecords)
-│
-├── 🧠 Intelligence & ML Engines
-│   ├── vision_engine.py (OpenCV Haar Crop, Keras Neural Models, YCrCb Top-Hat)
-│   ├── recommender_engine.py (TF-IDF Vectorizer, LightGBM Regressor, Dupes Matcher)
-│   └── llm_engine.py (Groq LLM LLaMA 3.3 70B, Structured Routine JSON & Chatbot)
-│
-└── 📁 Data & Models Directory
-    ├── models/ (Keras Models, Class JSON maps, OpenCV Haar XML)
-    └── data/ (final_skincare_v13_complete.csv)
-```
+
+### 1. Onboarding & Baseline Diagnostic Intake (Visit 1)
+
+The user journey begins by parameterizing their lifestyle profile and executing a baseline clinical vision assessment:
+
+* **Profile Parameterization:** Users register or log in via the Streamlit UI, establishing demographic parameters and inputting lifestyle constraints, including Skincare Budget ($), Daily Water Intake Goal (L), and Target Sleep Schedule (Hours).
+* **OpenCV Face Crop & Alignment:** A portrait image is uploaded and routed to the FastAPI backend. Haar Cascades (`cv2.CascadeClassifier`) detect facial boundaries, eliminate background interference, and crop/align the isolated face into a normalized 224×224 pixel tensor.
+* **Keras Deep Learning Diagnostics:** The vision engine evaluates unscaled `float32` pixel tensors (0–255 range) through trained neural network weights (`skin_type_model.keras` and `skin_concern_model.keras`). `EfficientNetB0` classifies the core **Skin Type** (Normal, Oily, Dry, Combination).
+* **Temperature-Scaled Probability Scoring ($T=0.45$):** `ConvNeXt-Tiny` evaluates the facial tensor across 7 clinical concern classes:
+  * Redness
+  * Acne
+  * Clear Skin
+  * Dark Spots
+  * Pigmentation
+  * Pores
+  * Wrinkles
+  
+  Raw neural network logits are calibrated using Temperature Scaling ($T=0.45$) to generate human-readable percentage distributions.
+* **YCrCb Morphological Blemish Analysis:** To eliminate false positives from ambient lighting shadows, the engine executes YCrCb color masking coupled with morphological black top-hat filtering (`cv2.MORPH_BLACKHAT`), isolating surface blemishes from illumination gradients.
+
 ---
+
+### 2. Two-Stage ML E-Commerce Recommender (Zero Hallucination)
+
+To prevent generative hallucination and ensure strict product feasibility, the platform relies on a closed-loop tabular machine learning pipeline:
+
+* **Clinical Active Translation:** The primary vision defect is translated into targeted biochemical active ingredients (e.g., *Acne* $\rightarrow$ Salicylic Acid, Zinc PCA, Niacinamide).
+* **Stage 1 (Candidate Retrieval):** The catalog (`final_skincare_v13_complete.csv`) is filtered to eliminate products exceeding the user's budget or flagged as unsafe for their skin type. A composite suitability score is computed by blending active ingredient TF-IDF cosine similarity (60% weight) with user profile vector similarity (40% weight).
+* **Stage 2 (LightGBM Reranking):** The candidate pool is reranked using an offline-trained `LGBMRegressor` model, blending clinical suitability (75%) with real-world market engagement and rating metrics (25%).
+* **Budget Dupes Matcher & Strict Rendering:** The Top 5 curated products are extracted alongside up to 3 cheaper alternative dupes matching the exact category and safety profile. Product metadata is rendered directly from the dataset:
+  * **Brand Name**
+  * **Product Name**
+  * **Category/Type**
+  * **Rating:** ⭐ 4.5 / 5.0
+  * **Untruncated Ingredient List**
+  * **Price ($) & Calculated Savings**
+
+---
+
+### 3. Generative LLM Routine Synthesis (7-Day AM/PM Plan)
+
+Objective diagnostic and tabular product outputs are synthesized into an actionable weekly regimen:
+
+* **Real-Time Context Bundling:** Patient demographics, vision probability metrics, lifestyle habits, and curated CSV product lists are compiled into an immutable zero-shot system prompt.
+* **Dynamic Llama-3.3-70B Synthesis:** Powered by the Groq inference engine (`llama-3.3-70b-versatile`), the LLM structures a deeply descriptive, non-repeating 7-Day AM/PM routine strictly formatted as a structured JSON object.
+* **Prescribed Clinical Targets:** Rather than mirroring current habits, the model analyzes baseline deficiencies and prescribes optimized clinical targets (e.g., transforming a current 5-hour sleep habit into an 8-hour target) embedded directly into the daily steps.
+* **Strict Product Incorporation:** The LLM integrates the recommended CSV products, providing specific sequencing and layering instructions across morning and evening routines.
+
+---
+
+### 4. Longitudinal Progress Tracking & Adaptive Logic (Visit 2+)
+
+Continuous clinical evaluation ensures routine effectiveness across subsequent visits:
+
+* **Follow-Up Scan Comparison:** Follow-up portraits are processed through the identical OpenCV and Keras pipelines used during baseline intake.
+* **Comparative Delta Matrix ($\Delta$):** The clinical shift is computed across all 7 concern classes:
+  $$\Delta = \text{Follow-up } \% - \text{Baseline } \%$$
+* **Automated Clinical Status Tagging:** Deltas are tabulated with automated progress flags:
+
+| Status Flag | Condition Criteria | Clinical Meaning |
+| :--- | :--- | :--- |
+| **Improved ✅** | $\Delta \le -2.0\%$ (Defect) or $\Delta > 0\%$ (Clear Skin) | Significant barrier recovery |
+| **Stable/Maintained 🌱** | $-2.0\% < \Delta \le 2.0\%$ | Controlled equilibrium |
+| **Needs Attention ⚠️** | $\Delta > 2.0\%$ (Defect) or $\Delta < 0\%$ (Clear Skin) | Persistent or active concern |
+
+* **Branched Adaptive Logic:**
+  * **The Preventative Loop:** If **Clear Skin $\ge 85\%$**, the routine shifts to a preventative barrier-maintenance plan with no new active treatments.
+  * **The Healing Loop:** If **Clear Skin $< 85\%$**, the system re-runs the Recommender Engine to target the newly identified primary concern.
+
+---
+
+### 5. Live AI Consultation (Dr. Twacha Chatbot)
+
+A real-time, context-aware conversational agent for ad-hoc user inquiries:
+
+* **In-Context System Injection:** User intake parameters, vision probability scores, and recommended CSV products are injected directly into the LLM context window, eliminating vector-database retrieval latency.
+* **Interactive Dermatology Consultant:** Provides real-time answers regarding product layering, ingredient interactions, and lifestyle adjustments without hallucinations.
+* **Session Memory Management:** Multi-turn conversational memory is preserved strictly in session state, with a dedicated **Clear Chat Memory** control to reset history upon logout.
+
+---
+
+### 6. Dynamic One-Click Re-Analysis Controls
+
+* **State-Driven Recalibration:** When profile parameters (e.g., budget, water goal, sleep schedule) are modified in the sidebar, a single click on **🚀 Re-Analyze Skin with Updated Profile Parameters** re-executes recommendation filtering and routine synthesis instantly without requiring image re-upload.
+---
+
 ## 📋 Directory Structure
 ```
 skincare_platform/
@@ -124,20 +155,20 @@ skincare_platform/
 │   │   ├── skin_type_classes.json
 │   │   ├── skin_concern_classes.json
 │   │   └── haarcascade_frontalface_default.xml
-│   ├── database.py
-│   ├── llm_engine.py
-│   ├── main.py
-│   ├── recommender_engine.py
-│   ├── vision_engine.py
+│   ├── database.py  (SQLAlchemy ORM, SQLite Storage for Users & ScanRecords)
+│   ├── llm_engine.py  (Groq LLM LLaMA 3.3 70B, Structured Routine JSON & Chatbot)
+│   ├── main.py  (REST API Routes, Pydantic Schemas, CORS, Upload Handlers)
+│   ├── recommender_engine.py  (TF-IDF Vectorizer, LightGBM Regressor, Dupes Matcher)
+│   ├── vision_engine.py  (OpenCV Haar Crop, Keras Neural Models, YCrCb Top-Hat)
 │   └── uploads/
-├── frontend/
-│   └── app.py
+├── frontend/ (Streamlit)
+│   └── app.py  (Native Theme UI, Multi-Tab Workflow, Chatbot Interface)
 ├── requirements.txt
 └── README.md
 ```
 -----------
 
-*Streamlit Web Application will open at: [http://127.0.0.1:8501](http://127.0.0.1:8501)*
+*Streamlit Web Application
 ---
 ## 📡 API Endpoints Reference
 | Method | Endpoint | Description |
