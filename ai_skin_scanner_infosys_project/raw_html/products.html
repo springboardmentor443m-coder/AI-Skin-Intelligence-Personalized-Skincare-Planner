@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aetheris Skin AI - Product Recommendations</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Sora:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#331f80",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e0e3e5",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-fixed": "#001c3b",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#191c1e",
+                        "surface-container-low": "#f2f4f6",
+                        "primary-fixed-dim": "#c9beff",
+                        "inverse-primary": "#c9beff",
+                        "error-container": "#ffdad6",
+                        "background": "#f7f9fb",
+                        "surface-tint": "#6050af",
+                        "surface": "#f7f9fb",
+                        "primary-fixed": "#e6deff",
+                        "on-tertiary-container": "#003262",
+                        "inverse-surface": "#2d3133",
+                        "surface-bright": "#f7f9fb",
+                        "on-secondary-container": "#2a6d64",
+                        "tertiary-container": "#6d9ce0",
+                        "tertiary": "#2b5f9f",
+                        "secondary-fixed": "#adefe4",
+                        "secondary-fixed-dim": "#91d3c8",
+                        "on-secondary-fixed-variant": "#005048",
+                        "outline-variant": "#c9c4d3",
+                        "surface-variant": "#e0e3e5",
+                        "primary-container": "#9d8df1",
+                        "secondary-container": "#aaece1",
+                        "on-primary-fixed": "#1b0062",
+                        "tertiary-fixed": "#d4e3ff",
+                        "tertiary-fixed-dim": "#a6c8ff",
+                        "on-background": "#191c1e",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-fixed": "#00201c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container": "#eceef0",
+                        "on-tertiary-fixed-variant": "#024785",
+                        "secondary": "#256960",
+                        "on-surface-variant": "#484552",
+                        "on-error": "#ffffff",
+                        "primary": "#6050af",
+                        "outline": "#797583",
+                        "on-primary-fixed-variant": "#483795"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-width": "280px",
+                        "card-gap": "20px",
+                        "gutter": "24px",
+                        "container-padding": "32px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Sora"],
+                        "display-lg": ["Sora"],
+                        "body-md": ["Inter"],
+                        "display-lg-mobile": ["Sora"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 40px 40px -20px rgba(114, 161, 229, 0.08);
+        }
+        .sidebar-blur {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+        }
+        .nav-item-active {
+            background: rgba(96, 80, 175, 0.1);
+        }
+        .scroll-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scroll-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .product-image-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 60%, rgba(255,255,255,0.4));
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 bottom-0 w-sidebar-width bg-surface-container-lowest/40 backdrop-blur-2xl border-r border-white/10 shadow-xl shadow-tertiary/10 flex flex-col h-full py-base gap-2 z-50">
+<div class="px-6 py-8 flex flex-col gap-1">
+<h1 class="font-display-lg text-headline-md text-primary tracking-tight">Aetheris AI</h1>
+<p class="text-on-surface-variant font-label-sm text-label-sm">Skin Intelligence</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">camera_front</span>
+<span class="font-label-sm">Scan</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">biotech</span>
+<span class="font-label-sm">Analysis</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-sm">Routine</span>
+</a>
+<!-- Active Tab: Products -->
+<a class="flex items-center gap-3 bg-primary/10 text-primary font-bold rounded-lg px-4 py-2 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+<span class="font-label-sm">Products</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">science</span>
+<span class="font-label-sm">Ingredients</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-label-sm">Progress</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-sm">Reports</span>
+</a>
+<div class="pt-4 mt-4 border-t border-white/10">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm">Profile</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm">Settings</span>
+</a>
+</div>
+</nav>
+<div class="px-4 pb-8">
+<div class="bg-gradient-to-br from-primary to-tertiary p-4 rounded-xl text-white shadow-lg shadow-primary/20">
+<p class="font-label-sm opacity-80 mb-1">Current Plan</p>
+<p class="font-headline-md text-body-md font-bold mb-4">Basic User</p>
+<button class="w-full bg-white text-primary font-label-sm py-2 rounded-lg hover:bg-white/90 transition-colors">Upgrade to Pro</button>
+</div>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-0 ml-sidebar-width h-16 bg-white/60 backdrop-blur-xl border-b border-white/20 shadow-sm shadow-tertiary/5 z-40 flex justify-between items-center px-container-padding">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full font-label-sm focus:ring-2 focus:ring-primary/20" placeholder="Search for products or ingredients..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary cursor-pointer active:scale-95">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer active:scale-95">contrast</span>
+</div>
+<div class="flex items-center gap-3 border-l border-white/20 pl-6">
+<div class="text-right hidden sm:block">
+<p class="font-label-sm text-primary font-bold">Alex Johnson</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Combination Skin</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary-container/30 flex items-center justify-center overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a modern woman with healthy, glowing skin looking calmly into the camera. The lighting is soft and high-key, emphasizing a clean, clinical healthcare aesthetic with lavender and soft blue tones in the background. The style is minimalist and high-end digital photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhf_NDVROsYm6Px3jTvi8l1lqqT58jDEVCms9w4yhrAj6K6wgquhqua2CKSfJqxSSBigg4doWZfjZGSPdbyGAKP73JiKforcFZjdH2BbJormk2ohODjEF-b-NXfJw1JTz6FBI-YTBWc2I1MQpOWdvgp5QpNraBpy2IGortdi_hiDSdwlYr-xSyxwF1tWbnxhYWWrm8uxuRg0BFCn91E7GL48v77Kn4RwtEyGEFsGT3BVt-uinzs_jhl7wHDfGiFkGC-lmqaWMFRdk2"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-sidebar-width pt-16 min-h-screen px-container-padding pb-12">
+<!-- Header Section -->
+<section class="py-10">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-2">Curated for You</h2>
+<p class="text-body-lg text-on-surface-variant max-w-2xl">Based on your recent 3D scan and hydration analysis, our AI has identified these formulations to restore your barrier and target hyperpigmentation.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="glass-card px-4 py-2 rounded-full flex items-center gap-2 border-primary/10">
+<span class="w-3 h-3 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-sm text-secondary">AI Analysis Sync: 98%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Filters Section -->
+<section class="mb-8 overflow-x-auto scroll-hide">
+<div class="flex items-center gap-4 min-w-max pb-2">
+<button class="flex items-center gap-2 bg-primary text-white px-6 py-2 rounded-full font-label-sm shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-base">filter_list</span>
+                    All Products
+                </button>
+<button class="flex items-center gap-2 bg-white/60 hover:bg-primary/5 text-on-surface-variant px-6 py-2 rounded-full font-label-sm border border-white/40 transition-all">
+                    Serums
+                </button>
+<button class="flex items-center gap-2 bg-white/60 hover:bg-primary/5 text-on-surface-variant px-6 py-2 rounded-full font-label-sm border border-white/40 transition-all">
+                    Cleansers
+                </button>
+<button class="flex items-center gap-2 bg-white/60 hover:bg-primary/5 text-on-surface-variant px-6 py-2 rounded-full font-label-sm border border-white/40 transition-all">
+                    Moisturizers
+                </button>
+<button class="flex items-center gap-2 bg-white/60 hover:bg-primary/5 text-on-surface-variant px-6 py-2 rounded-full font-label-sm border border-white/40 transition-all">
+                    Sun Protection
+                </button>
+<div class="w-px h-6 bg-white/20 mx-2"></div>
+<button class="flex items-center gap-2 bg-secondary-container/20 text-secondary px-6 py-2 rounded-full font-label-sm border border-secondary/10 hover:bg-secondary/10 transition-all">
+                    Hydration Focus
+                </button>
+<button class="flex items-center gap-2 bg-white/60 hover:bg-primary/5 text-on-surface-variant px-6 py-2 rounded-full font-label-sm border border-white/40 transition-all">
+                    Acne Relief
+                </button>
+</div>
+</section>
+<!-- Products Bento/Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-card-gap">
+<!-- Product Card 1: Featured High Match -->
+<div class="group glass-card rounded-lg overflow-hidden flex flex-col transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 border-primary/5">
+<div class="relative h-64 product-image-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Close-up high-resolution shot of a luxury minimalist frosted glass serum bottle with a white dropper. The product is placed on a clean white marble surface with soft lavender shadows and a subtle bokeh background of medical greenery. The aesthetic is ultra-clean, clinical, and premium, using soft natural light to highlight the texture of the glass." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSJlJtPrm979xyqmuf8Str12XIZLmrZ-2QQGUnBTXoLx16Fv9mLUCw5p6NVx5HolahE1ivwFk1hlvtNAyrtp4aBzCYufgYktYuB_SZMua2HJt9DylDimfHL233GZS0STTNNbaTtMWfzdZ_E0SM6nbhaUX8EKVjYsgJxdKzqdR-i3bsWpA4_WZ2alruuM7lje8QoOBGU46MEJz9kSVgPDz7h171iH9KXobHSKGSECkgIwTS5-Tl1QSzj-Yhm_nzDWe-opyj3CAhNASO"/>
+<div class="absolute top-4 left-4 z-10">
+<div class="bg-primary text-white font-label-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                            98% Match
+                        </div>
+</div>
+<div class="absolute top-4 right-4 z-10">
+<button class="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-[10px] uppercase tracking-widest text-primary font-bold mb-1">Aetheris Essentials</p>
+<h3 class="font-headline-md text-primary font-bold">Hyaluronic Complex B5</h3>
+</div>
+<p class="font-headline-md text-primary">$64.00</p>
+</div>
+<p class="text-on-surface-variant font-label-sm mb-4 line-clamp-2">Targets deep hydration and barrier repair. Optimized for your 24% lower forehead moisture levels.</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-secondary-container/30 text-secondary text-[10px] font-bold px-2 py-1 rounded">DEEP HYDRATION</span>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-bold px-2 py-1 rounded">VITAMIN B5</span>
+</div>
+<div class="mt-auto flex gap-3">
+<button class="flex-1 bg-primary text-white py-3 rounded-lg font-label-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+                            Add to Cart
+                        </button>
+<button class="w-12 border border-primary/20 rounded-lg flex items-center justify-center text-primary hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group glass-card rounded-lg overflow-hidden flex flex-col transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 border-primary/5">
+<div class="relative h-64 product-image-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Sleek white matte tube of an advanced facial cleanser. The tube has minimal black typography. The product is surrounded by splashes of crystal clear water and floating lavender petals. High-key studio lighting with a soft gradient from white to soft blue. Professional skincare product photography, minimalist and high-end clinic feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBb8gOe60RvyaWVE3DRccnkEr47RexCQSAN6XiVOumVCYXuPPfT-FmmDnER7CSaTtReRsWND9Q-fGiaXFzMHujeLN04epCvnTCcUkYwKw2aDbLhO3feSwVPq_Fq_6PXN7Rc1RLiTDyt5E8Qf2kl7SZ2XIPFZXE6U0RpWgGMTFsk-admyc7TYUK4G1__JNPxv8ovwqYPmOZ4tjctd-YAlANFcOFPYqBz09rGqPyldV_jv779gnZpnsMu8gOmI5crEuXPFBmud0v_wGt"/>
+<div class="absolute top-4 left-4 z-10">
+<div class="bg-secondary text-white font-label-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                            92% Match
+                        </div>
+</div>
+<div class="absolute top-4 right-4 z-10">
+<button class="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-[10px] uppercase tracking-widest text-primary font-bold mb-1">Radiance Line</p>
+<h3 class="font-headline-md text-primary font-bold">Gentle pH Amino Cleanser</h3>
+</div>
+<p class="font-headline-md text-primary">$38.00</p>
+</div>
+<p class="text-on-surface-variant font-label-sm mb-4 line-clamp-2">Sulfate-free formulation designed for reactive combination skin profiles.</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-secondary-container/30 text-secondary text-[10px] font-bold px-2 py-1 rounded">SENSITIVE SAFE</span>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-bold px-2 py-1 rounded">AMINO ACIDS</span>
+</div>
+<div class="mt-auto flex gap-3">
+<button class="flex-1 bg-primary text-white py-3 rounded-lg font-label-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+                            Add to Cart
+                        </button>
+<button class="w-12 border border-primary/20 rounded-lg flex items-center justify-center text-primary hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group glass-card rounded-lg overflow-hidden flex flex-col transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 border-primary/5">
+<div class="relative h-64 product-image-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A premium glass jar of facial moisturizer with a metallic silver cap. The texture of the cream is visible, looking rich and silky. It sits on a slab of light grey concrete with soft focus botanical elements in the background. Lighting is soft and airy, emphasizing the luxurious texture of the cream. Minimalist digital sanctuary aesthetic with lavender and cool white tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCluFhA3TKZS9OYZyyGeWRtuwdbPuJZ1OKjtmZg2zIFePNRSgxu7jTtOT2aC7MqO6Wgaaz6byldyzKFsXIniK9ZBCxgMBuKDWMEwOlr0oY5AruUTij_3ca8t4d9WQg-zr0EIan6WCN6kb5eQuwFOKDbvXRFEd3AizM6dE0pxXwyr-kqQX1sard9CGNAjPCCrCSwujSMICACsxM79G9x5UA1dKuMweFX6S2CrovkCJqo43zxVazGlacGjHnMgN2u2x78if4wN7N93UaX"/>
+<div class="absolute top-4 left-4 z-10">
+<div class="bg-primary text-white font-label-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                            89% Match
+                        </div>
+</div>
+<div class="absolute top-4 right-4 z-10">
+<button class="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-[10px] uppercase tracking-widest text-primary font-bold mb-1">Night Repair</p>
+<h3 class="font-headline-md text-primary font-bold">Ceramide Barrier Balm</h3>
+</div>
+<p class="font-headline-md text-primary">$82.00</p>
+</div>
+<p class="text-on-surface-variant font-label-sm mb-4 line-clamp-2">Nightly recovery cream to counteract UV-induced oxidative stress detected in your scan.</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-secondary-container/30 text-secondary text-[10px] font-bold px-2 py-1 rounded">NIGHT CARE</span>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-bold px-2 py-1 rounded">CERAMIDES</span>
+</div>
+<div class="mt-auto flex gap-3">
+<button class="flex-1 bg-primary text-white py-3 rounded-lg font-label-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+                            Add to Cart
+                        </button>
+<button class="w-12 border border-primary/20 rounded-lg flex items-center justify-center text-primary hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group glass-card rounded-lg overflow-hidden flex flex-col transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 border-primary/5">
+<div class="relative h-64 product-image-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A minimalist airless pump bottle for sunscreen. The bottle is a soft pearl white with a metallic pump. It is arranged elegantly next to a dried palm leaf on a sandy neutral surface. High-contrast lighting creates crisp, clean shadows. The aesthetic is beachy yet clinical, reflecting high-end sun protection. Tones are warm sandy beige mixed with cool whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvPUdOZVMPdq95XBaXRPyELV4TvSNznVzyDUgXm7GlFBj-vegGU3O_PqcmfIA_WC5MHqMOaBerJDH6FVjxX1UZ77dBNHUwdfT9Ip-v6g9eQzDJ-iw96_Pn9l4ER60RWfczp-xv2dwwpStmnG2ebKfEaPjP8QYQ86wwBiKv7VAqOFBpe0vg-9l0KNXZ7cDzIt9qWD410ioazGY3SCKZEhY69eHvQi2xyvZURpwtxEnjuh2-W69STQBlnut3AwBJTNr1W5jURka3qLsL"/>
+<div class="absolute top-4 left-4 z-10">
+<div class="bg-secondary text-white font-label-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                            85% Match
+                        </div>
+</div>
+<div class="absolute top-4 right-4 z-10">
+<button class="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-[10px] uppercase tracking-widest text-primary font-bold mb-1">Defense Shield</p>
+<h3 class="font-headline-md text-primary font-bold">Ultra-Light Fluid SPF 50+</h3>
+</div>
+<p class="font-headline-md text-primary">$42.00</p>
+</div>
+<p class="text-on-surface-variant font-label-sm mb-4 line-clamp-2">Weightless mineral protection. Recommended based on your active outdoor lifestyle data.</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-secondary-container/30 text-secondary text-[10px] font-bold px-2 py-1 rounded">MINERAL SPF</span>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-bold px-2 py-1 rounded">UVA/UVB</span>
+</div>
+<div class="mt-auto flex gap-3">
+<button class="flex-1 bg-primary text-white py-3 rounded-lg font-label-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+                            Add to Cart
+                        </button>
+<button class="w-12 border border-primary/20 rounded-lg flex items-center justify-center text-primary hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+</div>
+<!-- AI Insight Banner (Asymmetric Bento Element) -->
+<div class="md:col-span-2 glass-card rounded-lg p-8 relative overflow-hidden flex flex-col justify-center border-primary/10">
+<div class="absolute -right-20 -bottom-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
+<div class="absolute -left-20 -top-20 w-60 h-60 bg-tertiary/5 rounded-full blur-3xl"></div>
+<div class="relative z-10 max-w-lg">
+<div class="flex items-center gap-3 text-primary mb-4">
+<span class="material-symbols-outlined text-[32px]">psychology</span>
+<h4 class="font-headline-md font-bold">Why these products?</h4>
+</div>
+<p class="text-body-md text-on-surface mb-6">Our analysis detected a 12% increase in trans-epidermal water loss (TEWL) compared to last week. These selections prioritize <strong>humectants</strong> and <strong>occlusives</strong> to seal in moisture and prevent environmental stress.</p>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="text-label-sm text-on-surface-variant">Bio-active Ingredients</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-label-sm text-on-surface-variant">Skin Microbiome Friendly</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Routine Integration Preview -->
+<section class="mt-12 py-12 border-t border-white/20">
+<h3 class="font-headline-md text-primary mb-8">Integrated Routine Preview</h3>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="p-6 glass-card rounded-lg text-center">
+<p class="text-[10px] text-primary font-bold uppercase mb-4">Step 01: Cleanse</p>
+<div class="w-16 h-16 rounded-full bg-secondary-container/20 mx-auto flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-secondary">water_drop</span>
+</div>
+<p class="font-label-sm font-bold">Amino Cleanser</p>
+<p class="text-[10px] text-on-surface-variant mt-1">Morning &amp; Evening</p>
+</div>
+<div class="p-6 glass-card rounded-lg text-center">
+<p class="text-[10px] text-primary font-bold uppercase mb-4">Step 02: Treat</p>
+<div class="w-16 h-16 rounded-full bg-primary-container/20 mx-auto flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary">biotech</span>
+</div>
+<p class="font-label-sm font-bold">Hyaluronic B5</p>
+<p class="text-[10px] text-on-surface-variant mt-1">Damp skin only</p>
+</div>
+<div class="p-6 glass-card rounded-lg text-center">
+<p class="text-[10px] text-primary font-bold uppercase mb-4">Step 03: Protect</p>
+<div class="w-16 h-16 rounded-full bg-tertiary-container/20 mx-auto flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-tertiary">shield</span>
+</div>
+<p class="font-label-sm font-bold">Mineral SPF 50+</p>
+<p class="text-[10px] text-on-surface-variant mt-1">Morning application</p>
+</div>
+<div class="p-6 bg-primary rounded-lg text-center text-white flex flex-col items-center justify-center cursor-pointer hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[32px] mb-2">add_task</span>
+<p class="font-label-sm font-bold">Apply Full Routine</p>
+<p class="text-[10px] opacity-80 mt-1">Bundle &amp; Save 15%</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Notification Toast (Micro-interaction) -->
+<div class="fixed bottom-8 right-8 glass-card border-primary/20 px-6 py-4 rounded-xl flex items-center gap-4 translate-y-24 opacity-0 transition-all duration-500 z-[60]" id="toast">
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div>
+<p class="font-label-sm font-bold text-primary">Added to Wishlist</p>
+<p class="text-[10px] text-on-surface-variant">We'll track price changes for you.</p>
+</div>
+</div>
+<script>
+        // Simple micro-interaction for adding to wishlist
+        const wishlistBtns = document.querySelectorAll('.material-symbols-outlined:contains("favorite")');
+        const toast = document.getElementById('toast');
+
+        document.querySelectorAll('button').forEach(btn => {
+            if (btn.querySelector('.material-symbols-outlined')?.textContent === 'favorite') {
+                btn.addEventListener('click', function() {
+                    const icon = this.querySelector('.material-symbols-outlined');
+                    if (icon.style.fontVariationSettings.includes('FILL\' 1')) {
+                        icon.style.fontVariationSettings = "'FILL' 0";
+                        this.classList.remove('text-error');
+                    } else {
+                        icon.style.fontVariationSettings = "'FILL' 1";
+                        this.classList.add('text-error');
+                        
+                        // Show toast
+                        toast.classList.remove('translate-y-24', 'opacity-0');
+                        setTimeout(() => {
+                            toast.classList.add('translate-y-24', 'opacity-0');
+                        }, 3000);
+                    }
+                });
+            }
+        });
+
+        // Search Bar Focus Effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary/20');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary/20');
+        });
+    </script>
+</body></html>

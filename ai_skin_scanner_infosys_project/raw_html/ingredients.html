@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ingredient Intelligence | Aetheris AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Sora:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 40px 40px -20px rgba(114, 161, 229, 0.08);
+        }
+        .sidebar-blur {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+        }
+        .ingredient-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e0e3e5;
+            border-radius: 10px;
+        }
+        .safety-meter {
+            height: 4px;
+            border-radius: 2px;
+            background: #eceef0;
+            overflow: hidden;
+        }
+        .safety-fill {
+            height: 100%;
+            transition: width 1s ease-out;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#331f80",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e0e3e5",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-fixed": "#001c3b",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#191c1e",
+                        "surface-container-low": "#f2f4f6",
+                        "primary-fixed-dim": "#c9beff",
+                        "inverse-primary": "#c9beff",
+                        "error-container": "#ffdad6",
+                        "background": "#f7f9fb",
+                        "surface-tint": "#6050af",
+                        "surface": "#f7f9fb",
+                        "primary-fixed": "#e6deff",
+                        "on-tertiary-container": "#003262",
+                        "inverse-surface": "#2d3133",
+                        "surface-bright": "#f7f9fb",
+                        "on-secondary-container": "#2a6d64",
+                        "tertiary-container": "#6d9ce0",
+                        "tertiary": "#2b5f9f",
+                        "secondary-fixed": "#adefe4",
+                        "secondary-fixed-dim": "#91d3c8",
+                        "on-secondary-fixed-variant": "#005048",
+                        "outline-variant": "#c9c4d3",
+                        "surface-variant": "#e0e3e5",
+                        "primary-container": "#9d8df1",
+                        "secondary-container": "#aaece1",
+                        "on-primary-fixed": "#1b0062",
+                        "tertiary-fixed": "#d4e3ff",
+                        "tertiary-fixed-dim": "#a6c8ff",
+                        "on-background": "#191c1e",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-fixed": "#00201c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container": "#eceef0",
+                        "on-tertiary-fixed-variant": "#024785",
+                        "secondary": "#256960",
+                        "on-surface-variant": "#484552",
+                        "on-error": "#ffffff",
+                        "primary": "#6050af",
+                        "outline": "#797583",
+                        "on-primary-fixed-variant": "#483795"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-width": "280px",
+                        "card-gap": "20px",
+                        "gutter": "24px",
+                        "container-padding": "32px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Sora"],
+                        "display-lg": ["Sora"],
+                        "body-md": ["Inter"],
+                        "display-lg-mobile": ["Sora"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background font-body-md text-on-surface">
+<!-- Sidebar Component (SideNavBar) -->
+<aside class="fixed left-0 top-0 bottom-0 w-sidebar-width bg-surface-container-lowest/40 backdrop-blur-2xl border-r border-white/10 shadow-xl shadow-tertiary/10 flex flex-col py-base gap-2 z-50">
+<div class="px-6 py-8">
+<h1 class="font-display-lg text-headline-md text-primary font-bold tracking-tight">Aetheris AI</h1>
+<p class="text-on-surface-variant font-label-sm uppercase tracking-widest mt-1 opacity-70">Skin Intelligence</p>
+</div>
+<nav class="flex-1 px-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 rounded-lg" href="#">
+<span class="material-symbols-outlined">camera_front</span>
+<span class="font-label-sm">Scan</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 rounded-lg" href="#">
+<span class="material-symbols-outlined">biotech</span>
+<span class="font-label-sm">Analysis</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 rounded-lg" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-sm">Routine</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 rounded-lg" href="#">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="font-label-sm">Products</span>
+</a>
+<!-- Active State: Ingredients -->
+<a class="flex items-center gap-3 bg-primary/10 text-primary font-bold rounded-lg px-4 py-2 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">science</span>
+<span class="font-label-sm">Ingredients</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 rounded-lg" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-label-sm">Progress</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 rounded-lg" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-sm">Reports</span>
+</a>
+</nav>
+<div class="mt-auto px-4 pb-8 flex flex-col gap-4">
+<div class="p-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white shadow-lg shadow-primary/20">
+<p class="font-label-sm mb-2 opacity-90 text-white">Unlock Full Lab Access</p>
+<button class="w-full bg-white text-primary py-2 rounded-lg font-label-sm hover:bg-opacity-90 transition-colors">Upgrade to Pro</button>
+</div>
+<div class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-surface-variant transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-secondary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up clinical portrait of a woman with radiant, healthy skin in a bright minimalist setting, high-end skincare aesthetic, soft natural lighting, lavender and mint green color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBH93MwXcRvt4fOzz46mDuj9p_ZN61JuvDZh6l-TgVf2IHkhSIDJDF5LWpCM-L9otvKFhl3ft8YkTrlYbe6OAB5UFQgPDZNasE7rPUyxv6m6NBIR80OTddYqsRKpQObZWuPgVTa30SFVMbX6nEkx7ChlNx6HkBOkPqSLbCqJvm6EMjl20sJRd8p1KWDpJhfVHsMEzPlxJuRkx1KUgT5rqXBn4hSuSbG0X9R74ScIVSIp4iJ7_9lDlEiASyHRGOMQnkcKCnLEnKyBClA"/>
+</div>
+<div>
+<p class="font-label-sm text-on-surface">Alex Rivera</p>
+<p class="text-[10px] text-on-surface-variant opacity-60">Dry / Sensitive Skin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 left-0 h-16 ml-sidebar-width bg-white/60 backdrop-blur-xl border-b border-white/20 shadow-sm shadow-tertiary/5 flex justify-between items-center px-container-padding z-40">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-transparent focus:border-primary/20 focus:ring-0 rounded-full font-body-md text-sm transition-all duration-300" placeholder="Search ingredients, acids, or vitamins..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 transition-colors rounded-full cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">contrast</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 transition-colors rounded-full cursor-pointer active:scale-95 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 transition-colors rounded-full cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-sidebar-width mt-16 p-container-padding min-h-screen relative overflow-hidden">
+<!-- Background Decor -->
+<div class="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px] -z-10"></div>
+<div class="absolute bottom-[-10%] left-[10%] w-[400px] h-[400px] bg-tertiary/5 rounded-full blur-[100px] -z-10"></div>
+<div class="max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="mb-10">
+<div class="flex items-end justify-between">
+<div>
+<span class="text-primary font-label-sm uppercase tracking-wider">Clinical Database</span>
+<h2 class="font-display-lg text-display-lg-mobile md:text-headline-md text-on-surface mt-2">Ingredient Intelligence</h2>
+<p class="text-on-surface-variant mt-2 max-w-2xl">Access curated molecular data and AI-driven compatibility analysis for over 2,500 active cosmetic ingredients.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline/20 rounded-lg hover:bg-white transition-all font-label-sm">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                            Filter
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:shadow-lg hover:shadow-primary/20 transition-all font-label-sm">
+<span class="material-symbols-outlined text-sm">compare_arrows</span>
+                            Compare
+                        </button>
+</div>
+</div>
+</div>
+<!-- Bento Grid / Cards -->
+<div class="ingredient-grid">
+<!-- Card 1: Retinol -->
+<div class="glass-card p-6 rounded-lg group cursor-pointer hover:-translate-y-1 transition-all duration-300" onclick="openDetails('Retinol')">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">science</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold text-on-surface-variant/40 uppercase mb-1">Safety Rating</span>
+<div class="flex gap-0.5">
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+<div class="w-3 h-1 bg-secondary/30 rounded-full"></div>
+</div>
+</div>
+</div>
+<h3 class="font-headline-md text-xl mb-1 group-hover:text-primary transition-colors">Retinol</h3>
+<p class="text-on-surface-variant text-sm mb-4 line-clamp-2">Gold standard for anti-aging, promoting cell turnover and collagen production.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Aging</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Acne</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Texture</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-xs">
+<span class="text-secondary flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-sm">check_circle</span> Good for
+                            </span>
+<span class="text-on-surface-variant">Niacinamide</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="text-error flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-sm">cancel</span> Avoid with
+                            </span>
+<span class="text-on-surface-variant">Vitamin C, AHAs</span>
+</div>
+</div>
+</div>
+<!-- Card 2: Niacinamide -->
+<div class="glass-card p-6 rounded-lg group cursor-pointer hover:-translate-y-1 transition-all duration-300" onclick="openDetails('Niacinamide')">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-secondary-container/30 rounded-xl flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">spa</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold text-on-surface-variant/40 uppercase mb-1">Safety Rating</span>
+<div class="flex gap-0.5">
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+</div>
+</div>
+</div>
+<h3 class="font-headline-md text-xl mb-1 group-hover:text-primary transition-colors">Niacinamide</h3>
+<p class="text-on-surface-variant text-sm mb-4 line-clamp-2">Versatile Vitamin B3 derivative that strengthens skin barrier and controls oil.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Pores</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Brightening</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Barrier</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-xs">
+<span class="text-secondary flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-sm">check_circle</span> Good for
+                            </span>
+<span class="text-on-surface-variant">Almost anything</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="text-error flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-sm">cancel</span> Avoid with
+                            </span>
+<span class="text-on-surface-variant">None (Low risk)</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Hyaluronic Acid -->
+<div class="glass-card p-6 rounded-lg group cursor-pointer hover:-translate-y-1 transition-all duration-300" onclick="openDetails('Hyaluronic Acid')">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-tertiary-container/30 rounded-xl flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold text-on-surface-variant/40 uppercase mb-1">Safety Rating</span>
+<div class="flex gap-0.5">
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+</div>
+</div>
+</div>
+<h3 class="font-headline-md text-xl mb-1 group-hover:text-primary transition-colors">Hyaluronic Acid</h3>
+<p class="text-on-surface-variant text-sm mb-4 line-clamp-2">Humectant powerhouse that draws moisture into the skin for plumping effects.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Hydration</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Plumping</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Sensitive</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-xs">
+<span class="text-secondary flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-sm">check_circle</span> Good for
+                            </span>
+<span class="text-on-surface-variant">Everything</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="text-error flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-sm">cancel</span> Avoid with
+                            </span>
+<span class="text-on-surface-variant">None</span>
+</div>
+</div>
+</div>
+<!-- Card 4: Salicylic Acid (BHA) -->
+<div class="glass-card p-6 rounded-lg group cursor-pointer hover:-translate-y-1 transition-all duration-300" onclick="openDetails('Salicylic Acid')">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-on-error-container/10 rounded-xl flex items-center justify-center text-error">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">science</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold text-on-surface-variant/40 uppercase mb-1">Safety Rating</span>
+<div class="flex gap-0.5">
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+<div class="w-3 h-1 bg-secondary/30 rounded-full"></div>
+</div>
+</div>
+</div>
+<h3 class="font-headline-md text-xl mb-1 group-hover:text-primary transition-colors">Salicylic Acid</h3>
+<p class="text-on-surface-variant text-sm mb-4 line-clamp-2">Oil-soluble exfoliant that penetrates deep into pores to treat and prevent acne.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Acne</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Oily Skin</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Blackheads</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-xs">
+<span class="text-secondary flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-sm">check_circle</span> Good for
+                            </span>
+<span class="text-on-surface-variant">Soothing agents</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="text-error flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-sm">cancel</span> Avoid with
+                            </span>
+<span class="text-on-surface-variant">Retinoids, AHAs</span>
+</div>
+</div>
+</div>
+<!-- Card 5: Vitamin C -->
+<div class="glass-card p-6 rounded-lg group cursor-pointer hover:-translate-y-1 transition-all duration-300" onclick="openDetails('Vitamin C')">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-yellow-400/10 rounded-xl flex items-center justify-center text-yellow-600">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">light_mode</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold text-on-surface-variant/40 uppercase mb-1">Safety Rating</span>
+<div class="flex gap-0.5">
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+</div>
+</div>
+</div>
+<h3 class="font-headline-md text-xl mb-1 group-hover:text-primary transition-colors">Vitamin C</h3>
+<p class="text-on-surface-variant text-sm mb-4 line-clamp-2">Potent antioxidant that brightens skin tone and protects against environmental damage.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Glow</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Pigment</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Defense</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-xs">
+<span class="text-secondary flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-sm">check_circle</span> Good for
+                            </span>
+<span class="text-on-surface-variant">Vitamin E, Ferulic</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="text-error flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-sm">cancel</span> Avoid with
+                            </span>
+<span class="text-on-surface-variant">Retinol, Benzoyl</span>
+</div>
+</div>
+</div>
+<!-- Card 6: Peptides -->
+<div class="glass-card p-6 rounded-lg group cursor-pointer hover:-translate-y-1 transition-all duration-300" onclick="openDetails('Peptides')">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary-container/20 rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rebase_edit</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold text-on-surface-variant/40 uppercase mb-1">Safety Rating</span>
+<div class="flex gap-0.5">
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+<div class="w-3 h-1 bg-secondary rounded-full"></div>
+</div>
+</div>
+</div>
+<h3 class="font-headline-md text-xl mb-1 group-hover:text-primary transition-colors">Peptides</h3>
+<p class="text-on-surface-variant text-sm mb-4 line-clamp-2">Amino acid chains that signal skin to produce collagen and elastin fibers.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Firming</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Repair</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] font-semibold text-on-surface-variant">Anti-aging</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-xs">
+<span class="text-secondary flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-sm">check_circle</span> Good for
+                            </span>
+<span class="text-on-surface-variant">Hyaluronic Acid</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="text-error flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-sm">cancel</span> Avoid with
+                            </span>
+<span class="text-on-surface-variant">Strong Acids</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Detail Side Panel (Initially Hidden) -->
+<div class="fixed top-0 right-0 h-screen w-[480px] bg-white shadow-2xl z-[60] translate-x-full transition-transform duration-500 ease-in-out border-l border-white/20" id="detailPanel">
+<div class="flex flex-col h-full">
+<!-- Panel Header -->
+<div class="p-6 flex items-center justify-between border-b border-surface-container">
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors" onclick="closeDetails()">
+<span class="material-symbols-outlined">close</span>
+</button>
+<div class="flex gap-2">
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-primary">favorite</span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+<!-- Panel Content -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-8">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary text-3xl" id="detailIcon">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">science</span>
+</div>
+<div>
+<h2 class="font-display-lg text-headline-md" id="detailTitle">Retinol</h2>
+<p class="text-primary font-semibold">Vitamin A Derivative</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="p-4 bg-surface-container-low rounded-xl">
+<p class="text-[10px] font-bold text-on-surface-variant/60 uppercase mb-2">Molecular Type</p>
+<p class="font-semibold">Lipid-Soluble</p>
+</div>
+<div class="p-4 bg-surface-container-low rounded-xl">
+<p class="text-[10px] font-bold text-on-surface-variant/60 uppercase mb-2">Skin Match</p>
+<p class="font-semibold">Oily to Normal</p>
+</div>
+</div>
+<div class="mb-8">
+<h4 class="font-semibold mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">info</span> Scientific Overview
+                        </h4>
+<p class="text-on-surface-variant leading-relaxed mb-4" id="detailDesc">
+                            Retinol is a type of retinoid, which is a derivative of vitamin A. It’s commonly used to give skin an overall youthful boost by speeding up cell turnover and exfoliating the top layer of skin to reveal the fresh skin underneath.
+                        </p>
+<div class="safety-meter mb-2">
+<div class="safety-fill bg-secondary w-[80%]"></div>
+</div>
+<p class="text-[10px] text-right text-secondary font-bold uppercase">Safety Rating: High/Controlled</p>
+</div>
+<div class="mb-8">
+<h4 class="font-semibold mb-4">Conflict Intelligence</h4>
+<div class="space-y-4">
+<div class="p-4 rounded-xl border border-secondary/20 bg-secondary/5">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-secondary">verified</span>
+<span class="font-semibold text-secondary">Synergy Boosters</span>
+</div>
+<p class="text-xs text-on-surface-variant">Combined with <strong>Niacinamide</strong>, retinol's irritation is significantly reduced while barrier function is preserved.</p>
+</div>
+<div class="p-4 rounded-xl border border-error/20 bg-error/5">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-error">report_problem</span>
+<span class="font-semibold text-error">High Reactivity</span>
+</div>
+<p class="text-xs text-on-surface-variant">Avoid using with <strong>Vitamin C (L-Ascorbic Acid)</strong> in the same routine window as pH imbalances can cause extreme sensitivity.</p>
+</div>
+</div>
+</div>
+<div>
+<h4 class="font-semibold mb-4">Clinical Application</h4>
+<ul class="space-y-3">
+<li class="flex items-start gap-3 text-sm text-on-surface-variant">
+<span class="w-1.5 h-1.5 bg-primary rounded-full mt-1.5"></span>
+                                Start with 0.25% concentration twice weekly.
+                            </li>
+<li class="flex items-start gap-3 text-sm text-on-surface-variant">
+<span class="w-1.5 h-1.5 bg-primary rounded-full mt-1.5"></span>
+                                Apply only to dry skin at night (PM).
+                            </li>
+<li class="flex items-start gap-3 text-sm text-on-surface-variant">
+<span class="w-1.5 h-1.5 bg-primary rounded-full mt-1.5"></span>
+                                Mandatory broad-spectrum SPF 30+ daily.
+                            </li>
+</ul>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="p-6 border-t border-surface-container flex gap-3">
+<button class="flex-1 py-3 bg-primary text-white rounded-xl font-semibold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+                        Add to Routine
+                    </button>
+<button class="px-4 py-3 bg-surface-container text-on-surface-variant rounded-xl font-semibold hover:bg-surface-variant transition-all">
+                        Full Research
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Overlay for detail panel -->
+<div class="fixed inset-0 bg-black/20 backdrop-blur-sm z-[55] opacity-0 pointer-events-none transition-opacity duration-500" id="overlay" onclick="closeDetails()"></div>
+<script>
+        const ingredients = {
+            'Retinol': {
+                icon: 'science',
+                desc: 'Retinol is a type of retinoid, which is a derivative of vitamin A. It’s commonly used to give skin an overall youthful boost by speeding up cell turnover and exfoliating the top layer of skin to reveal the fresh skin underneath.',
+                type: 'Lipid-Soluble',
+                match: 'Oily to Normal'
+            },
+            'Niacinamide': {
+                icon: 'spa',
+                desc: 'Niacinamide, also known as nicotinamide, is a form of vitamin B3. It helps build keratin, a type of protein that keeps your skin firm and healthy. It also helps your skin grow a ceramide (lipid) barrier.',
+                type: 'Water-Soluble',
+                match: 'All Skin Types'
+            },
+            'Hyaluronic Acid': {
+                icon: 'water_drop',
+                desc: 'Hyaluronic acid is a sugar molecule that occurs naturally in the skin, and it helps to bind water to collagen, trapping it in the skin, so that skin can appear plumper, dewier, and more hydrated.',
+                type: 'Humectant',
+                match: 'Dry/Dehydrated'
+            },
+            'Salicylic Acid': {
+                icon: 'science',
+                desc: 'Salicylic acid is a beta hydroxy acid (BHA). It’s well-known for reducing acne by exfoliating the skin and keeping pores clear. It works best for mild acne (blackheads and whiteheads).',
+                type: 'Oil-Soluble BHA',
+                match: 'Oily/Acne-Prone'
+            },
+            'Vitamin C': {
+                icon: 'light_mode',
+                desc: 'Vitamin C is an antioxidant, meaning it protects skin cells from damaging free radicals caused by UV exposure. It also inhibits melanin production in the skin, which helps to lighten hyperpigmentation.',
+                type: 'Antioxidant',
+                match: 'All Skin Types'
+            },
+            'Peptides': {
+                icon: 'rebase_edit',
+                desc: 'Peptides are strings of amino acids, which are the "building blocks" of proteins. They are known to boost the production of collagen, elastin and other structure proteins, making skin look firmer and fuller.',
+                type: 'Protein Precursor',
+                match: 'Mature Skin'
+            }
+        };
+
+        function openDetails(name) {
+            const data = ingredients[name];
+            document.getElementById('detailTitle').innerText = name;
+            document.getElementById('detailDesc').innerText = data.desc;
+            document.getElementById('detailIcon').innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">${data.icon}</span>`;
+            
+            document.getElementById('detailPanel').classList.remove('translate-x-full');
+            document.getElementById('overlay').classList.remove('opacity-0', 'pointer-events-none');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeDetails() {
+            document.getElementById('detailPanel').classList.add('translate-x-full');
+            document.getElementById('overlay').classList.add('opacity-0', 'pointer-events-none');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // Micro-interactions for search bar
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach(card => {
+                const title = card.querySelector('h3').innerText.toLowerCase();
+                if(title.includes(term)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body></html>

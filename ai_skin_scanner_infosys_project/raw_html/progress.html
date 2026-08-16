@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aetheris AI | Progress Tracking</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Sora:wght@500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Sora:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#331f80",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e0e3e5",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-fixed": "#001c3b",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#191c1e",
+                        "surface-container-low": "#f2f4f6",
+                        "primary-fixed-dim": "#c9beff",
+                        "inverse-primary": "#c9beff",
+                        "error-container": "#ffdad6",
+                        "background": "#f7f9fb",
+                        "surface-tint": "#6050af",
+                        "surface": "#f7f9fb",
+                        "primary-fixed": "#e6deff",
+                        "on-tertiary-container": "#003262",
+                        "inverse-surface": "#2d3133",
+                        "surface-bright": "#f7f9fb",
+                        "on-secondary-container": "#2a6d64",
+                        "tertiary-container": "#6d9ce0",
+                        "tertiary": "#2b5f9f",
+                        "secondary-fixed": "#adefe4",
+                        "secondary-fixed-dim": "#91d3c8",
+                        "on-secondary-fixed-variant": "#005048",
+                        "outline-variant": "#c9c4d3",
+                        "surface-variant": "#e0e3e5",
+                        "primary-container": "#9d8df1",
+                        "secondary-container": "#aaece1",
+                        "on-primary-fixed": "#1b0062",
+                        "tertiary-fixed": "#d4e3ff",
+                        "tertiary-fixed-dim": "#a6c8ff",
+                        "on-background": "#191c1e",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-fixed": "#00201c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container": "#eceef0",
+                        "on-tertiary-fixed-variant": "#024785",
+                        "secondary": "#256960",
+                        "on-surface-variant": "#484552",
+                        "on-error": "#ffffff",
+                        "primary": "#6050af",
+                        "outline": "#797583",
+                        "on-primary-fixed-variant": "#483795"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-width": "280px",
+                        "card-gap": "20px",
+                        "gutter": "24px",
+                        "container-padding": "32px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Sora"],
+                        "display-lg": ["Sora"],
+                        "body-md": ["Inter"],
+                        "display-lg-mobile": ["Sora"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 40px 40px -20px rgba(114, 161, 229, 0.08);
+        }
+        .sidebar-blur {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e0e3e5;
+            border-radius: 10px;
+        }
+        .slider-handle {
+            cursor: ew-resize;
+            box-shadow: 0 0 15px rgba(96, 80, 175, 0.3);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 bottom-0 w-sidebar-width border-r border-white/10 sidebar-blur flex flex-col h-full py-base gap-2 z-50">
+<div class="px-6 py-8">
+<h1 class="font-display-lg text-headline-md text-primary font-bold tracking-tight">Aetheris AI</h1>
+<p class="text-on-surface-variant font-label-sm mt-1">Skin Intelligence</p>
+</div>
+<nav class="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar">
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 cursor-pointer group">
+<span class="material-symbols-outlined text-primary/70 group-hover:text-primary">dashboard</span>
+<span class="font-label-sm">Dashboard</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 cursor-pointer group">
+<span class="material-symbols-outlined text-primary/70 group-hover:text-primary">camera_front</span>
+<span class="font-label-sm">Scan</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 cursor-pointer group">
+<span class="material-symbols-outlined text-primary/70 group-hover:text-primary">biotech</span>
+<span class="font-label-sm">Analysis</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 cursor-pointer group">
+<span class="material-symbols-outlined text-primary/70 group-hover:text-primary">calendar_today</span>
+<span class="font-label-sm">Routine</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 cursor-pointer group">
+<span class="material-symbols-outlined text-primary/70 group-hover:text-primary">shopping_bag</span>
+<span class="font-label-sm">Products</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 cursor-pointer group">
+<span class="material-symbols-outlined text-primary/70 group-hover:text-primary">science</span>
+<span class="font-label-sm">Ingredients</span>
+</div>
+<!-- Active Tab -->
+<div class="flex items-center gap-3 bg-primary/10 text-primary font-bold rounded-lg px-4 py-2 group cursor-default">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">insights</span>
+<span class="font-label-sm">Progress</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 cursor-pointer group">
+<span class="material-symbols-outlined text-primary/70 group-hover:text-primary">assessment</span>
+<span class="font-label-sm">Reports</span>
+</div>
+<div class="mt-8 pt-8 border-t border-white/20">
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 cursor-pointer group">
+<span class="material-symbols-outlined text-primary/70 group-hover:text-primary">person</span>
+<span class="font-label-sm">Profile</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-primary px-4 py-2 hover:bg-primary/5 transition-all duration-300 cursor-pointer group">
+<span class="material-symbols-outlined text-primary/70 group-hover:text-primary">settings</span>
+<span class="font-label-sm">Settings</span>
+</div>
+</div>
+</nav>
+<div class="p-6">
+<div class="bg-primary/10 rounded-xl p-4 text-center">
+<span class="material-symbols-outlined text-primary mb-2">auto_awesome</span>
+<p class="font-label-sm text-primary font-bold mb-3">Upgrade to Pro</p>
+<button class="w-full py-2 bg-primary text-white font-label-sm rounded-lg hover:shadow-lg transition-shadow duration-300">Unlock AI Insights</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width min-h-screen relative overflow-y-auto h-screen custom-scrollbar pb-20">
+<!-- Header Container -->
+<header class="sticky top-0 z-40 bg-white/60 backdrop-blur-xl border-b border-white/20 px-container-padding h-16 flex justify-between items-center w-full">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-md text-primary font-bold">Progress Journey</h2>
+<div class="flex gap-2 ml-4">
+<span class="px-3 py-1 bg-primary/5 text-primary rounded-full font-label-sm">Last 90 Days</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-primary/5 rounded-full transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="p-2 hover:bg-primary/5 rounded-full transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined text-on-surface-variant">contrast</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-primary/20 border-2 border-white overflow-hidden cursor-pointer active:scale-95">
+<img class="w-full h-full object-cover" data-alt="A portrait of a serene woman with flawless, glowing skin in soft clinical lighting, showcasing the ultimate skincare results in a premium wellness context, soft pastel background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKn1bOyvP2JiD6z-cnUSg6CPIgCT-xn4m8b6hRLRuhe0x0p2mVirApdOpnMT8vkOE4Mengrzyb696kvVtuFn8BdswUAxj9sD_1R_Q0VoGCM1MUaj698aIe76AkTNk04YwpIuCWKIz7j_BnbhHvThneA9mmtcUye7_80xyYMDeq6zMZnAr03n_Cq8dtsIiKQxecem3-o32AMRXEZ1mMOBl4ybItcSvFi2pocqyOfZYoyYjs4KsU985xVHMg7z68lyRUb3SmQsr_rpRX"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="px-container-padding py-8 space-y-8">
+<!-- Bento Grid Section -->
+<div class="grid grid-cols-12 gap-card-gap">
+<!-- Before & After Comparison -->
+<div class="col-span-12 lg:col-span-7 glass-card rounded-lg p-6 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-on-surface">Visual Evolution</h3>
+<div class="flex gap-4 font-label-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary-container"></span> Oct 12, 2023</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary"></span> Jan 15, 2024</span>
+</div>
+</div>
+<!-- Image Comparison Slider -->
+<div class="relative w-full aspect-[16/9] rounded-lg overflow-hidden group">
+<!-- Before Image -->
+<div class="absolute inset-0">
+<img class="w-full h-full object-cover" data-alt="High-resolution close-up of facial skin showing minor texture irregularities and slight redness, clinical lighting, neutral gray background, focused on skincare diagnostic progress." src="https://lh3.googleusercontent.com/aida-public/AB6AXuANFKz39SA70tTjgUb_dNMdTggy2ibcT9ZNMv44zxn7HBI0s8ok7J_RM8CFKtS-yPGWiUZSkY-QyMexhDHVKd2GttyU9FdiC14p9UeNOigJI7GNqx0kb-ieNnp4eAlvA99QUQn-tJ1H6nrgeUurPIN12mloUbqzCiv1NFVkszOP_iEGiNX2uC2fnteBWFVC6MkR2CE_RZrbeuZyKJHAlBLvZe4Y2quN4NkgaArPhbfpMxTq54DjMSEmznx6UuTzM6L1YvhBBMgnfXyl"/>
+<div class="absolute bottom-4 left-4 px-3 py-1 bg-black/40 backdrop-blur-md text-white rounded-full font-label-sm">Baseline</div>
+</div>
+<!-- After Image Overlay -->
+<div class="absolute inset-0 overflow-hidden" id="after-image" style="width: 50%;">
+<img class="w-full h-full object-cover max-w-none" data-alt="High-resolution close-up of rejuvenated facial skin showing smooth texture, radiant clarity, and even tone, soft high-key clinical lighting, luxury skincare aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6fqip03Tr0lz52a4VtnH8NWUayrgs2Z_a3cY2kg6E0dpSPPC0gwKLsGUmIalXuRkYB5439Lj304iWovHBWsgzq12glhMpSprhEKx2c4eKfsWF50XIT2yersXi7dZDFbmx_tEeZqAHoB02l0RlcIYX87-xIeWSHjcfZ_mG0egYMC5SKDbhy6OwX-LCVsrxU1pQayShTq1eOynNLC85EVR1W7YihVJdqXQXJp7apTruTLSSjOhCrstLm3_e2mClRNB7bgbUG0wrfF5L" style="width: 200%;"/>
+<div class="absolute bottom-4 left-4 px-3 py-1 bg-primary/60 backdrop-blur-md text-white rounded-full font-label-sm">Current Progress</div>
+</div>
+<!-- Slider Bar -->
+<div class="absolute inset-y-0 left-1/2 w-1 bg-white/80 cursor-ew-resize group-hover:w-1.5 transition-all" id="slider-bar" style="left: 50%;">
+<div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg slider-handle">
+<span class="material-symbols-outlined text-primary text-[20px]">unfold_more</span>
+</div>
+</div>
+</div>
+<div class="mt-6 flex justify-between gap-4">
+<div class="flex-1 p-4 rounded-xl bg-surface-container-low">
+<p class="font-label-sm text-on-surface-variant mb-1">Texture Improvement</p>
+<p class="font-headline-md text-secondary">+24%</p>
+</div>
+<div class="flex-1 p-4 rounded-xl bg-surface-container-low">
+<p class="font-label-sm text-on-surface-variant mb-1">Redness Reduction</p>
+<p class="font-headline-md text-secondary">-38%</p>
+</div>
+<div class="flex-1 p-4 rounded-xl bg-surface-container-low">
+<p class="font-label-sm text-on-surface-variant mb-1">Clarity Score</p>
+<p class="font-headline-md text-primary">89/100</p>
+</div>
+</div>
+</div>
+<!-- Skin Health Score Timeline -->
+<div class="col-span-12 lg:col-span-5 glass-card rounded-lg p-6 relative overflow-hidden">
+
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h3 class="font-headline-md text-on-surface">Health Score</h3>
+<p class="font-label-sm text-on-surface-variant">Overall vitality trend</p>
+</div>
+<div class="text-right">
+<span class="text-[42px] font-bold text-primary font-display-lg leading-none">92</span>
+<p class="font-label-sm text-secondary font-bold">+12% this month</p>
+</div>
+</div>
+<!-- Mini Score Chart Visualization -->
+<div class="h-48 w-full flex items-end gap-2 mb-6">
+<div class="flex-1 bg-primary/10 rounded-t-lg transition-all hover:bg-primary/30 h-[40%]" title="Oct"></div>
+<div class="flex-1 bg-primary/10 rounded-t-lg transition-all hover:bg-primary/30 h-[45%]" title="Nov"></div>
+<div class="flex-1 bg-primary/10 rounded-t-lg transition-all hover:bg-primary/30 h-[65%]" title="Dec"></div>
+<div class="flex-1 bg-primary/10 rounded-t-lg transition-all hover:bg-primary/30 h-[60%]" title="Jan"></div>
+<div class="flex-1 bg-primary-container rounded-t-lg h-[92%] shadow-lg shadow-primary/20" title="Current"></div>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<div>
+<p class="font-label-sm font-bold">New Peak Reached</p>
+<p class="text-[11px] text-on-surface-variant">Highest hydration score recorded yesterday.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Stats Row -->
+<div class="col-span-12 md:col-span-4 glass-card rounded-lg p-6 flex items-center gap-6">
+<div class="w-14 h-14 rounded-full bg-tertiary-container/30 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[32px]">water_drop</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant">Hydration Index</p>
+<h4 class="font-headline-md text-on-surface">78%</h4>
+<div class="w-32 h-1 bg-surface-container-highest rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-tertiary w-[78%]"></div>
+</div>
+</div>
+</div>
+<div class="col-span-12 md:col-span-4 glass-card rounded-lg p-6 flex items-center gap-6">
+<div class="w-14 h-14 rounded-full bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[32px]">task_alt</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant">Consistency</p>
+<h4 class="font-headline-md text-on-surface">94%</h4>
+<p class="text-[11px] text-secondary font-bold">28 day streak!</p>
+</div>
+</div>
+<div class="col-span-12 md:col-span-4 glass-card rounded-lg p-6 flex items-center gap-6">
+<div class="w-14 h-14 rounded-full bg-primary-container/30 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[32px]">ac_unit</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant">Redness Reduction</p>
+<h4 class="font-headline-md text-on-surface">High</h4>
+<p class="text-[11px] text-on-surface-variant">Calm state maintained</p>
+</div>
+</div>
+<!-- Interactive Analysis Chart -->
+<div class="col-span-12 glass-card rounded-lg p-8">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+<div>
+<h3 class="font-headline-md text-on-surface">Correlation Analysis</h3>
+<p class="font-label-sm text-on-surface-variant">Routine adherence vs. skin sensitivity</p>
+</div>
+<div class="flex bg-surface-container-low p-1 rounded-lg">
+<button class="px-4 py-1.5 rounded-md font-label-sm bg-white shadow-sm text-primary">Daily</button>
+<button class="px-4 py-1.5 rounded-md font-label-sm text-on-surface-variant hover:text-primary transition-colors">Weekly</button>
+<button class="px-4 py-1.5 rounded-md font-label-sm text-on-surface-variant hover:text-primary transition-colors">Monthly</button>
+</div>
+</div>
+<div class="relative h-80 w-full group">
+<!-- Simulated Chart Grid -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+<div class="w-full border-t border-surface-variant/50 h-0"></div>
+<div class="w-full border-t border-surface-variant/50 h-0"></div>
+<div class="w-full border-t border-surface-variant/50 h-0"></div>
+<div class="w-full border-t border-surface-variant/50 h-0"></div>
+<div class="w-full border-t border-surface-variant/50 h-0"></div>
+</div>
+<!-- Chart Lines (Simulated with SVGs) -->
+<svg class="absolute inset-0 w-full h-full overflow-visible" preserveaspectratio="none">
+<defs>
+<lineargradient id="lineGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#6050af" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#6050af" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Hydration Area -->
+<path d="M0,240 Q150,180 300,200 T600,100 T900,150 T1200,80 L1200,320 L0,320 Z" fill="url(#lineGrad)"></path>
+<!-- Hydration Line -->
+<path d="M0,240 Q150,180 300,200 T600,100 T900,150 T1200,80" fill="none" stroke="#6050af" stroke-width="3"></path>
+<!-- Redness Line (Dashed) -->
+<path d="M0,80 Q150,120 300,100 T600,180 T900,220 T1200,260" fill="none" stroke="#ffdad6" stroke-dasharray="8,4" stroke-width="2"></path>
+</svg>
+<!-- Tooltip Interaction Layer -->
+<div class="absolute inset-0 flex items-center justify-around">
+<div class="h-full w-px bg-transparent hover:bg-primary/20 relative group/marker">
+<div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-primary border-4 border-white shadow-md opacity-0 group-hover/marker:opacity-100 transition-opacity"></div>
+<div class="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 bg-white p-3 rounded-lg shadow-xl opacity-0 group-hover/marker:opacity-100 transition-all scale-90 group-hover/marker:scale-100 min-w-[120px] pointer-events-none">
+<p class="font-label-sm text-on-surface-variant">Jan 12</p>
+<p class="font-bold text-primary">Hydration: 84%</p>
+<p class="font-bold text-error">Sensitivity: Low</p>
+</div>
+</div>
+<div class="h-full w-px bg-transparent hover:bg-primary/20 relative group/marker"></div>
+<div class="h-full w-px bg-transparent hover:bg-primary/20 relative group/marker"></div>
+<div class="h-full w-px bg-transparent hover:bg-primary/20 relative group/marker"></div>
+<div class="h-full w-px bg-transparent hover:bg-primary/20 relative group/marker"></div>
+</div>
+</div>
+<div class="flex justify-center gap-12 mt-8">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="font-label-sm text-on-surface-variant">Skin Hydration</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full border-2 border-primary-container border-dashed"></div>
+<span class="font-label-sm text-on-surface-variant">Pore Sensitivity</span>
+</div>
+</div>
+</div>
+<!-- Recent Activity Timeline -->
+<div class="col-span-12 glass-card rounded-lg p-8">
+<h3 class="font-headline-md text-on-surface mb-8">Skin Events</h3>
+<div class="relative">
+<!-- Vertical Line -->
+<div class="absolute left-6 top-0 bottom-0 w-0.5 border-l-2 border-dashed border-primary/20"></div>
+<div class="space-y-10">
+<!-- Timeline Item 1 -->
+<div class="relative pl-16">
+<div class="absolute left-4 top-2 w-4 h-4 rounded-full bg-white border-4 border-primary z-10"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h4 class="font-bold text-on-surface">Significant Redness Reduction</h4>
+<p class="text-on-surface-variant mt-1">Attributed to: Niacinamide 10% + Zinc 1% usage.</p>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant font-label-sm">
+<span class="material-symbols-outlined">schedule</span>
+                                        Jan 14, 2024
+                                        <button class="ml-4 px-4 py-1.5 border border-outline rounded-lg hover:bg-primary/5 transition-colors">View Details</button>
+</div>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative pl-16">
+<div class="absolute left-4 top-2 w-4 h-4 rounded-full bg-white border-4 border-secondary z-10"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h4 class="font-bold text-on-surface">New Routine Started</h4>
+<p class="text-on-surface-variant mt-1">"Hydration Boost" morning routine activated.</p>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant font-label-sm">
+<span class="material-symbols-outlined">schedule</span>
+                                        Jan 08, 2024
+                                        <button class="ml-4 px-4 py-1.5 border border-outline rounded-lg hover:bg-primary/5 transition-colors">View Details</button>
+</div>
+</div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="relative pl-16">
+<div class="absolute left-4 top-2 w-4 h-4 rounded-full bg-white border-4 border-tertiary z-10"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h4 class="font-bold text-on-surface">Weekly AI Scan Complete</h4>
+<p class="text-on-surface-variant mt-1">Acne activity down by 15% from last week.</p>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant font-label-sm">
+<span class="material-symbols-outlined">schedule</span>
+                                        Jan 02, 2024
+                                        <button class="ml-4 px-4 py-1.5 border border-outline rounded-lg hover:bg-primary/5 transition-colors">View Details</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB for quick scan (Only on progress/dashboard) -->
+<button class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">add_a_photo</span>
+</button>
+<script>
+        // Before/After Slider Logic
+        const sliderBar = document.getElementById('slider-bar');
+        const afterImage = document.getElementById('after-image');
+        const container = sliderBar.parentElement;
+
+        let isDragging = false;
+
+        const moveSlider = (e) => {
+            if (!isDragging) return;
+            
+            const rect = container.getBoundingClientRect();
+            let x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+            
+            if (x < 0) x = 0;
+            if (x > rect.width) x = rect.width;
+            
+            const percentage = (x / rect.width) * 100;
+            sliderBar.style.left = `${percentage}%`;
+            afterImage.style.width = `${percentage}%`;
+        };
+
+        const startDragging = (e) => {
+            isDragging = true;
+            moveSlider(e);
+        };
+
+        const stopDragging = () => {
+            isDragging = false;
+        };
+
+        sliderBar.addEventListener('mousedown', startDragging);
+        window.addEventListener('mousemove', moveSlider);
+        window.addEventListener('mouseup', stopDragging);
+
+        sliderBar.addEventListener('touchstart', startDragging);
+        window.addEventListener('touchmove', moveSlider);
+        window.addEventListener('touchend', stopDragging);
+
+        // Simple animation trigger for chart
+        document.addEventListener('DOMContentLoaded', () => {
+            const chartPaths = document.querySelectorAll('svg path');
+            chartPaths.forEach(path => {
+                const length = path.getTotalLength();
+                path.style.strokeDasharray = length;
+                path.style.strokeDashoffset = length;
+                path.getBoundingClientRect(); // Trigger reflow
+                path.style.transition = 'stroke-dashoffset 2s ease-in-out';
+                path.style.strokeDashoffset = '0';
+            });
+        });
+    </script>
+</body></html>
