@@ -8,7 +8,8 @@ export const Navbar = ({ onMenuToggle }) => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-30 w-full glass-card border-b border-slate-200/50 dark:border-slate-800/50 px-4 md:px-6 py-3 flex items-center justify-between">
+    <header className="sticky top-0 z-30 w-full glass-card border-b border-slate-200/50 dark:border-slate-800/50 px-4 md:px-6 py-3 flex items-center justify-between print:hidden">
+
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuToggle}

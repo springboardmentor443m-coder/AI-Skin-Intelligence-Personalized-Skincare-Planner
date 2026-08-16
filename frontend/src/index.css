@@ -153,3 +153,34 @@ body {
   border-radius: 50%;
   animation: radar-pulse 3s infinite ease-out;
 }
+
+/* Print/Save Report Styles */
+@media print {
+  html, body {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 12pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .glass-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+    color: #0f172a !important;
+  }
+
+  main {
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  /* Hide interactives and utilities */
+  .print\:hidden {
+    display: none !important;
+  }
+}
+

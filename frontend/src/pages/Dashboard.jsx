@@ -411,7 +411,8 @@ export const Dashboard = () => {
         </div>
         
         {/* Interactive manual tuning switches */}
-        <div className="flex justify-between gap-1 pt-1.5 border-t border-slate-200/40 dark:border-slate-800/30">
+        <div className="flex justify-between gap-1 pt-1.5 border-t border-slate-200/40 dark:border-slate-800/30 print:hidden">
+
           {['none', 'mild', 'moderate', 'severe'].map((lvl) => {
             const isActive = level === lvl;
             const buttonColors = {
