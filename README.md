@@ -2,35 +2,26 @@
 
 ## Overview
 
-A full-stack AI-powered facial skin analysis and personalized skincare
-planning application.
+A full-stack AI-powered facial skin analysis and personalized skincare planning application.
 
-The system analyzes a user's facial image with a trained CNN model,
-identifies the most probable skin concern, displays the complete model
-probability distribution, recommends relevant skincare products using an
-NLP-based recommendation pipeline, generates personalized skincare
-routines with Groq, and compares previous and latest scans to visualize
-changes over time.
+The system analyzes a user's facial image with a trained CNN model, identifies the most probable skin concern, displays the complete model probability distribution, recommends relevant skincare products using an NLP-based recommendation pipeline, generates personalized skincare routines with Groq, and compares previous and latest scans to visualize changes over time.
 
-The application is designed as a **facial skin analysis and
-decision-support system**. Its model probabilities and generated
-recommendations are not clinically validated measurements or medical
-diagnoses.
+The application is designed as a **facial skin analysis and decision-support system**. Its model probabilities and generated recommendations are not clinically validated measurements or medical diagnoses.
 
-------------------------------------------------------------------------
+---
 
 ## Core Workflow
 
-``` text
+```text
 Upload / Capture Facial Image
           ↓
-Image Preprocessing
+Image Preprocessing (224x224 RGB Normalization)
           ↓
 MobileNetV2-based CNN Model
           ↓
 Six-Class Skin Probability Distribution
           ↓
-Primary Skin Concern
+Primary Skin Concern Identification
           ↓
  ┌───────────────────────┬────────────────────────┐
  │                       │                        │
@@ -38,205 +29,178 @@ Primary Skin Concern
 Product Recommendation  Personalized Routine   AI Analysis
  │                       │                        │
  ↓                       ↓                        ↓
-Top 5 Products           Groq-generated Plan    Skin Insights
+Top 5 Products           7-Day Groq Plan         Skin Insights
           │
           ↓
-Save Analysis to User History
+Save Analysis to User History (MongoDB)
           ↓
 Previous vs Latest Comparison
           ↓
 Probability Changes + Radar Profile + AI Report
 ```
 
-------------------------------------------------------------------------
+All of the above — the primary concern, probability distribution, top 5 recommended products, and the 7-day routine — are returned together in a single response from `POST /api/analyze-skin`.
+
+---
 
 ## Main Features
 
 ### 1. Authentication
-
--   User registration and login
--   Password protection
--   JWT-based authenticated sessions
--   User-specific analysis history
--   Protected application workflow
+- User registration and login with input validation
+- Password hashing with bcrypt
+- JWT-based authenticated sessions (python-jose)
+- User-specific scan records and persistent database history
+- Protected API endpoints and route guards
 
 ### 2. Facial Skin Analysis
-
--   Upload a facial image
--   Analyze the image using the trained skin classification model
--   Predict the primary skin concern
--   Display model confidence
--   Display the complete six-class probability distribution
+- Upload an image file or capture live via webcam
+- Image preprocessing with RGB conversion and tensor normalization
+- Inference using a fine-tuned MobileNetV2 CNN classifier
+- Confidence scoring and dynamic threshold evaluation
+- Display of the complete six-class probability distribution
+- A single analysis call returns the classification, top 5 recommended products, and the 7-day routine together
 
 ### 3. Six Skin Classes
+The classification engine predicts across six distinct target classes:
 
-The current model uses:
-
-``` text
 1. Acne
 2. Blackheads
 3. Clear Skin
 4. Dark Spots
 5. Puffy Eyes
 6. Wrinkles
-```
 
 ### 4. Product Recommendation Engine
+The recommendation system uses the project's curated skincare product dataset rather than hard-coded product recommendations.
 
-The recommendation system uses the project's skincare product dataset
-rather than hard-coded product recommendations.
-
-``` text
-Detected Skin Concern
+```text
+Detected Skin Concern + Skin Type
         ↓
-Product Dataset
+Skincare Dataset Ingestion
         ↓
-Text / Ingredient Matching
+TF-IDF Vectorization on Active Ingredients & Concerns
         ↓
-Similarity Scoring
+Cosine Similarity Scoring
         ↓
-Rank Products
+Ranking & Filtering
         ↓
-Top 5 Recommendations
+Top 5 Target-Matched Products
 ```
 
-The product data is stored in:
-
-``` text
-backend/
-└── data/
-    └── skincare_products.csv
-```
-
-The recommendation logic is implemented in:
-
-``` text
-backend/
-└── recommender.py
-```
+- **Dataset path:** `backend/data/skincare_products.csv`
+- **Recommendation logic:** `backend/recommender.py`
+- **Delivery:** Recommendations are not fetched from a separate endpoint. They are generated as part of the skin analysis call and returned as `analysisData.recommended_products` from `POST /api/analyze-skin`, then rendered by `ProductCards.jsx`.
 
 ### 5. Personalized Skincare Routine
+Groq (`openai/gpt-oss-120b`) generates a structured 7-day skincare routine based on the user's primary detected concern, age, gender, and skin type.
 
-Groq is used to generate a personalized skincare routine based on the
-user's analysis and available profile information.
+The routine is generated as part of the analysis call and returned as `analysisData.routine_7_day` from `POST /api/analyze-skin`. `Dashboard.jsx` passes this value down to `RoutinePlanner.jsx`, which renders it across:
 
-The application can present routine guidance such as:
-
--   Morning routine
--   Evening routine
--   Suggested product usage
--   Skin-care guidance
--   General precautions
+- Morning (AM) protective routine
+- Evening (PM) restorative routine
+- Target active ingredient application
+- Step-by-step application order
+- General precautions and patch-test guidelines
 
 ### 6. Skin Progress Comparison
+The comparison module tracks multi-session progress across the user's two most recent scans.
 
-The comparison module uses the user's two most recent scans.
-
-``` text
+```text
 Previous Scan
       ↓
 Latest Scan
       ↓
 Compare Six Model Probabilities
       ↓
-Before → Latest → Change
+Before → Latest → Change Points
       ↓
-Radar Probability Profile
+Dual-Profile Radar Visualization (SVG)
       ↓
-AI Comparison Report
+Groq AI Progress Analysis Report
 ```
 
-The comparison page includes:
+Features included:
+- Before and latest scan visual previews
+- Primary condition transition detection
+- Confidence delta tracking
+- Favorable vs. unfavorable probability change calculation
+- Six-axis Before vs. Latest overlay radar chart
+- Groq-generated comparative AI progress report
+- One-click real-time data refresh
 
--   Previous scan
--   Latest scan
--   Primary condition
--   Model confidence
--   Probability changes
--   Before vs Latest radar chart
--   AI-generated progress analysis
--   Refresh comparison
-
-> **Important:** Probability changes represent AI model outputs. They
-> should not be interpreted as clinically validated measurements of skin
-> improvement.
+> **Important:** Probability changes represent AI model outputs. They should not be interpreted as clinically validated measurements of skin improvement.
 
 ### 7. Analysis History
+Persistent historical scan logs are stored in MongoDB and associated with the authenticated user.
 
-Previous analyses can be stored and viewed for the authenticated user.
-
-The history workflow allows the application to use earlier scans for
-comparison and progress tracking.
+- Chronological log of all past diagnostic uploads
+- Thumbnail image rendering with base64/URL fallbacks
+- Classification records with score metrics and timestamps
+- Single-click complete history reset with confirmation safeguards
 
 ### 8. GlowAI Chatbot
+The application includes the GlowAI interactive assistant for real-time skincare guidance, ingredient explanations, and routine advice powered by Groq.
 
-The application includes the **GlowAI** assistant for skincare-related
-interaction and guidance through the application's AI functionality.
-
-------------------------------------------------------------------------
+---
 
 ## Technology Stack
 
 ### Frontend
-
-``` text
-React
+```text
+React 19
 Vite
-Tailwind CSS
+Tailwind CSS v4
 Lucide React
-JavaScript
+Recharts
+Axios
+React-Markdown
 ```
 
 ### Backend
-
-``` text
-Python
+```text
+Python 3.10+
 FastAPI
 Uvicorn
 Pydantic
-MongoDB
-Motor
+MongoDB Atlas
+Motor (Async MongoDB Driver)
 PyMongo
 ```
 
 ### Machine Learning
-
-``` text
-TensorFlow / Keras
-MobileNetV2
-NumPy
+```text
+TensorFlow 2.15.0
+Keras (MobileNetV2 Backbone)
+NumPy (< 2.0.0, >= 1.23.5)
 Pillow
 ```
 
-### AI
-
-``` text
-Groq
+### AI & LLM Inference
+```text
+Groq API (openai/gpt-oss-120b)
 ```
 
 ### Recommendation System
-
-``` text
+```text
 Pandas
 Scikit-learn
-TF-IDF / text similarity
+TF-IDF Vectorizer
 Cosine Similarity
 ```
 
 ### Authentication & Security
-
-``` text
-bcrypt
-JWT
-python-jose
-python-dotenv
+```text
+Bcrypt
+Python-Jose (JWT Tokens)
+Python-Dotenv
+Python-Multipart
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Project Structure
 
-``` text
+```text
 AI-Skin-Intelligence-Personalized-Skincare-Planner/
 │
 ├── backend/
@@ -246,13 +210,13 @@ AI-Skin-Intelligence-Personalized-Skincare-Planner/
 │   ├── models/
 │   │   └── facial_skin_model.keras
 │   │
-│   ├── recommender.py
-│   └── __pycache__/
+│   └── recommender.py
 │
 ├── Datasets/
 │   └── facial skin analysis training dataset
 │
 ├── frontend/
+│   ├── node_modules/
 │   ├── public/
 │   │
 │   ├── src/
@@ -283,74 +247,79 @@ AI-Skin-Intelligence-Personalized-Skincare-Planner/
 │   │   ├── index.css
 │   │   └── main.jsx
 │   │
+│   ├── eslint.config.js
+│   ├── index.html
 │   ├── package.json
 │   ├── package-lock.json
-│   ├── index.html
 │   └── vite.config.js
 │
-├── app.py
-├── face_analysis.ipynb
-├── requirements.txt
+├── venv/
 ├── .env
 ├── .gitignore
+├── app.py
+├── face_analysis.ipynb
 ├── LICENSE
-└── README.md
+├── README.md
+└── requirements.txt
 ```
 
-------------------------------------------------------------------------
+---
 
-## Backend Architecture
+## Backend API Architecture
 
-``` text
+```text
 app.py
   │
-  ├── Authentication
+  ├── Authentication Router
+  │     ├── POST /api/auth/register
+  │     └── POST /api/auth/login
   │
-  ├── Skin Analysis API
-  │       ↓
-  │   facial_skin_model.keras
+  ├── Skin Analysis Pipeline
+  │     └── POST /api/analyze-skin
+  │           ↓
+  │         facial_skin_model.keras (MobileNetV2)
+  │           ↓
+  │         recommender.py (TF-IDF + Cosine Similarity) → recommended_products
+  │           ↓
+  │         Groq (openai/gpt-oss-120b) → routine_7_day
+  │           ↓
+  │         Store Scan Document in MongoDB
   │
-  ├── Product Recommendation API
-  │       ↓
-  │   recommender.py
-  │       ↓
-  │   skincare_products.csv
+  ├── History Pipeline
+  │     ├── GET    /api/scan-history
+  │     └── DELETE /api/scan-history
+  │           ↓
+  │         MongoDB Motor Async Engine
   │
-  ├── Routine Generation
-  │       ↓
-  │   Groq
+  ├── Comparison Pipeline
+  │     └── GET /api/comparison
+  │           ↓
+  │         Fetch Two Most Recent User Scans
+  │           ↓
+  │         Compute 6-Class Probability Deltas
+  │           ↓
+  │         Groq Progress Report Generation
   │
-  ├── History
-  │       ↓
-  │   MongoDB
-  │
-  └── Comparison API
-          ↓
-      Previous Scan
-          +
-      Latest Scan
-          ↓
-      Probability Changes
-          ↓
-      Groq Comparison Report
+  └── GlowAI Chatbot Pipeline
+        ├── GET  /api/chat/greeting
+        └── POST /api/chat
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Machine Learning Model
 
 The facial skin classification model is stored as:
 
-``` text
+```text
 backend/models/facial_skin_model.keras
 ```
 
-The model predicts six skin-related classes and returns a probability
-distribution for each class.
+The model architecture uses a MobileNetV2 backbone fine-tuned for transfer learning, outputting a softmax probability vector across 6 skin classes.
 
-Example:
+**Example output vector:**
 
-``` text
+```text
 Acne          → 74.0%
 Blackheads    →  6.7%
 Clear Skin    →  0.6%
@@ -359,319 +328,255 @@ Puffy Eyes    →  1.0%
 Wrinkles      →  1.2%
 ```
 
-The class with the highest probability is presented as the primary
-detected concern.
+The class with the maximum activation probability is designated as the primary classified target.
 
-------------------------------------------------------------------------
+---
 
 ## Dataset
 
-The project uses a facial skin analysis dataset for model training.
+- **Training dataset:** Maintained in `Datasets/` for model development and transfer learning.
+- **Model weights:** Serialized for runtime inference under `backend/models/facial_skin_model.keras`.
+- **Skincare product catalog:** Located at `backend/data/skincare_products.csv` with ingredients, ratings, prices, and skin concerns.
 
-The training dataset is maintained separately from the runtime model:
-
-``` text
-Datasets/
-```
-
-The trained model is then saved as:
-
-``` text
-backend/models/facial_skin_model.keras
-```
-
-The skincare recommendation dataset is maintained separately:
-
-``` text
-backend/data/skincare_products.csv
-```
-
-------------------------------------------------------------------------
+---
 
 ## Product Recommendation Pipeline
 
-The recommendation engine is designed to avoid hard-coded product
-responses.
-
-``` text
-Skin Concern
+```text
+Primary Skin Concern + User Skin Type
      ↓
-Dataset Filtering / Text Representation
+Filter Dataset by Target Concern
      ↓
-TF-IDF Vectorization
+TF-IDF Vectorization on Ingredients & Benefits
      ↓
-Cosine Similarity
+Compute Cosine Similarity Matrix
      ↓
-Ranking
+Sort by Score & Rating
      ↓
-Top 5 Skincare Products
+Top 5 Product Recommendations
+     ↓
+Returned as analysisData.recommended_products from POST /api/analyze-skin
 ```
 
-This allows the recommendation results to be generated from the
-project's skincare product dataset.
+---
 
-------------------------------------------------------------------------
+## Skin Progress Comparison Pipeline
 
-## Skin Comparison Pipeline
-
-The comparison API obtains the user's previous and latest analysis
-records.
-
-``` text
-Previous Analysis
+```text
+Previous Analysis Document
        │
-       ├── Image
-       ├── Primary Class
-       └── Six Probabilities
+       ├── Timestamp & Base64 Image
+       ├── Primary Class & Confidence
+       └── 6-Class Probability Vector
               │
               ↓
           Comparison
               ↑
               │
-Latest Analysis
+Latest Analysis Document
        │
-       ├── Image
-       ├── Primary Class
-       └── Six Probabilities
+       ├── Timestamp & Base64 Image
+       ├── Primary Class & Confidence
+       └── 6-Class Probability Vector
 
               ↓
 
-Before → Latest → Change
+Calculate Class-by-Class Changes (Deltas)
 
               ↓
 
-Radar Visualization
+Render Dual-Profile Radar Visualization
 
               ↓
 
-Groq AI Comparison Report
+Generate Groq LLM Progress Analysis Report
 ```
 
-The frontend comparison page is implemented in:
-
-``` text
-frontend/src/components/ComparisonView.jsx
-```
-
-------------------------------------------------------------------------
+---
 
 ## Installation
 
 ### 1. Clone the project
-
-``` bash
+```bash
 git clone <your-repository-url>
 cd AI-Skin-Intelligence-Personalized-Skincare-Planner
 ```
 
 ### 2. Create and activate the Python environment
 
-Windows:
-
-``` powershell
+**Windows (PowerShell):**
+```powershell
 python -m venv venv
 .\venv\Scripts\activate
 ```
 
-### 3. Install backend dependencies
+**Linux / macOS:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
-``` bash
+### 3. Install backend dependencies
+```bash
 pip install -r requirements.txt
 ```
 
 ### 4. Install frontend dependencies
-
-``` bash
+```bash
 cd frontend
 npm install
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Environment Variables
 
-Create a `.env` file in the project root.
+Create a `.env` file in the project root directory:
 
-Example:
-
-``` env
-MONGO_URI=your_mongodb_connection_string
-GROQ_API_KEY=your_groq_api_key
-SECRET_KEY=your_secret_key
+```env
+SECRET_KEY=your_secure_custom_secret_key_here
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+GROQ_API_KEY=your_groq_api_key_here
+MONGO_URI=your_mongodb_connection_string_here
+DB_NAME=skincare_db
 ```
 
-Do not commit real API keys, passwords, or database credentials to
-GitHub.
+> **Security Note:** Never commit your `.env` file with active database credentials or API keys to any public GitHub repository. Ensure `.env` is listed in your `.gitignore`.
 
-------------------------------------------------------------------------
+---
 
 ## Running the Application
 
 ### Start the FastAPI backend
-
-From the project root:
-
-``` powershell
-.\venv\Scripts\activate
+From the project root directory (with virtual environment activated):
+```powershell
 python -m uvicorn app:app --reload
 ```
-
-The backend will normally run at:
-
-``` text
-http://127.0.0.1:8000
-```
+The backend server will run at `http://127.0.0.1:8000`.
 
 ### Start the React frontend
-
-Open another terminal:
-
-``` powershell
+Open a new terminal window:
+```powershell
 cd frontend
 npm run dev
 ```
+The Vite development server will provide the local application URL (typically `http://localhost:5173`).
 
-Vite will display the local frontend URL in the terminal.
-
-Open that URL in your browser.
-
-------------------------------------------------------------------------
+---
 
 ## API Documentation
 
-When the FastAPI server is running, the interactive API documentation is
-available through:
+When the FastAPI server is running, interactive API documentation is available at:
 
-``` text
-/api/docs
-```
+- **Swagger UI:** `http://127.0.0.1:8000/api/docs`
+- **ReDoc:** `http://127.0.0.1:8000/api/redoc`
 
-and the alternative documentation interface through:
+### Endpoints
 
-``` text
-/api/redoc
-```
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/` | Read Root |
+| POST | `/api/auth/register` | Register |
+| POST | `/api/auth/login` | Login |
+| GET | `/api/scan-history` | Get Scan History |
+| DELETE | `/api/scan-history` | Clear Scan History |
+| POST | `/api/analyze-skin` | Analyze Skin (returns classification, `recommend_products`, and `routine_7_day`) |
+| GET | `/api/comparison` | Get Comparison |
+| GET | `/api/chat/greeting` | Get Chat Greeting |
+| POST | `/api/chat` | Chat With Glowai |
 
-The exact available endpoints depend on the routes currently registered
-by `app.py`.
-
-------------------------------------------------------------------------
+---
 
 ## Important Files
 
-  ----------------------------------------------------------------------------------
-  File                                           Purpose
-  ---------------------------------------------- -----------------------------------
-  `app.py`                                       Main FastAPI backend application
+| File | Purpose |
+|---|---|
+| `app.py` | Main FastAPI backend & API routing |
+| `backend/models/facial_skin_model.keras` | Trained MobileNetV2 CNN classifier |
+| `backend/recommender.py` | TF-IDF product recommendation engine |
+| `backend/data/skincare_products.csv` | Skincare product & ingredient dataset |
+| `frontend/src/services/api.js` | Axios client with JWT interceptor |
+| `frontend/src/pages/AuthPage.jsx` | Authentication (Login / Register) view |
+| `frontend/src/pages/Dashboard.jsx` | Central dashboard & state coordinator |
+| `frontend/src/components/SkinScanner.jsx` | Webcam capture & image upload interface |
+| `frontend/src/components/AnalysisResult.jsx` | Classification metrics & vector bars |
+| `frontend/src/components/AnalyticsView.jsx` | Recharts radar chart & analytics view |
+| `frontend/src/components/ComparisonView.jsx` | Before vs. Latest SVG radar comparison |
+| `frontend/src/components/ProductCards.jsx` | Matched skincare product recommendations |
+| `frontend/src/components/RoutinePlanner.jsx` | 7-Day interactive skincare routine cards |
+| `frontend/src/components/HistoryView.jsx` | Chronological scan logs & thumbnail viewer |
+| `frontend/src/components/GlowAIChatbot.jsx` | Interactive Groq-powered AI chatbot |
+| `requirements.txt` | Pinned Python package dependencies |
+| `frontend/package.json` | Frontend dependencies & scripts |
 
-  `backend/models/facial_skin_model.keras`       Trained facial skin classification
-                                                 model
-
-  `backend/recommender.py`                       Product recommendation logic
-
-  `backend/data/skincare_products.csv`           Skincare product dataset
-
-  `frontend/src/services/api.js`                 Frontend API communication
-
-  `frontend/src/components/SkinScanner.jsx`      Facial image scanning interface
-
-  `frontend/src/components/AnalysisResult.jsx`   Displays skin analysis results
-
-  `frontend/src/components/AnalyticsView.jsx`    Analytics and probability insights
-
-  `frontend/src/components/ComparisonView.jsx`   Before vs latest skin comparison
-
-  `frontend/src/components/ProductCards.jsx`     Product recommendations
-
-  `frontend/src/components/RoutinePlanner.jsx`   Personalized skincare routine
-
-  `frontend/src/components/GlowAIChatbot.jsx`    GlowAI assistant
-
-  `frontend/src/components/HistoryView.jsx`      Previous analysis history
-
-  `frontend/src/pages/Dashboard.jsx`             Main application dashboard
-
-  `face_analysis.ipynb`                          Model development/training notebook
-
-  `requirements.txt`                             Python dependencies
-
-  `frontend/package.json`                        Frontend dependencies and scripts
-  ----------------------------------------------------------------------------------
-
-------------------------------------------------------------------------
+---
 
 ## Application Modules
 
-``` text
+```text
 Authentication
      ↓
 Dashboard
-     ├── Skin Scanner
-     ├── Skin Concern Analysis
-     ├── Probability Distribution
-     ├── Product Recommendations
-     ├── Personalized Routine
-     ├── Analytics & Insights
-     ├── Skin Comparison
-     ├── Analysis History
-     └── GlowAI Chatbot
+     ├── Skin Scanner (Upload / Live Webcam)
+     ├── Diagnostic Concern Analysis
+     ├── Six-Class Probability Distribution
+     ├── TF-IDF Product Recommendations
+     ├── 7-Day Personalized Routine Planner
+     ├── Skin Analytics & Radar View
+     ├── Before vs. Latest Scan Comparison
+     ├── Saved Scan History
+     └── GlowAI Virtual Assistant
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Responsible Use
 
-This application is intended for educational, research, and
-skincare-support purposes.
+This application is intended for educational, research, and skincare-support purposes.
 
 The CNN probabilities, product recommendations, and AI-generated text:
+- are not medical diagnoses
+- are not clinically validated measurements
+- should not replace professional medical advice
+- may vary depending on image quality, lighting, pose, and model behavior
 
--   are not medical diagnoses
--   are not clinically validated measurements
--   should not replace professional medical advice
--   may vary depending on image quality, lighting, pose, and model
-    behavior
+Users should consult a qualified dermatologist or healthcare professional for medical concerns.
 
-Users should consult a qualified dermatologist or healthcare
-professional for medical concerns.
-
-------------------------------------------------------------------------
+---
 
 ## Development Notes
 
-The project separates the main responsibilities into:
+The project enforces clean separation of concerns across its architectural layers:
 
-``` text
+```text
 Frontend
    ↓
-User Interface + Visualization
+User Interface + SVG/Recharts Visualizations
 
 Backend
    ↓
-API + Authentication + Business Logic
+RESTful API + JWT Authentication + Async MongoDB Operations
 
 Machine Learning
    ↓
-Facial Skin Classification
+MobileNetV2 CNN Skin Classification
 
 Recommendation Engine
    ↓
-Dataset-based Product Ranking
+TF-IDF & Cosine Similarity Dataset Matching (returned inline with analysis)
 
 Generative AI
    ↓
-Personalized Routines + Comparison Insights
+Groq (openai/gpt-oss-120b) Skincare Regimens & Comparison Reports
 
 Database
    ↓
-User Data + Analysis History
+MongoDB Atlas User Profiles & Scan History Collections
 ```
 
-This structure allows each part of the application to be developed and
-maintained independently.
-
-------------------------------------------------------------------------
+---
 
 ## License
 
-See the `LICENSE` file included in this repository.
+See the [LICENSE](LICENSE) file included in this repository.

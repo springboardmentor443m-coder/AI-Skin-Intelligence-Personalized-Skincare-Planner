@@ -979,7 +979,7 @@ async def analyze_skin(
             # If confidence is very low,
             # classify as clear skin.
 
-            if confidence < 0.35:
+            if confidence < 0.20:
 
                 predicted_label = (
                     "clear skin"
@@ -1001,24 +1001,13 @@ async def analyze_skin(
 
         else:
 
-            # Fallback if model is unavailable
-
-            predicted_label = "acne"
-
-            confidence = 0.95
-
-
-            prob_dict = {
-
-                cls:
-                    (
-                        0.95
-                        if cls == "acne"
-                        else 0.01
-                    )
-
-                for cls in SKIN_CLASSES
-            }
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    "Skin analysis model is unavailable. "
+                    "Please restart the backend and try again."
+                )
+            )
 
 
         confidence_formatted = (
@@ -1071,6 +1060,42 @@ async def analyze_skin(
 
         product_names = ", ".join(
             extracted_names
+        )
+
+
+        # ------------------------------------------------------------
+        # Assign specific recommended products to specific days so the
+        # 7-day routine is FORCED to differ day-to-day, rather than
+        # relying on the model alone to avoid repetition.
+        # ------------------------------------------------------------
+
+        def _get_product(index: int, fallback: str) -> str:
+
+            if index < len(extracted_names):
+
+                return extracted_names[index]
+
+            return fallback
+
+
+        primary_active = _get_product(
+            0, "your primary treatment product"
+        )
+
+        secondary_active = _get_product(
+            1, primary_active
+        )
+
+        tertiary_product = _get_product(
+            2, secondary_active
+        )
+
+        quaternary_product = _get_product(
+            3, tertiary_product
+        )
+
+        quinary_product = _get_product(
+            4, quaternary_product
         )
 
 
@@ -1137,6 +1162,25 @@ IMPORTANT INSTRUCTIONS
     product list.
 14. Keep recommendations practical and easy to follow.
 
+15. THE 7-DAY ROUTINE MUST PROGRESS ACROSS THE WEEK. Do NOT repeat
+    the same AM/PM steps on every day. Follow this escalation logic:
+    - Day 1-2: Baseline gentle routine. Cleanser, moisturizer,
+      sunscreen (AM). Introduce ONLY ONE new active (lowest strength)
+      at night, applied as a thin layer, to patch-test tolerance.
+    - Day 3-4: If no irritation would be expected, increase frequency
+      or introduce a second complementary active (e.g. alternate
+      nights between two actives, never both the same night unless
+      it's a well-tolerated pairing).
+    - Day 5-6: Build toward the target routine — increase active
+      usage frequency, add any secondary treatment product from the
+      recommended list.
+    - Day 7: Full target routine with maintenance-level actives,
+      plus a brief note on what to monitor going forward.
+    - Each day's AM/PM text must be DIFFERENT from the previous day
+      in at least one concrete way (product added, frequency changed,
+      or amount adjusted). Do not output identical text blocks for
+      different days.
+
 FORMAT EXACTLY:
 
 ### Personalized Assessment
@@ -1150,38 +1194,67 @@ Explain which recommended products are most relevant and why.
 
 ### 7-Day Personalized Routine
 
+You MUST use the exact product names given in each day's directive
+below. Each day's AM/PM Routine text must be substantially different
+from every other day — do not reuse the same sentence wording across
+days. A routine that repeats the same steps on multiple days is
+WRONG and unacceptable.
+
 ---Day 1---
+Directive: AM: gentle cleanse, moisturize, sunscreen only (no actives
+yet). PM: cleanse, then apply "{primary_active}" as a SMALL PATCH
+TEST only (small area, e.g. jawline), not full face.
 AM Routine: ...
 PM Routine: ...
 
 ---Day 2---
+Directive: AM: same gentle baseline as Day 1. PM: cleanse, then
+apply "{primary_active}" to the FULL FACE for the first time
+(thin layer). Explicitly mention this is the first full-face use.
 AM Routine: ...
 PM Routine: ...
 
 ---Day 3---
+Directive: AM: gentle baseline, ADD "{tertiary_product}" as a new
+daytime step. PM: continue full-face "{primary_active}", add a
+barrier-support/hydrating step.
 AM Routine: ...
 PM Routine: ...
 
 ---Day 4---
+Directive: AM: same as Day 3. PM: introduce "{secondary_active}" on
+ALTERNATE nights, explicitly alternating with "{primary_active}"
+(state the alternation clearly, e.g. odd nights vs even nights).
 AM Routine: ...
 PM Routine: ...
 
 ---Day 5---
+Directive: AM: add "{quaternary_product}" to the morning routine.
+PM: continue alternating "{primary_active}" and "{secondary_active}",
+increase frequency slightly if tolerated.
 AM Routine: ...
 PM Routine: ...
 
 ---Day 6---
+Directive: AM: full target morning routine including
+"{quinary_product}". PM: both actives now in regular rotation at
+target frequency.
 AM Routine: ...
 PM Routine: ...
 
 ---Day 7---
+Directive: Full target maintenance routine using ALL the recommended
+products listed above at their intended frequency. End with one
+sentence on what to monitor going forward (irritation, dryness,
+visible progress).
 AM Routine: ...
 PM Routine: ...
 
 ### Important Precautions
 Provide concise precautions relevant to the user's situation.
 
-Keep each AM/PM routine concise.
+Keep each AM/PM routine concise but each day must be visibly
+different from the others.
 """
 
 
@@ -1192,7 +1265,7 @@ Keep each AM/PM routine concise.
                     .create(
 
                         model=
-                            "llama-3.3-70b-versatile",
+                            "openai/gpt-oss-120b",
 
                         messages=[
                             {
@@ -1348,116 +1421,29 @@ Keep each AM/PM routine concise.
 
 
         # ======================================================
-        # 21.12 24-HOUR RETAKE WINDOW
+        # 21.12 SAVE EVERY SCAN
         # ======================================================
         #
-        # If the user performs another scan within 24 hours,
-        # the latest scan can replace the previous latest scan
-        # according to the existing application logic.
+        # Every successful skin analysis is stored as a new
+        # MongoDB document.
+        #
+        # This allows:
+        #   - Multiple scans on the same day
+        #   - Complete scan history
+        #   - Before/after comparison
+        #   - Mentor demonstration with different images
         # ======================================================
 
-        if (
-            latest_scan
-            and "timestamp"
-            in latest_scan
-        ):
-
-            try:
-
-                last_time = datetime.fromisoformat(
-                    latest_scan[
-                        "timestamp"
-                    ]
-                )
-
-
-                if last_time.tzinfo is None:
-
-                    last_time = (
-                        last_time.replace(
-                            tzinfo=timezone.utc
-                        )
-                    )
-
-
-            except Exception:
-
-                last_time = (
-                    now_utc
-                    - timedelta(
-                        days=2
-                    )
-                )
-
-
-            user_total_scans = (
-                await analyses_collection
-                .count_documents(
-                    {
-                        "user":
-                            current_user
-                    }
-                )
+        insert_res = (
+            await analyses_collection
+            .insert_one(
+                analysis_doc
             )
+        )
 
-
-            if (
-                (
-                    now_utc
-                    - last_time
-                )
-                < timedelta(
-                    hours=24
-                )
-
-                and user_total_scans > 1
-            ):
-
-                await analyses_collection.replace_one(
-
-                    {
-                        "_id":
-                            latest_scan["_id"]
-                    },
-
-                    analysis_doc
-                )
-
-
-                inserted_id = (
-                    latest_scan["_id"]
-                )
-
-
-            else:
-
-                insert_res = (
-                    await analyses_collection
-                    .insert_one(
-                        analysis_doc
-                    )
-                )
-
-
-                inserted_id = (
-                    insert_res.inserted_id
-                )
-
-
-        else:
-
-            insert_res = (
-                await analyses_collection
-                .insert_one(
-                    analysis_doc
-                )
-            )
-
-
-            inserted_id = (
-                insert_res.inserted_id
-            )
-
+        inserted_id = (
+            insert_res.inserted_id
+        )
 
         # Add MongoDB ID to response
 
@@ -1465,12 +1451,10 @@ Keep each AM/PM routine concise.
             inserted_id
         )
 
-
         analysis_doc.pop(
             "_id",
             None
         )
-
 
         return analysis_doc
 
@@ -1486,7 +1470,6 @@ Keep each AM/PM routine concise.
             f"Fatal Diagnostic Error: "
             f"{str(e)}"
         )
-
 
         raise HTTPException(
             status_code=500,
@@ -1908,7 +1891,7 @@ diagnosis.
                     .create(
 
                         model=
-                            "llama-3.3-70b-versatile",
+                            "openai/gpt-oss-120b",
 
                         messages=[
                             {
@@ -2459,7 +2442,7 @@ INSTRUCTIONS:
                 .create(
 
                     model=
-                        "llama-3.3-70b-versatile",
+                        "openai/gpt-oss-120b",
 
                     messages=[
 

@@ -28,6 +28,28 @@ export default function Dashboard({ username, onLogout }) {
       setAnalysisError('');
 
       const data = await analyzeSkin(imageFile, userDetails);
+      console.log(
+  '========== 7 DAY ROUTINE FROM BACKEND =========='
+);
+
+console.log(
+  'routine_7_day:',
+  data?.routine_7_day
+);
+
+console.log(
+  'routine_7_day type:',
+  typeof data?.routine_7_day
+);
+
+console.log(
+  'routine_7_day length:',
+  data?.routine_7_day?.length
+);
+
+console.log(
+  '================================================='
+);
 
       // Safety check:
       // Do not allow an invalid/empty API response to crash the UI.

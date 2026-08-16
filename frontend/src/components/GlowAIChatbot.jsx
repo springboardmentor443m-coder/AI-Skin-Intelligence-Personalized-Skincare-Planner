@@ -19,7 +19,6 @@ export default function GlowAIChatbot() {
   const [loading, setLoading] = useState(false);
   const [greetingLoaded, setGreetingLoaded] = useState(false);
 
-
   const messagesEndRef = useRef(null);
 
 
@@ -64,9 +63,11 @@ export default function GlowAIChatbot() {
             {
               sender: 'bot',
               text:
-                'Hello! I am GlowAI, your personal AI Dermatologist. How can I help you today?',
+                'Hello! I am GlowAI, your personal AI skincare assistant. How can I help you today?',
             },
           ]);
+
+          setGreetingLoaded(true);
 
         }
 
@@ -138,10 +139,30 @@ export default function GlowAIChatbot() {
   };
 
 
+  /*
+   * ============================================================
+   * QUICK PROMPTS
+   *
+   * The routine prompt is intentionally condition-neutral.
+   *
+   * It works with all six model classes:
+   *
+   * 1. Acne
+   * 2. Blackheads
+   * 3. Clear Skin
+   * 4. Dark Spots
+   * 5. Puffy Eyes
+   * 6. Wrinkles
+   *
+   * The backend can use the user's latest scan context to
+   * determine the appropriate condition-specific response.
+   * ============================================================
+   */
+
   const quickPrompts = [
     "Analyze my latest scan result",
     "Show product ingredients & prices",
-    "Suggest a weekly acne routine",
+    "Suggest a 7-day skincare routine for my detected condition",
     "How does sleep affect my skin?",
   ];
 
@@ -170,6 +191,8 @@ export default function GlowAIChatbot() {
 
       {isOpen && (
         <div className="w-[360px] sm:w-[420px] h-[560px] bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl animate-in fade-in slide-in-from-bottom-5 duration-200">
+
+          {/* HEADER */}
 
           <div className="bg-slate-800 p-4 border-b border-slate-700/80 flex items-center justify-between">
 
@@ -207,6 +230,8 @@ export default function GlowAIChatbot() {
 
           </div>
 
+
+          {/* CHAT MESSAGES */}
 
           <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-slate-950/50">
 
@@ -250,6 +275,8 @@ export default function GlowAIChatbot() {
             ))}
 
 
+            {/* LOADING */}
+
             {loading && (
               <div className="flex gap-2.5 items-center text-slate-400 text-xs italic">
 
@@ -260,7 +287,7 @@ export default function GlowAIChatbot() {
                 </div>
 
                 <span>
-                  GlowAI is analyzing medical context & preparing response...
+                  GlowAI is analyzing your skin context and preparing a response...
                 </span>
 
               </div>
@@ -271,6 +298,8 @@ export default function GlowAIChatbot() {
 
           </div>
 
+
+          {/* QUICK PROMPTS */}
 
           <div className="px-3 py-2 bg-slate-900 border-t border-slate-800 flex gap-1.5 overflow-x-auto no-scrollbar">
 
@@ -293,6 +322,8 @@ export default function GlowAIChatbot() {
 
           </div>
 
+
+          {/* INPUT */}
 
           <form
             onSubmit={(e) => {

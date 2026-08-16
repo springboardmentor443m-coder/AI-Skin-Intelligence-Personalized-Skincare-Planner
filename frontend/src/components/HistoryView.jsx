@@ -240,9 +240,9 @@ export default function HistoryView({ activeAnalysis, savedPreviewUrl }) {
 
                 <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center text-slate-500 border border-slate-800 overflow-hidden">
 
-                  {scan.image_url ? (
+                  {scan.image_base64 || scan.image_url ? (
                     <img
-                      src={scan.image_url}
+                      src={scan.image_base64 || scan.image_url}
                       alt={scan.predicted_class || 'Skin Scan'}
                       className="w-full h-full object-cover"
                     />
