@@ -399,7 +399,7 @@ export const Dashboard = () => {
     return (
       <div className="space-y-3.5 p-4 bg-white/40 dark:bg-slate-900/40 border border-slate-200/50 dark:border-slate-800/60 rounded-2xl shadow-xs hover:shadow-md hover:border-brand-500/20 dark:hover:border-brand-500/20 transition-all duration-300 backdrop-blur-xs flex flex-col justify-between">
         <div className="flex justify-between items-center text-xs">
-          <span className="font-extrabold text-slate-850 dark:text-slate-200 flex items-center gap-1.5 capitalize">
+          <span className="font-extrabold text-slate-800 dark:text-slate-200 flex items-center gap-1.5 capitalize">
             <Icon className="w-3.5 h-3.5 text-brand-500" /> {label}
           </span>
           <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100/50 dark:bg-slate-850/50 ${cfg.textClass}`}>{cfg.text}</span>
@@ -411,15 +411,16 @@ export const Dashboard = () => {
         </div>
         
         {/* Interactive manual tuning switches */}
-        <div className="flex justify-between gap-1 pt-1.5 border-t border-slate-150/40 dark:border-slate-800/30">
+        <div className="flex justify-between gap-1 pt-1.5 border-t border-slate-200/40 dark:border-slate-800/30">
           {['none', 'mild', 'moderate', 'severe'].map((lvl) => {
             const isActive = level === lvl;
             const buttonColors = {
-              none: isActive ? 'bg-slate-200 dark:bg-slate-750 text-slate-700 dark:text-slate-200 font-extrabold shadow-inner' : 'text-slate-400 dark:text-slate-500 hover:bg-slate-100/50 dark:hover:bg-slate-800/40',
+              none: isActive ? 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-extrabold shadow-inner' : 'text-slate-400 dark:text-slate-500 hover:bg-slate-100/50 dark:hover:bg-slate-800/40',
               mild: isActive ? 'bg-emerald-500 text-white font-extrabold shadow-sm shadow-emerald-500/20' : 'text-slate-400 dark:text-slate-500 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20 hover:text-emerald-500',
               moderate: isActive ? 'bg-amber-500 text-white font-extrabold shadow-sm shadow-amber-500/20' : 'text-slate-400 dark:text-slate-500 hover:bg-amber-50/50 dark:hover:bg-amber-950/20 hover:text-amber-500',
               severe: isActive ? 'bg-rose-500 text-white font-extrabold shadow-sm shadow-rose-500/20' : 'text-slate-400 dark:text-slate-500 hover:bg-rose-50/50 dark:hover:bg-rose-950/20 hover:text-rose-500'
             };
+
             return (
               <button
                 key={lvl}
