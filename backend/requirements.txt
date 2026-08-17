@@ -1,0 +1,52 @@
+# ── AI Skin Intelligence Backend — Python Dependencies ────────────────────────
+#
+# Install all dependencies with:
+#   pip install -r requirements.txt
+#
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Phase 4 (existing) ────────────────────────────────────────────────────────
+
+# FastAPI — the web framework for building APIs
+fastapi
+
+# Uvicorn — the ASGI server that runs the FastAPI application
+# [standard] includes extra speed improvements (httptools, uvloop on Linux/macOS)
+uvicorn[standard]
+
+# python-dotenv — loads variables from the .env file into os.environ
+python-dotenv
+
+# ── Phase 5 (added) ───────────────────────────────────────────────────────────
+
+# SQLAlchemy — ORM that maps Python classes to database tables
+sqlalchemy
+
+# psycopg2-binary — PostgreSQL driver that lets Python communicate with PostgreSQL
+psycopg2-binary
+
+# bcrypt — Secure password hashing library (direct, no passlib wrapper needed)
+bcrypt
+
+# PyJWT — Creates and verifies JWT tokens (actively maintained, Python 3.14 compatible)
+PyJWT
+
+# email-validator — Required by Pydantic's EmailStr type for email format validation
+email-validator
+
+# ── Phase 8 (added) ───────────────────────────────────────────────────────────
+
+# torch — PyTorch deep learning framework used to load and run the EfficientNetB0 model
+torch
+
+# torchvision — Provides EfficientNetB0 architecture and pretrained weight helpers
+torchvision
+
+# Pillow — Image I/O library; opens uploaded images for preprocessing before inference
+Pillow
+
+# python-multipart — Required by FastAPI to handle multipart/form-data file uploads
+python-multipart
+
+# deep-translator — Free translation library using Google Translate (no API key needed)
+deep-translator
