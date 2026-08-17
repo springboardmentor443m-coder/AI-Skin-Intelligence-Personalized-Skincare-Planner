@@ -5,51 +5,63 @@ Skinly is an AI-powered personalized skincare application that goes beyond gener
 
 ## Key Features
 *   **User Registration and Login:** Secure authentication to manage personal skincare journeys.
-*   **Skin Profile Onboarding:** Detailed profiling including skin type, concerns, allergies, and sensitivity.
-*   **Lifestyle Information:** Tracking sleep, water intake, stress, and diet to contextualize skincare needs.
-*   **Personalized Skincare Routine:** Dynamic generation of daily skincare steps based on user profiles.
-*   **Routine Adaptation:** Adjusting routines based on user feedback and changing needs.
-*   **AI Skin Image Analysis:** Uploading an image to predict current skin conditions (e.g., acne, redness).
+*   **Forgot Password / Password Reset:** Securely reset user passwords.
+*   **Skin Profile and Lifestyle information:** Detailed profiling including skin type, concerns, allergies, sensitivity, sleep, water intake, stress, and diet.
+*   **AI Skin Image Analysis:** Uploading an image to predict current skin conditions.
+*   **Personalized 7-Day Skincare Routine:** Dynamic generation of daily skincare steps based on user profiles.
+*   **Daily Skin Check-in / Routine Adaptation:** Adjusting routines based on user feedback and changing needs.
 *   **Product Recommendations:** Targeted suggestions based on both the user's static profile and real-time image analysis.
-*   **SkinMate AI Skincare Chatbot:** An intelligent assistant powered by Llama 3.
-*   **Continuous SkinMate Conversation:** Chatbot maintains recent conversation context for fluid interactions.
-*   **SkinMate Streaming Responses:** Real-time token streaming for a responsive chatbot experience.
-*   **Edit My Profile:** Updating skin and lifestyle parameters at any time.
+*   **SkinMate AI Chatbot:** An intelligent assistant powered by Llama 3.
+*   **Streaming SkinMate responses:** Real-time token streaming for a responsive chatbot experience.
+*   **Recent in-session SkinMate conversation context:** Chatbot maintains recent conversation context for fluid interactions during the session.
 *   **Progress Tracking:** Basic progress logging with image and notes submission.
+*   **Skin Analysis History:** Track past skin image analysis results.
+*   **Tab-based Dashboard:** A clean, organized interface for managing skincare.
+*   **7-Day Routine Completion chart:** Visual tracking of routine adherence.
+*   **User Skin Report / Dashboard summary:** A comprehensive overview of the user's skin profile and progress.
 
 ## AI / ML Components
 Skinly utilizes several interconnected AI/ML systems to provide a personalized experience:
-*   **Skin Condition Image Classification:** A TensorFlow-based model analyzes uploaded facial images to classify conditions like acne or redness.
-*   **Product Recommendation System:** Uses machine learning (scikit-learn/pandas) to map identified conditions and skin profiles to specific active ingredients and products.
-*   **Profile-Based Recommendations:** A rule-based and ML hybrid approach to suggest routines even without an image.
+*   **Skin Condition Image Classification:** A TensorFlow/Keras-based model using a MobileNetV2 architecture analyzes uploaded facial images. The model accepts an uploaded skin image and returns a predicted condition and confidence score. Training categories are exactly:
+    * wrinkles
+    * clear skin
+    * puffy eyes
+    * dark spots
+*   **Product Recommendation:** Uses TF-IDF vectorization and Cosine Similarity on a skincare/Sephora product dataset to find matching products based on identified conditions and skin profiles.
 *   **SkinMate AI Chatbot:** Driven by **Llama 3** running locally via **Ollama**.
-*   **Interaction:** The backend aggregates the user's profile, recent chat history, and current skin condition context into a comprehensive prompt, ensuring SkinMate's advice is safe, personalized, and context-aware.
 
 ## SkinMate Architecture
-SkinMate operates as an advanced Retrieval-Augmented Generation (RAG)-style assistant tailored for skincare. Its current architecture:
-1.  **Input:** User question + saved skin profile (type, allergies) + current skin check-in + recent conversation history.
-2.  **Processing:** FastAPI receives the request and constructs a strict prompt with guardrails (e.g., avoiding allergy triggers, no medical diagnoses).
+SkinMate operates as an advanced assistant tailored for skincare. Its current architecture:
+1.  **Input:** FastAPI receives the user's question, available skin-condition/check-in context, and recent in-session chat history from the frontend.
+2.  **Processing:** FastAPI constructs a strict prompt with guardrails (e.g., avoiding allergy triggers, no medical diagnoses) using the user's stored skin profile and the provided context.
 3.  **Inference:** The prompt is sent to a local **Ollama** instance running **Llama 3**.
-4.  **Output:** Llama 3 generates the response, which FastAPI **streams** back to the frontend in real-time.
+4.  **Output:** Llama 3 generates the response, which FastAPI **streams** back to the React frontend in real-time.
 
-*Note: The current SkinMate chatbot processes text context only; it does not directly process or "see" uploaded images. Images are processed separately by the TensorFlow classification model.*
+*Note: The current SkinMate chatbot processes text context only; it does not directly process or "see" uploaded images.*
 
 ## Technology Stack
 **Frontend:**
-*   React (via Vite)
-*   JavaScript / HTML / CSS
+*   React + Vite
+*   JavaScript
+*   HTML/CSS
 
 **Backend:**
-*   FastAPI (Python)
-*   SQLAlchemy & Pydantic
-*   PostgreSQL (via psycopg2)
+*   Python
+*   FastAPI
+*   SQLAlchemy
+*   Pydantic
+*   PostgreSQL
+*   psycopg2
 *   Uvicorn
 
-**Machine Learning & AI:**
-*   TensorFlow
-*   scikit-learn, pandas, NumPy
-*   Ollama (Local LLM Server)
-*   Llama 3 (LLM)
+**AI/ML:**
+*   TensorFlow/Keras
+*   MobileNetV2
+*   scikit-learn
+*   pandas
+*   NumPy
+*   Ollama
+*   Llama 3
 
 ## Project Structure
 ```text
@@ -74,18 +86,22 @@ AI-Skin-Intelligence-Personalized-Skincare-Planner/
 ## Database
 The application uses PostgreSQL with the following core entities:
 *   **`users`**: Stores authentication details (email, password hash, role).
-*   **`skin_profile`**: Stores biological/dermatological data (age, gender, skin type, concerns, allergies, sensitivity).
-*   **`lifestyle`**: Stores daily habits affecting skin health (sleep hours, water intake, stress, diet).
-*   **`progress`**: Stores historical check-ins (image paths, notes) to track changes over time.
+*   **`skin_profile`**: Stores biological/dermatological data (age, gender, skin type, concerns, allergies, sensitive skin).
+*   **`lifestyle`**: Stores daily habits affecting skin health (sleep hours, water intake, stress level, diet).
+*   **`progress`**: Stores progress/check-in information including image path, notes, and created_at timestamp to track changes over time.
 
 ## API Overview
 The FastAPI backend exposes several key endpoints (`/docs` for Swagger UI):
-*   `POST /register` & `POST /login`: User authentication.
-*   `GET/POST/PUT /skin-profile` & `/lifestyle`: Manage user data used for personalization.
+*   `POST /register`, `POST /login`, `POST /reset-password`: User authentication and account management.
+*   `POST`, `PUT`, `GET /skin-profile/{user_id}`: Manage user skin profile data.
+*   `POST`, `PUT`, `GET /lifestyle/{user_id}`: Manage user lifestyle data.
+*   `GET /recommend-by-profile`: Get product recommendations based on the user's profile and lifestyle.
+*   `GET /recommend`: Get product recommendations for a specific product name.
 *   `GET /routine/{user_id}`: Generate a daily skincare routine.
+*   `POST /routine/{user_id}/adapt`: Adapt the skincare routine based on user feedback.
 *   `POST /analyze-image`: Upload a photo, predict skin condition, and get targeted product recommendations.
 *   `POST /skinmate`: Stream a response from the Llama 3 AI assistant using conversation history and profile context.
-*   `POST /progress`: Log a new progress entry with notes and an image path.
+*   `POST /progress`, `GET /progress/{user_id}`: Log and retrieve progress check-ins (with image path and notes).
 
 ## How to Run the Project
 
@@ -128,12 +144,19 @@ Open the application in your browser at the URL provided by Vite (usually `http:
 ## Current Project Status
 
 ### Implemented
-*   End-to-end user onboarding and profile management.
-*   Image-based skin condition classification and product recommendation.
-*   Context-aware, streaming AI chatbot (SkinMate) running locally.
-*   Dynamic routine generation and basic progress logging.
+*   Authentication and Forgot Password.
+*   Profile management (skin profile and lifestyle).
+*   MobileNetV2 image classification for skin conditions.
+*   Product recommendation using TF-IDF + Cosine Similarity.
+*   7-day routine and adaptation.
+*   SkinMate with Llama 3/Ollama and streaming.
+*   Progress tracking and analysis history.
+*   Tab-based dashboard.
+*   Routine completion chart.
+*   User Skin Report.
 
 ### Planned / Future Improvements
-*   **Skin Score / Progress Charts:** Implementing a unified "Skin Score" metric and visual charts to track improvement over time.
-*   **Persistent Chat History:** Storing SkinMate conversations in the database across user sessions (currently handled via frontend state).
-*   **Enhanced Dashboard UI:** Further refinements to the user interface for tracking daily routine completion and displaying analytics.
+*   **Persistent SkinMate Chat History:** Storing SkinMate conversations in PostgreSQL across user sessions (currently handled via frontend in-session state).
+*   **Persistent Routine Completion Data:** Storing routine completion data in PostgreSQL so completion survives refresh/logout/login.
+*   **Long-term Routine History:** Using persisted routine completion data for a long-term 7-day routine completion chart/history.
+*   **SkinMate Recommendation Integration:** Integrate SkinMate with the main recommendation system so SkinMate uses the same stored/retrieved recommended products.
