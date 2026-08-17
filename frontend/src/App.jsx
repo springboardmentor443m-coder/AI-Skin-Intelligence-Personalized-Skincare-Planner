@@ -7,6 +7,7 @@ import RoutinePlanner from './components/RoutinePlanner';
 import ProgressTracker from './components/ProgressTracker';
 import AuthModal from './components/AuthModal';
 import HistoryDrawer from './components/HistoryDrawer';
+import DermChatbot from './components/DermChatbot';
 
 const API_BASE_URL = 'http://localhost:8000';
 
@@ -71,11 +72,12 @@ export default function App() {
     }
   };
 
-  const handleRegister = async (fullName, email, password) => {
+  const handleRegister = async (fullName, email, password, gender = "Unisex") => {
     const res = await axios.post(`${API_BASE_URL}/api/auth/register`, {
       full_name: fullName,
       email: email,
-      password: password
+      password: password,
+      gender: gender
     });
     const { access_token, user } = res.data;
     localStorage.setItem('token', access_token);
@@ -108,8 +110,10 @@ export default function App() {
     const formData = new FormData();
     formData.append('file', file);
 
+    const userGender = currentUser?.gender || 'Unisex';
+
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/assessments/analyze`, formData, {
+      const res = await axios.post(`${API_BASE_URL}/api/assessments/analyze?gender=${encodeURIComponent(userGender)}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setAnalysisResult(res.data);
@@ -188,6 +192,7 @@ export default function App() {
           isAnalyzing={isAnalyzing}
           analysisResult={analysisResult}
           errorMessage={errorMessage}
+          currentUser={currentUser}
         />
 
         {/* Tailored Product Recommendations */}
@@ -231,6 +236,12 @@ export default function App() {
         onClose={() => setIsProgressOpen(false)}
         historyList={historyList}
         onCompareIds={handleCompareProgressIds}
+      />
+
+      {/* Dr. DermAI Floating Chatbot */}
+      <DermChatbot
+        analysisResult={analysisResult}
+        currentUser={currentUser}
       />
 
     </div>

@@ -9,17 +9,21 @@ export default function RoutinePlanner({ weeklyRoutine, analysisId }) {
 
   const storageKey = `ticked_routine_steps_${analysisId || 'default'}`;
 
-  // Load ticked steps from localStorage
+  // Load ticked steps from localStorage and reset active day tab on new analysis
   useEffect(() => {
+    setActiveDayIdx(0);
     try {
       const saved = localStorage.getItem(storageKey);
       if (saved) {
         setCompletedSteps(JSON.parse(saved));
+      } else {
+        setCompletedSteps({});
       }
     } catch (e) {
       console.error("Error loading ticked steps", e);
+      setCompletedSteps({});
     }
-  }, [storageKey]);
+  }, [storageKey, weeklyRoutine]);
 
   const toggleStep = (dayName, timeOfDay, stepKey) => {
     const key = `${dayName}_${timeOfDay}_${stepKey}`;

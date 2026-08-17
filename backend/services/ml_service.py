@@ -70,24 +70,15 @@ class MLService:
             return False
 
     def analyze_uploaded_image(self, uploaded_file) -> dict:
-        """Saves the uploaded file temporarily, validates face presence, and runs ML analysis."""
+        """Saves the uploaded file temporarily and runs PyTorch ML analysis directly."""
         
         file_path = os.path.join(self.upload_dir, uploaded_file.filename)
         
         # Save file
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(uploaded_file.file, buffer)
-
-        # Validate human face presence
-        if not self.is_human_face_present(file_path):
-            if os.path.exists(file_path):
-                os.remove(file_path)
-            raise HTTPException(
-                status_code=400,
-                detail="No human face detected! Please re-upload a clear photo or capture your face properly using the live camera."
-            )
             
-        # Run ML model
+        # Run PyTorch ML model directly
         result = analyze_skin(file_path, self.type_model_path, self.concern_model_path)
         
         return {

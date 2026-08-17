@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 # pyrefly: ignore [missing-import]
 from config.database import connect_to_mongo, close_mongo_connection
-from routes import assessment_routes, recommendation_routes, progress_routes, auth_routes
+from routes import assessment_routes, recommendation_routes, progress_routes, auth_routes, chatbot_routes
 import uvicorn
 
 app = FastAPI(
@@ -34,6 +34,7 @@ app.include_router(auth_routes.router, prefix="/api/auth")
 app.include_router(assessment_routes.router, prefix="/api/assessments")
 app.include_router(recommendation_routes.router, prefix="/api/recommendations")
 app.include_router(progress_routes.router, prefix="/api/progress")
+app.include_router(chatbot_routes.router, prefix="/api/chat")
 
 @app.get("/")
 def root():

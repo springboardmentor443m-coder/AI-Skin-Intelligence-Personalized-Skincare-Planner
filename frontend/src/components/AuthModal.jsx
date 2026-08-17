@@ -8,6 +8,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }) {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [gender, setGender] = useState('Unisex');
   const [errorMsg, setErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -18,7 +19,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }) {
 
     try {
       if (isRegister) {
-        await onRegister(fullName, email, password);
+        await onRegister(fullName, email, password, gender);
       } else {
         await onLogin(email, password);
       }
@@ -50,7 +51,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }) {
             {isRegister ? "Create Your Account" : "Welcome Back"}
           </h3>
           <p style={{ color: 'var(--text-muted)', fontSize: '13px', marginTop: '4px' }}>
-            {isRegister ? "Save assessments & track skin progress" : "Log in to view saved skin scans"}
+            {isRegister ? "Save assessments & get gender-tailored skincare" : "Log in to view saved skin scans"}
           </p>
         </div>
 
@@ -63,20 +64,57 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister }) {
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           
           {isRegister && (
-            <div>
-              <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>Full Name</label>
-              <div style={{ position: 'relative' }}>
-                <User size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '12px' }} />
-                <input
-                  type="text"
-                  required
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="John Doe"
-                  style={{ width: '100%', padding: '10px 10px 10px 38px', borderRadius: '10px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid var(--border-glass)', color: 'var(--text-main)', fontSize: '13px' }}
-                />
+            <>
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>Full Name</label>
+                <div style={{ position: 'relative' }}>
+                  <User size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '12px' }} />
+                  <input
+                    type="text"
+                    required
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="John Doe"
+                    style={{ width: '100%', padding: '10px 10px 10px 38px', borderRadius: '10px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid var(--border-glass)', color: 'var(--text-main)', fontSize: '13px' }}
+                  />
+                </div>
               </div>
-            </div>
+
+              {/* Gender Selection Selector */}
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>Gender (For Custom Product Matching)</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+                  {[
+                    { label: 'Male', val: 'Male', icon: '👨' },
+                    { label: 'Female', val: 'Female', icon: '👩' },
+                    { label: 'Unisex', val: 'Unisex', icon: '⚧️' }
+                  ].map((g) => (
+                    <button
+                      key={g.val}
+                      type="button"
+                      onClick={() => setGender(g.val)}
+                      style={{
+                        padding: '8px',
+                        borderRadius: '8px',
+                        border: gender === g.val ? '1px solid #818CF8' : '1px solid var(--border-glass)',
+                        background: gender === g.val ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+                        color: gender === g.val ? '#FFFFFF' : 'var(--text-muted)',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      <span>{g.icon}</span>
+                      <span>{g.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
           )}
 
           <div>

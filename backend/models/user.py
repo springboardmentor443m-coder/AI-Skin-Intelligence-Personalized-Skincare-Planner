@@ -6,6 +6,7 @@ class UserRegister(BaseModel):
     full_name: str
     email: EmailStr
     password: str = Field(..., min_length=6, description="Password must be at least 6 characters")
+    gender: Optional[str] = Field(default="Unisex", description="Male, Female, or Unisex")
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -15,6 +16,7 @@ class UserResponse(BaseModel):
     id: str
     full_name: str
     email: str
+    gender: Optional[str] = "Unisex"
     created_at: datetime
 
 class TokenResponse(BaseModel):

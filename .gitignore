@@ -1,7 +1,5 @@
-
 Data sets/
 *.zip
 __pycache__/
 *.pyc
 *.pth
-*.env

@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { UploadCloud, Camera, Sparkles, Activity, Zap, HeartPulse, Video, AlertTriangle } from 'lucide-react';
+import ClinicalReportPDF from './ClinicalReportPDF';
 
-export default function HeroScanner({ onAnalyze, isAnalyzing, analysisResult, errorMessage }) {
+export default function HeroScanner({ onAnalyze, isAnalyzing, analysisResult, errorMessage, currentUser }) {
   const [inputMode, setInputMode] = useState('file'); // 'file' or 'camera'
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -157,6 +158,11 @@ export default function HeroScanner({ onAnalyze, isAnalyzing, analysisResult, er
             <span style={{ fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '12px', background: isAnalyzing ? 'rgba(6, 182, 212, 0.2)' : 'rgba(255, 255, 255, 0.05)', color: isAnalyzing ? '#06B6D4' : 'var(--text-muted)' }}>
               {isAnalyzing ? "ANALYZING..." : "STANDBY"}
             </span>
+          </div>
+
+          {/* Facial Image Guidance Note */}
+          <div style={{ background: 'rgba(99, 102, 241, 0.08)', border: '1px solid rgba(99, 102, 241, 0.2)', padding: '8px 12px', borderRadius: '10px', fontSize: '11px', color: '#818CF8', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span>💡 <strong>Guidelines:</strong> Please capture or upload a clear, front-facing photo of your face under bright, natural lighting.</span>
           </div>
 
           {/* Mode Selector Tabs (Upload File vs Live Camera) */}
@@ -332,21 +338,28 @@ export default function HeroScanner({ onAnalyze, isAnalyzing, analysisResult, er
         {analysisResult && (
           <div className="glass-card" style={{ padding: '32px' }}>
             
-            {/* Header with Radial Health Score */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', borderBottom: '1px solid var(--border-glass)', paddingBottom: '20px' }}>
+            {/* Header with Radial Health Score & PDF Export */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', borderBottom: '1px solid var(--border-glass)', paddingBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
               <div>
                 <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '1px' }}>Assessment Dashboard</span>
                 <h3 style={{ fontSize: '22px', fontWeight: 800, marginTop: '2px' }}>Facial Diagnostics</h3>
               </div>
 
-              {/* Skin Health Radial Score Meter */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', background: 'rgba(16, 185, 129, 0.08)', padding: '10px 18px', borderRadius: '16px', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
-                <div style={{ textAlign: 'right' }}>
-                  <span style={{ fontSize: '10px', fontWeight: 700, color: '#10B981', textTransform: 'uppercase', display: 'block' }}>Skin Health Index</span>
-                  <span style={{ fontSize: '24px', fontWeight: 900, color: '#FFFFFF' }}>{healthScore}<span style={{ fontSize: '14px', color: '#10B981' }}>/100</span></span>
-                </div>
-                <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: 'linear-gradient(135deg, #10B981, #06B6D4)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 15px rgba(16, 185, 129, 0.4)' }}>
-                  <HeartPulse size={22} color="#FFFFFF" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <ClinicalReportPDF
+                  analysisResult={analysisResult}
+                  currentUser={currentUser}
+                />
+
+                {/* Skin Health Radial Score Meter */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', background: 'rgba(16, 185, 129, 0.08)', padding: '8px 16px', borderRadius: '16px', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
+                  <div style={{ textAlign: 'right' }}>
+                    <span style={{ fontSize: '10px', fontWeight: 700, color: '#10B981', textTransform: 'uppercase', display: 'block' }}>Skin Health Index</span>
+                    <span style={{ fontSize: '22px', fontWeight: 900, color: '#FFFFFF' }}>{healthScore}<span style={{ fontSize: '13px', color: '#10B981' }}>/100</span></span>
+                  </div>
+                  <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'linear-gradient(135deg, #10B981, #06B6D4)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 15px rgba(16, 185, 129, 0.4)' }}>
+                    <HeartPulse size={20} color="#FFFFFF" />
+                  </div>
                 </div>
               </div>
             </div>

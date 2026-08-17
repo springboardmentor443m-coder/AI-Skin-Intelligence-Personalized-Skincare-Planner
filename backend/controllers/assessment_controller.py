@@ -8,7 +8,7 @@ from fastapi.encoders import jsonable_encoder
 
 from typing import Optional, Dict, Any
 
-async def analyze_and_save_assessment(file: UploadFile, current_user: Optional[Dict[str, Any]] = None):
+async def analyze_and_save_assessment(file: UploadFile, current_user: Optional[Dict[str, Any]] = None, gender: str = "Unisex"):
     # 1. Run ML Analysis
     try:
         ml_result = ml_service.analyze_uploaded_image(file)
@@ -24,8 +24,8 @@ async def analyze_and_save_assessment(file: UploadFile, current_user: Optional[D
     predicted_concern = analysis_data.get("skin_concerns", {}).get("prediction", "Normal")
     
     # 3. Generate Tailored Product Recommendations & Groq LLM 7-Day Routine
-    product_recs = recommendation_service.get_product_recommendations(predicted_type, predicted_concern)
-    weekly_routine = recommendation_service.generate_llm_routine(predicted_type, predicted_concern)
+    product_recs = recommendation_service.get_product_recommendations(predicted_type, predicted_concern, gender)
+    weekly_routine = recommendation_service.generate_llm_routine(predicted_type, predicted_concern, gender)
     
     user_id = current_user["id"] if current_user else "anonymous"
     

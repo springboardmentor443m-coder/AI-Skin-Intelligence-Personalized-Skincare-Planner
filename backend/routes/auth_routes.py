@@ -28,6 +28,7 @@ async def register_user(user_data: UserRegister):
         "full_name": user_data.full_name,
         "email": user_data.email.lower(),
         "password_hash": hashed_pwd,
+        "gender": user_data.gender or "Unisex",
         "created_at": datetime.utcnow()
     }
 
@@ -41,6 +42,7 @@ async def register_user(user_data: UserRegister):
         id=user_id,
         full_name=user_data.full_name,
         email=user_data.email.lower(),
+        gender=user_doc["gender"],
         created_at=user_doc["created_at"]
     )
 
@@ -67,6 +69,7 @@ async def login_user(credentials: UserLogin):
         id=user_id,
         full_name=user_doc["full_name"],
         email=user_doc["email"],
+        gender=user_doc.get("gender", "Unisex"),
         created_at=user_doc.get("created_at", datetime.utcnow())
     )
 
@@ -81,6 +84,7 @@ async def get_current_user_profile(current_user: Dict[str, Any] = Depends(requir
         id=current_user["id"],
         full_name=current_user["full_name"],
         email=current_user["email"],
+        gender=current_user.get("gender", "Unisex"),
         created_at=current_user.get("created_at", datetime.utcnow())
     )
 
