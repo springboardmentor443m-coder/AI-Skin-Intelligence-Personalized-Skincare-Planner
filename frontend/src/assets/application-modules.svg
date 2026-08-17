@@ -1,0 +1,76 @@
+<svg viewBox="0 0 1000 550" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#495057"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="550" fill="#fafafa"/>
+  <text x="500" y="28" text-anchor="middle" font-size="22" font-weight="700" fill="#1a1a1a">Application Modules — Feature Map</text>
+
+  <!-- Authentication -->
+  <rect x="400" y="45" width="200" height="45" rx="12" fill="#ffe0ec" stroke="#d6336c" stroke-width="2"/>
+  <text x="500" y="72" text-anchor="middle" font-size="15" fill="#1a1a1a">Authentication</text>
+  <line x1="500" y1="90" x2="500" y2="112" stroke="#495057" stroke-width="2" marker-end="url(#arrow3)"/>
+
+  <!-- Dashboard hub -->
+  <rect x="380" y="114" width="240" height="55" rx="14" fill="#495057" stroke="#212529" stroke-width="2"/>
+  <text x="500" y="147" text-anchor="middle" font-size="17" fill="#ffffff">Dashboard</text>
+
+  <!-- bus line -->
+  <line x1="500" y1="169" x2="500" y2="195" stroke="#495057" stroke-width="2"/>
+  <line x1="180" y1="195" x2="820" y2="195" stroke="#495057" stroke-width="2"/>
+  <line x1="180" y1="195" x2="180" y2="225" stroke="#495057" stroke-width="2" marker-end="url(#arrow3)"/>
+  <line x1="500" y1="195" x2="500" y2="225" stroke="#495057" stroke-width="2" marker-end="url(#arrow3)"/>
+  <line x1="820" y1="195" x2="820" y2="225" stroke="#495057" stroke-width="2" marker-end="url(#arrow3)"/>
+
+  <!-- Row 0 -->
+  <rect x="40" y="225" width="280" height="65" rx="12" fill="#ffe0ec" stroke="#d6336c" stroke-width="2"/>
+  <text x="180" y="252" text-anchor="middle" font-size="13" fill="#1a1a1a">Skin Scanner</text>
+  <text x="180" y="272" text-anchor="middle" font-size="11" fill="#495057">Upload / Live Webcam</text>
+
+  <rect x="360" y="225" width="280" height="65" rx="12" fill="#e0f0ff" stroke="#1971c2" stroke-width="2"/>
+  <text x="500" y="252" text-anchor="middle" font-size="13" fill="#1a1a1a">Diagnostic Concern Analysis</text>
+  <text x="500" y="272" text-anchor="middle" font-size="11" fill="#495057">Primary condition detection</text>
+
+  <rect x="680" y="225" width="280" height="65" rx="12" fill="#e0f0ff" stroke="#1971c2" stroke-width="2"/>
+  <text x="820" y="252" text-anchor="middle" font-size="13" fill="#1a1a1a">Six-Class Probability</text>
+  <text x="820" y="272" text-anchor="middle" font-size="11" fill="#495057">Distribution view</text>
+
+  <!-- connectors row0->row1 -->
+  <line x1="180" y1="290" x2="180" y2="315" stroke="#495057" stroke-width="2" marker-end="url(#arrow3)"/>
+  <line x1="500" y1="290" x2="500" y2="315" stroke="#495057" stroke-width="2" marker-end="url(#arrow3)"/>
+  <line x1="820" y1="290" x2="820" y2="315" stroke="#495057" stroke-width="2" marker-end="url(#arrow3)"/>
+
+  <!-- Row 1 -->
+  <rect x="40" y="317" width="280" height="65" rx="12" fill="#d3f9d8" stroke="#2f9e44" stroke-width="2"/>
+  <text x="180" y="344" text-anchor="middle" font-size="13" fill="#1a1a1a">TF-IDF Recommendations</text>
+  <text x="180" y="364" text-anchor="middle" font-size="11" fill="#495057">Matched skincare products</text>
+
+  <rect x="360" y="317" width="280" height="65" rx="12" fill="#d3f9d8" stroke="#2f9e44" stroke-width="2"/>
+  <text x="500" y="344" text-anchor="middle" font-size="13" fill="#1a1a1a">7-Day Routine Planner</text>
+  <text x="500" y="364" text-anchor="middle" font-size="11" fill="#495057">Groq-generated AM/PM plan</text>
+
+  <rect x="680" y="317" width="280" height="65" rx="12" fill="#ffe8cc" stroke="#e8590c" stroke-width="2"/>
+  <text x="820" y="344" text-anchor="middle" font-size="13" fill="#1a1a1a">Skin Analytics &amp; Radar</text>
+  <text x="820" y="364" text-anchor="middle" font-size="11" fill="#495057">Recharts visual breakdown</text>
+
+  <!-- connectors row1->row2 -->
+  <line x1="180" y1="382" x2="180" y2="407" stroke="#495057" stroke-width="2" marker-end="url(#arrow3)"/>
+  <line x1="500" y1="382" x2="500" y2="407" stroke="#495057" stroke-width="2" marker-end="url(#arrow3)"/>
+  <line x1="820" y1="382" x2="820" y2="407" stroke="#495057" stroke-width="2" marker-end="url(#arrow3)"/>
+
+  <!-- Row 2 -->
+  <rect x="40" y="409" width="280" height="65" rx="12" fill="#ffe8cc" stroke="#e8590c" stroke-width="2"/>
+  <text x="180" y="436" text-anchor="middle" font-size="13" fill="#1a1a1a">Before vs Latest Comparison</text>
+  <text x="180" y="456" text-anchor="middle" font-size="11" fill="#495057">Dual-profile radar overlay</text>
+
+  <rect x="360" y="409" width="280" height="65" rx="12" fill="#e5dbff" stroke="#7048e8" stroke-width="2"/>
+  <text x="500" y="436" text-anchor="middle" font-size="13" fill="#1a1a1a">Scan History</text>
+  <text x="500" y="456" text-anchor="middle" font-size="11" fill="#495057">Chronological log + thumbnails</text>
+
+  <rect x="680" y="409" width="280" height="65" rx="12" fill="#fff9db" stroke="#f08c00" stroke-width="2"/>
+  <text x="820" y="436" text-anchor="middle" font-size="13" fill="#1a1a1a">GlowAI Virtual Assistant</text>
+  <text x="820" y="456" text-anchor="middle" font-size="11" fill="#495057">Real-time skincare guidance</text>
+
+</svg>

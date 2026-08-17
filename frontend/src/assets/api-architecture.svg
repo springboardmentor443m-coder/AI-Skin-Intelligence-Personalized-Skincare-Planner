@@ -1,0 +1,90 @@
+<svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#495057"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="520" fill="#fafafa"/>
+  <text x="500" y="28" text-anchor="middle" font-size="22" font-weight="700" fill="#1a1a1a">Backend API Architecture (app.py)</text>
+
+  <!-- Root -->
+  <rect x="400" y="40" width="200" height="46" rx="12" fill="#495057" stroke="#212529" stroke-width="2"/>
+  <text x="500" y="68" text-anchor="middle" font-size="16" fill="#ffffff">app.py</text>
+
+  <!-- Connector lines from root to each title -->
+  <line x1="500" y1="86" x2="120" y2="110" stroke="#495057" stroke-width="2"/>
+  <line x1="500" y1="86" x2="310" y2="110" stroke="#495057" stroke-width="2"/>
+  <line x1="500" y1="86" x2="500" y2="110" stroke="#495057" stroke-width="2"/>
+  <line x1="500" y1="86" x2="690" y2="110" stroke="#495057" stroke-width="2"/>
+  <line x1="500" y1="86" x2="880" y2="110" stroke="#495057" stroke-width="2"/>
+
+  <!-- COLUMN 0: Authentication -->
+  <rect x="35" y="110" width="170" height="40" rx="10" fill="#ffe0ec" stroke="#d6336c" stroke-width="2"/>
+  <text x="120" y="135" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a">Authentication Router</text>
+  <line x1="120" y1="150" x2="120" y2="168" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="35" y="170" width="170" height="45" rx="8" fill="#ffffff" stroke="#868e96" stroke-width="1.5"/>
+  <text x="120" y="197" text-anchor="middle" font-size="11" fill="#1a1a1a">POST /api/auth/register</text>
+  <line x1="120" y1="215" x2="120" y2="228" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="35" y="230" width="170" height="45" rx="8" fill="#ffffff" stroke="#868e96" stroke-width="1.5"/>
+  <text x="120" y="257" text-anchor="middle" font-size="11" fill="#1a1a1a">POST /api/auth/login</text>
+
+  <!-- COLUMN 1: Skin Analysis -->
+  <rect x="225" y="110" width="170" height="40" rx="10" fill="#e0f0ff" stroke="#1971c2" stroke-width="2"/>
+  <text x="310" y="135" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a">Skin Analysis Pipeline</text>
+  <line x1="310" y1="150" x2="310" y2="168" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="225" y="170" width="170" height="45" rx="8" fill="#ffffff" stroke="#868e96" stroke-width="1.5"/>
+  <text x="310" y="197" text-anchor="middle" font-size="11" fill="#1a1a1a">POST /api/analyze-skin</text>
+  <line x1="310" y1="215" x2="310" y2="228" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="225" y="230" width="170" height="45" rx="8" fill="#d3f9d8" stroke="#2f9e44" stroke-width="1.5"/>
+  <text x="310" y="257" text-anchor="middle" font-size="11" fill="#1a1a1a">MobileNetV2 CNN Model</text>
+  <line x1="310" y1="275" x2="310" y2="288" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="225" y="290" width="170" height="45" rx="8" fill="#d3f9d8" stroke="#2f9e44" stroke-width="1.5"/>
+  <text x="310" y="317" text-anchor="middle" font-size="11" fill="#1a1a1a">TF-IDF Recommender</text>
+  <line x1="310" y1="335" x2="310" y2="348" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="225" y="350" width="170" height="45" rx="8" fill="#d3f9d8" stroke="#2f9e44" stroke-width="1.5"/>
+  <text x="310" y="377" text-anchor="middle" font-size="11" fill="#1a1a1a">Groq → 7-Day Routine</text>
+  <line x1="310" y1="395" x2="310" y2="408" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="225" y="410" width="170" height="45" rx="8" fill="#e5dbff" stroke="#7048e8" stroke-width="1.5"/>
+  <text x="310" y="437" text-anchor="middle" font-size="11" fill="#1a1a1a">Save Scan → MongoDB</text>
+
+  <!-- COLUMN 2: History -->
+  <rect x="415" y="110" width="170" height="40" rx="10" fill="#e6fcf5" stroke="#0ca678" stroke-width="2"/>
+  <text x="500" y="135" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a">History Pipeline</text>
+  <line x1="500" y1="150" x2="500" y2="168" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="415" y="170" width="170" height="45" rx="8" fill="#ffffff" stroke="#868e96" stroke-width="1.5"/>
+  <text x="500" y="197" text-anchor="middle" font-size="11" fill="#1a1a1a">GET /api/scan-history</text>
+  <line x1="500" y1="215" x2="500" y2="228" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="415" y="230" width="170" height="45" rx="8" fill="#ffffff" stroke="#868e96" stroke-width="1.5"/>
+  <text x="500" y="257" text-anchor="middle" font-size="11" fill="#1a1a1a">DELETE /api/scan-history</text>
+  <line x1="500" y1="275" x2="500" y2="288" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="415" y="290" width="170" height="45" rx="8" fill="#ffffff" stroke="#868e96" stroke-width="1.5"/>
+  <text x="500" y="317" text-anchor="middle" font-size="11" fill="#1a1a1a">MongoDB Motor Async</text>
+
+  <!-- COLUMN 3: Comparison -->
+  <rect x="605" y="110" width="170" height="40" rx="10" fill="#ffe8cc" stroke="#e8590c" stroke-width="2"/>
+  <text x="690" y="135" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a">Comparison Pipeline</text>
+  <line x1="690" y1="150" x2="690" y2="168" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="605" y="170" width="170" height="45" rx="8" fill="#ffffff" stroke="#868e96" stroke-width="1.5"/>
+  <text x="690" y="197" text-anchor="middle" font-size="11" fill="#1a1a1a">GET /api/comparison</text>
+  <line x1="690" y1="215" x2="690" y2="228" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="605" y="230" width="170" height="45" rx="8" fill="#ffffff" stroke="#868e96" stroke-width="1.5"/>
+  <text x="690" y="257" text-anchor="middle" font-size="11" fill="#1a1a1a">Fetch Last 2 Scans</text>
+  <line x1="690" y1="275" x2="690" y2="288" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="605" y="290" width="170" height="45" rx="8" fill="#ffffff" stroke="#868e96" stroke-width="1.5"/>
+  <text x="690" y="317" text-anchor="middle" font-size="11" fill="#1a1a1a">Compute Prob. Deltas</text>
+  <line x1="690" y1="335" x2="690" y2="348" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="605" y="350" width="170" height="45" rx="8" fill="#ffe8cc" stroke="#e8590c" stroke-width="1.5"/>
+  <text x="690" y="377" text-anchor="middle" font-size="11" fill="#1a1a1a">Groq Progress Report</text>
+
+  <!-- COLUMN 4: GlowAI -->
+  <rect x="795" y="110" width="170" height="40" rx="10" fill="#fff9db" stroke="#f08c00" stroke-width="2"/>
+  <text x="880" y="135" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a">GlowAI Chatbot Pipeline</text>
+  <line x1="880" y1="150" x2="880" y2="168" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="795" y="170" width="170" height="45" rx="8" fill="#ffffff" stroke="#868e96" stroke-width="1.5"/>
+  <text x="880" y="197" text-anchor="middle" font-size="11" fill="#1a1a1a">GET /api/chat/greeting</text>
+  <line x1="880" y1="215" x2="880" y2="228" stroke="#495057" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <rect x="795" y="230" width="170" height="45" rx="8" fill="#ffffff" stroke="#868e96" stroke-width="1.5"/>
+  <text x="880" y="257" text-anchor="middle" font-size="11" fill="#1a1a1a">POST /api/chat</text>
+
+</svg>

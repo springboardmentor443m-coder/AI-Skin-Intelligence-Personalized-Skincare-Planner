@@ -1,0 +1,112 @@
+<svg viewBox="0 0 1000 1400" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#495057"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="1400" fill="#fafafa"/>
+
+  <!-- Title -->
+  <text x="500" y="45" text-anchor="middle" font-size="26" font-weight="700" fill="#1a1a1a">AI Skin Intelligence — Application Workflow</text>
+
+  <!-- 1. Upload -->
+  <rect x="350" y="80" width="300" height="60" rx="14" fill="#ffe0ec" stroke="#d6336c" stroke-width="2"/>
+  <text x="500" y="116" text-anchor="middle" font-size="17" fill="#1a1a1a">📷 Upload / Capture Facial Image</text>
+  <line x1="500" y1="140" x2="500" y2="172" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 2. Preprocessing -->
+  <rect x="325" y="174" width="350" height="60" rx="14" fill="#ffffff" stroke="#868e96" stroke-width="2"/>
+  <text x="500" y="210" text-anchor="middle" font-size="17" fill="#1a1a1a">Image Preprocessing (224×224 RGB Normalization)</text>
+  <line x1="500" y1="234" x2="500" y2="266" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 3. CNN Model -->
+  <rect x="325" y="268" width="350" height="60" rx="14" fill="#e0f0ff" stroke="#1971c2" stroke-width="2"/>
+  <text x="500" y="304" text-anchor="middle" font-size="17" fill="#1a1a1a">MobileNetV2 CNN Model</text>
+  <line x1="500" y1="328" x2="500" y2="360" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 4. Probability Distribution -->
+  <rect x="300" y="362" width="400" height="60" rx="14" fill="#e0f0ff" stroke="#1971c2" stroke-width="2"/>
+  <text x="500" y="398" text-anchor="middle" font-size="17" fill="#1a1a1a">Six-Class Probability Distribution</text>
+  <line x1="500" y1="422" x2="500" y2="454" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 5. Primary Concern -->
+  <rect x="325" y="456" width="350" height="60" rx="14" fill="#fff3bf" stroke="#f08c00" stroke-width="2"/>
+  <text x="500" y="492" text-anchor="middle" font-size="17" fill="#1a1a1a">Primary Skin Concern Identified</text>
+
+  <!-- Branch lines down to two boxes -->
+  <line x1="500" y1="516" x2="500" y2="540" stroke="#495057" stroke-width="2"/>
+  <line x1="270" y1="540" x2="730" y2="540" stroke="#495057" stroke-width="2"/>
+  <line x1="270" y1="540" x2="270" y2="572" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="730" y1="540" x2="730" y2="572" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Group container: single API call -->
+  <rect x="130" y="560" width="740" height="200" rx="16" fill="none" stroke="#7048e8" stroke-width="2" stroke-dasharray="8,6"/>
+  <text x="150" y="588" font-size="14" fill="#7048e8" font-weight="600">Single API Call — POST /api/analyze-skin</text>
+
+  <!-- 6a. Recommendation Engine -->
+  <rect x="150" y="600" width="340" height="70" rx="14" fill="#d3f9d8" stroke="#2f9e44" stroke-width="2"/>
+  <text x="320" y="628" text-anchor="middle" font-size="16" fill="#1a1a1a">TF-IDF + Cosine Similarity</text>
+  <text x="320" y="650" text-anchor="middle" font-size="16" fill="#1a1a1a">Recommendation Engine</text>
+  <line x1="320" y1="670" x2="320" y2="700" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="150" y="702" width="340" height="50" rx="14" fill="#d3f9d8" stroke="#2f9e44" stroke-width="2"/>
+  <text x="320" y="732" text-anchor="middle" font-size="16" fill="#1a1a1a">Top 5 Matched Products</text>
+
+  <!-- 6b. Groq Routine -->
+  <rect x="510" y="600" width="340" height="70" rx="14" fill="#d3f9d8" stroke="#2f9e44" stroke-width="2"/>
+  <text x="680" y="628" text-anchor="middle" font-size="16" fill="#1a1a1a">Groq LLM</text>
+  <text x="680" y="650" text-anchor="middle" font-size="16" fill="#1a1a1a">(openai/gpt-oss-120b)</text>
+  <line x1="680" y1="670" x2="680" y2="700" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="510" y="702" width="340" height="50" rx="14" fill="#d3f9d8" stroke="#2f9e44" stroke-width="2"/>
+  <text x="680" y="732" text-anchor="middle" font-size="16" fill="#1a1a1a">7-Day AM/PM Skincare Routine</text>
+
+  <!-- Converge to DB -->
+  <line x1="320" y1="752" x2="320" y2="790" stroke="#495057" stroke-width="2"/>
+  <line x1="680" y1="752" x2="680" y2="790" stroke="#495057" stroke-width="2"/>
+  <line x1="320" y1="790" x2="680" y2="790" stroke="#495057" stroke-width="2"/>
+  <line x1="500" y1="790" x2="500" y2="812" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 7. MongoDB -->
+  <rect x="325" y="814" width="350" height="60" rx="14" fill="#e5dbff" stroke="#7048e8" stroke-width="2"/>
+  <text x="500" y="850" text-anchor="middle" font-size="17" fill="#1a1a1a">💾 Save Scan to MongoDB</text>
+  <line x1="500" y1="874" x2="500" y2="906" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 8. Decision diamond -->
+  <polygon points="500,908 620,968 500,1028 380,968" fill="#fff9db" stroke="#f08c00" stroke-width="2"/>
+  <text x="500" y="962" text-anchor="middle" font-size="15" fill="#1a1a1a">Two or More</text>
+  <text x="500" y="982" text-anchor="middle" font-size="15" fill="#1a1a1a">Scans?</text>
+
+  <!-- No branch -->
+  <line x1="380" y1="968" x2="230" y2="968" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="305" y="956" text-anchor="middle" font-size="13" fill="#495057">No</text>
+  <rect x="60" y="938" width="170" height="60" rx="14" fill="#ffffff" stroke="#868e96" stroke-width="2"/>
+  <text x="145" y="974" text-anchor="middle" font-size="15" fill="#1a1a1a">Await Next Scan</text>
+
+  <!-- Yes branch -->
+  <line x1="500" y1="1028" x2="500" y2="1060" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="520" y="1048" font-size="13" fill="#495057">Yes</text>
+
+  <!-- 9. Fetch previous vs latest -->
+  <rect x="300" y="1062" width="400" height="60" rx="14" fill="#ffffff" stroke="#868e96" stroke-width="2"/>
+  <text x="500" y="1098" text-anchor="middle" font-size="16" fill="#1a1a1a">Fetch Previous vs Latest Scan</text>
+  <line x1="500" y1="1122" x2="500" y2="1154" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 10. Compute deltas -->
+  <rect x="275" y="1156" width="450" height="60" rx="14" fill="#ffffff" stroke="#868e96" stroke-width="2"/>
+  <text x="500" y="1192" text-anchor="middle" font-size="16" fill="#1a1a1a">Compute 6-Class Probability Deltas</text>
+
+  <!-- Branch to radar + report -->
+  <line x1="500" y1="1216" x2="500" y2="1240" stroke="#495057" stroke-width="2"/>
+  <line x1="290" y1="1240" x2="710" y2="1240" stroke="#495057" stroke-width="2"/>
+  <line x1="290" y1="1240" x2="290" y2="1272" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="710" y1="1240" x2="710" y2="1272" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="130" y="1274" width="320" height="70" rx="14" fill="#ffe8cc" stroke="#e8590c" stroke-width="2"/>
+  <text x="290" y="1304" text-anchor="middle" font-size="16" fill="#1a1a1a">Dual-Profile Radar</text>
+  <text x="290" y="1326" text-anchor="middle" font-size="16" fill="#1a1a1a">Visualization (SVG)</text>
+
+  <rect x="550" y="1274" width="320" height="70" rx="14" fill="#ffe8cc" stroke="#e8590c" stroke-width="2"/>
+  <text x="710" y="1304" text-anchor="middle" font-size="16" fill="#1a1a1a">Groq AI Progress</text>
+  <text x="710" y="1326" text-anchor="middle" font-size="16" fill="#1a1a1a">Analysis Report</text>
+
+</svg>
