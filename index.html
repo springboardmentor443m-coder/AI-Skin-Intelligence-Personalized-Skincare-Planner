@@ -10,27 +10,27 @@
 <style>
 /* ============ DESIGN TOKENS ============ */
 :root{
-  --bg:#F6F3EC;
+  --bg:#F3F6FA;
   --surface:#FFFFFF;
-  --surface-sunk:#F0ECE2;
-  --ink:#182420;
-  --ink-soft:#5B6A62;
-  --ink-faint:#8B968E;
-  --line:#E4DDCB;
-  --primary:#1F6F5C;
-  --primary-dark:#134A3D;
-  --primary-tint:#E4EFEA;
-  --gold:#C99A4A;
-  --gold-tint:#F6ECD8;
-  --danger:#B4483B;
-  --danger-tint:#F7E7E3;
+  --surface-sunk:#EAF0F5;
+  --ink:#0F2027;
+  --ink-soft:#48606B;
+  --ink-faint:#8CA0AB;
+  --line:#DCE6EC;
+  --primary:#0B7B76;
+  --primary-dark:#075450;
+  --primary-tint:#E2F3F1;
+  --gold:#C68A2E;
+  --gold-tint:#FBF0DC;
+  --danger:#C0392B;
+  --danger-tint:#FBEAE7;
   --font-display:'Fraunces', serif;
   --font-body:'Inter', sans-serif;
   --font-mono:'IBM Plex Mono', monospace;
   --radius-s:8px;
   --radius-m:14px;
   --radius-l:22px;
-  --shadow-card: 0 1px 2px rgba(24,36,32,0.04), 0 8px 24px -12px rgba(24,36,32,0.12);
+  --shadow-card: 0 1px 2px rgba(15,32,39,0.05), 0 10px 28px -14px rgba(15,32,39,0.16);
 }
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -202,6 +202,39 @@ button{font-family:var(--font-body);}
   font-size:14px; font-family:var(--font-body); background:var(--surface-sunk); color:var(--ink);
 }
 .field input:focus{ background:var(--surface); border-color:var(--primary); }
+.field select{
+  width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:var(--radius-s);
+  font-size:14px; font-family:var(--font-body); background:var(--surface-sunk); color:var(--ink);
+}
+.field select:focus{ background:var(--surface); border-color:var(--primary); }
+
+/* ============ 7-DAY PLAN WITH CHECKBOXES ============ */
+.plan-day-card{ border:1px solid var(--line); border-radius:var(--radius-s); margin-bottom:14px; overflow:hidden; }
+.plan-day-head{ padding:12px 16px; background:var(--surface-sunk); font-weight:700; font-size:14px; display:flex; justify-content:space-between; align-items:center; }
+.plan-day-tip{ padding:10px 16px; font-size:12.5px; color:var(--ink-soft); font-style:italic; border-bottom:1px solid var(--line); }
+.plan-block{ padding:12px 16px; }
+.plan-block-label{ font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin-bottom:8px; }
+.plan-task{ display:flex; align-items:flex-start; gap:9px; padding:6px 0; font-size:13.5px; }
+.plan-task input[type="checkbox"]{ margin-top:3px; width:16px; height:16px; accent-color:var(--primary); cursor:pointer; }
+.plan-task label{ cursor:pointer; }
+.plan-task.done label{ text-decoration:line-through; color:var(--muted); }
+.plan-progress{ font-size:12.5px; color:var(--ink-soft); margin-bottom:16px; }
+.toggle-btn{
+  padding:9px 16px; border:1.5px solid var(--line); border-radius:var(--radius-s);
+  background:var(--surface); color:var(--ink-soft); font-size:13px; font-weight:600;
+  font-family:var(--font-body); cursor:pointer; transition:.15s;
+}
+.toggle-btn.active{ border-color:var(--primary); background:var(--primary); color:#fff; }
+.natural-note{ font-size:12px; color:var(--ink-soft); font-style:italic; margin:10px 0 16px; padding:10px 12px; background:var(--surface-sunk); border-radius:var(--radius-s); }
+
+/* ============ COMBINED PLAN CHAT ============ */
+.plan-chat-box{ border:1px solid var(--line); border-radius:var(--radius-s); margin-top:20px; }
+.plan-chat-log{ max-height:260px; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px; }
+.plan-chat-msg{ font-size:13.5px; padding:9px 12px; border-radius:10px; max-width:85%; }
+.plan-chat-msg.user{ align-self:flex-end; background:var(--primary); color:#fff; }
+.plan-chat-msg.assistant{ align-self:flex-start; background:var(--surface-sunk); }
+.plan-chat-row{ display:flex; gap:8px; padding:12px; border-top:1px solid var(--line); }
+.plan-chat-row input{ flex:1; padding:9px 12px; border:1px solid var(--line); border-radius:var(--radius-s); font-size:13.5px; }
 .auth-error{ background:var(--danger-tint); color:var(--danger); font-size:13px; padding:10px 12px; border-radius:var(--radius-s); margin-bottom:14px; display:none; }
 .auth-error.show{ display:block; }
 .auth-foot-note{ text-align:center; font-size:12.5px; color:var(--ink-faint); margin-top:16px; }
@@ -250,7 +283,7 @@ button{font-family:var(--font-body);}
 .stat-card .v{ font-family:var(--font-mono); font-size:28px; margin-top:8px; color:var(--ink); }
 .badge{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; padding:5px 11px; border-radius:999px; }
 .badge-primary{ background:var(--primary-tint); color:var(--primary-dark); }
-.badge-gold{ background:var(--gold-tint); color:#7A5A20; }
+.badge-gold{ background:var(--gold-tint); color:#7A4E12; }
 .badge-muted{ background:var(--surface-sunk); color:var(--ink-soft); }
 
 .quick-actions{ display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:14px; margin-top:22px; }
@@ -315,7 +348,7 @@ tr:last-child td{ border-bottom:none; }
 .msg.user .bubble a{ color:#fff; }
 .bubble img.thumb{ width:100%; max-width:200px; border-radius:10px; margin-bottom:8px; display:block; }
 .bubble .src-badge{ display:inline-block; margin-top:10px; font-family:var(--font-mono); font-size:10.5px; padding:3px 9px; border-radius:999px; background:var(--primary-tint); color:var(--primary-dark); }
-.bubble .src-badge.fallback{ background:var(--gold-tint); color:#7A5A20; }
+.bubble .src-badge.fallback{ background:var(--gold-tint); color:#7A4E12; }
 .chat-empty{ margin:auto; text-align:center; color:var(--ink-faint); font-size:13.5px; max-width:34ch; }
 .chat-empty .ring-loader{ margin-bottom:14px; opacity:0.5; animation:none; }
 .chat-empty .ring-loader .r1,.chat-empty .ring-loader .r2,.chat-empty .ring-loader .r3{ animation:none; }
@@ -378,7 +411,7 @@ tr:last-child td{ border-bottom:none; }
 <div id="landing">
   <nav class="nav">
     <div class="nav-inner">
-      <div class="brand"><span class="ring-mark"><svg width="26" height="26" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="none" stroke="#1F6F5C" stroke-width="1.4"/><circle cx="13" cy="13" r="8" fill="none" stroke="#C99A4A" stroke-width="1.4"/><circle cx="13" cy="13" r="3.4" fill="#1F6F5C"/></svg></span>DermAI</div>
+      <div class="brand"><span class="ring-mark"><svg width="26" height="26" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="none" stroke="#0B7B76" stroke-width="1.4"/><circle cx="13" cy="13" r="8" fill="none" stroke="#C68A2E" stroke-width="1.4"/><circle cx="13" cy="13" r="3.4" fill="#0B7B76"/></svg></span>DermAI</div>
       <div class="nav-links">
         <a href="#how-it-works">How it works</a>
         <a href="#trust">Why it's reliable</a>
@@ -471,7 +504,7 @@ tr:last-child td{ border-bottom:none; }
 <!-- ============ APP SHELL ============ -->
 <div class="app" id="app">
   <div class="topbar">
-    <div class="brand"><span class="ring-mark"><svg width="24" height="24" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="none" stroke="#1F6F5C" stroke-width="1.4"/><circle cx="13" cy="13" r="8" fill="none" stroke="#C99A4A" stroke-width="1.4"/><circle cx="13" cy="13" r="3.4" fill="#1F6F5C"/></svg></span>DermAI</div>
+    <div class="brand"><span class="ring-mark"><svg width="24" height="24" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="none" stroke="#0B7B76" stroke-width="1.4"/><circle cx="13" cy="13" r="8" fill="none" stroke="#C68A2E" stroke-width="1.4"/><circle cx="13" cy="13" r="3.4" fill="#0B7B76"/></svg></span>DermAI</div>
     <div class="topbar-right">
       <div class="user-chip"><span class="user-avatar" id="userAvatar">·</span><span id="userEmailLabel"></span></div>
       <button class="btn btn-danger-ghost btn-sm" onclick="logout()">Log out</button>
@@ -480,6 +513,7 @@ tr:last-child td{ border-bottom:none; }
 
   <div class="sidebar">
     <button class="side-link active" data-view="dashboard" onclick="showView('dashboard')"><svg width="18" height="18"><use href="#ic-dash"/></svg>Dashboard</button>
+    <button class="side-link" data-view="profile" onclick="showView('profile')"><svg width="18" height="18"><use href="#ic-dash"/></svg>My Profile</button>
     <button class="side-link" data-view="scan" onclick="showView('scan')"><svg width="18" height="18"><use href="#ic-scan"/></svg>Scan image</button>
     <button class="side-link" data-view="routine" onclick="showView('routine')"><svg width="18" height="18"><use href="#ic-plan"/></svg>Routine plan</button>
     <button class="side-link" data-view="predict" onclick="showView('predict')"><svg width="18" height="18"><use href="#ic-predict"/></svg>Outcome predict</button>
@@ -519,6 +553,44 @@ tr:last-child td{ border-bottom:none; }
       </div>
     </div>
 
+    <!-- PROFILE -->
+    <div class="view" id="view-profile">
+      <div class="view-head"><h2>My profile</h2><p>This info personalizes your plan and lets the assistant flag ingredient conflicts.</p></div>
+      <div class="card">
+        <div class="field">
+          <label>Age group</label>
+          <select id="profAge">
+            <option value="">Select…</option>
+            <option value="under-18">Under 18</option>
+            <option value="18-24">18–24</option>
+            <option value="25-34">25–34</option>
+            <option value="35-44">35–44</option>
+            <option value="45+">45+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Skin type</label>
+          <select id="profSkinType">
+            <option value="normal">Normal</option>
+            <option value="oily">Oily</option>
+            <option value="dry">Dry</option>
+            <option value="combination">Combination</option>
+            <option value="sensitive">Sensitive</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Skin concerns (comma-separated, optional)</label>
+          <input type="text" id="profConcerns" placeholder="e.g. acne, redness">
+        </div>
+        <div class="field">
+          <label>Known allergies (comma-separated — checked against every plan/recommendation)</label>
+          <input type="text" id="profAllergies" placeholder="e.g. salicylic acid, fragrance">
+        </div>
+        <button class="btn btn-primary" id="profileSaveBtn" onclick="saveProfile()">Save profile</button>
+        <div id="profileSaveMsg" style="margin-top:10px; font-size:13px; color:var(--muted);"></div>
+      </div>
+    </div>
+
     <!-- SCAN -->
     <div class="view" id="view-scan">
       <div class="view-head"><h2>Scan a skin image</h2><p>Upload a clear, well-lit photo of the area you'd like analyzed.</p></div>
@@ -540,10 +612,26 @@ tr:last-child td{ border-bottom:none; }
 
     <!-- ROUTINE -->
     <div class="view" id="view-routine">
-      <div class="view-head"><h2>7-day routine plan</h2><p>Generated from your most recent scan result.</p></div>
+      <div class="view-head"><h2>7-day routine plan</h2><p>Generated from your most recent scan result. Check off tasks as you complete them.</p></div>
       <div class="card">
+        <div class="plan-type-toggle" style="margin-bottom:16px;">
+          <label style="display:block; font-size:12.5px; font-weight:600; color:var(--ink-soft); margin-bottom:8px;">Plan style</label>
+          <div style="display:flex; gap:10px;">
+            <button type="button" class="toggle-btn active" id="toggleMedical" onclick="setPlanType('medical')">Medical (active ingredients)</button>
+            <button type="button" class="toggle-btn" id="toggleNatural" onclick="setPlanType('natural')">Natural (home remedies)</button>
+          </div>
+        </div>
         <button class="btn btn-primary" id="routineBtn" onclick="runRoutine()">Generate 7-day plan</button>
         <div id="routineResult" style="margin-top:20px;"></div>
+
+        <div class="plan-chat-box hidden" id="planChatBox">
+          <div class="plan-block-label" style="padding:12px 14px 0;">Ask about this plan</div>
+          <div class="plan-chat-log" id="planChatLog"></div>
+          <div class="plan-chat-row">
+            <input type="text" id="planChatInput" placeholder="e.g. Why no retinol on Day 2?" onkeydown="if(event.key==='Enter') sendPlanChatMessage()">
+            <button class="btn btn-primary btn-sm" onclick="sendPlanChatMessage()">Ask</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -742,6 +830,8 @@ function showView(name){
   if(link) link.classList.add("active");
   if(name === "history") refreshHistory();
   if(name === "dashboard") refreshHistory();
+  if(name === "profile") loadProfile();
+  if(name === "routine") loadLatestPlanIfAny();
 }
 
 /* ============ API HELPER ============ */
@@ -982,21 +1072,158 @@ function sourceBadgeHtml(source){
   return `<span class="badge ${cls}" style="margin-bottom:14px; display:inline-block;">${label}</span>`;
 }
 
-/* ============ ROUTINE ============ */
+/* ============ ROUTINE (structured, with checkboxes) ============ */
+let currentPlan = null; // holds the last-loaded plan object, incl. plan_id
+let selectedPlanType = "medical";
+
+function setPlanType(type){
+  selectedPlanType = type;
+  document.getElementById("toggleMedical").classList.toggle("active", type === "medical");
+  document.getElementById("toggleNatural").classList.toggle("active", type === "natural");
+}
+
+function renderPlan(plan){
+  currentPlan = plan;
+  const out = document.getElementById("routineResult");
+  const badge = sourceBadgeHtml(plan.source);
+
+  const totalTasks = plan.days.reduce((n,d)=> n + d.morning.length + d.evening.length, 0);
+  const doneTasks = plan.days.reduce((n,d)=> n + [...d.morning,...d.evening].filter(t=>t.completed).length, 0);
+
+  let html = `<div>${badge}</div>`;
+  if(plan.plan_type === "natural"){
+    html += `<div class="natural-note">🌿 Natural remedy plan — gentler and slower-acting than active-ingredient treatments. Patch-test anything new on your inner arm before applying to your face, and give it a full week or two before judging results.</div>`;
+  }
+  if(plan.intro) html += `<p style="margin-bottom:14px;">${plan.intro}</p>`;
+  html += `<div class="plan-progress">${doneTasks} / ${totalTasks} tasks completed</div>`;
+
+  plan.days.forEach(day=>{
+    html += `<div class="plan-day-card">
+      <div class="plan-day-head">Day ${day.day}</div>
+      ${day.tip ? `<div class="plan-day-tip">${day.tip}</div>` : ""}
+      <div class="plan-block">
+        <div class="plan-block-label">Morning</div>
+        ${day.morning.map(t=>planTaskHtml(t)).join("")}
+      </div>
+      <div class="plan-block">
+        <div class="plan-block-label">Evening</div>
+        ${day.evening.map(t=>planTaskHtml(t)).join("")}
+      </div>
+    </div>`;
+  });
+
+  out.innerHTML = html;
+  document.getElementById("planChatBox").classList.remove("hidden");
+}
+
+function planTaskHtml(task){
+  return `<div class="plan-task ${task.completed ? "done" : ""}" id="task-row-${task.id}">
+    <input type="checkbox" id="task-${task.id}" ${task.completed ? "checked" : ""} onchange="toggleTask('${task.id}')">
+    <label for="task-${task.id}">${task.text}</label>
+  </div>`;
+}
+
+async function toggleTask(taskId){
+  if(!currentPlan) return;
+  const form = new URLSearchParams();
+  form.append("plan_id", currentPlan.plan_id);
+  form.append("task_id", taskId);
+  try{
+    const { ok, data } = await apiCall("/plan/task/toggle", { method:"POST", body: form });
+    if(!ok) return;
+    // update local state + UI without a full re-render
+    currentPlan.days.forEach(d=>{
+      [...d.morning, ...d.evening].forEach(t=>{ if(t.id === taskId) t.completed = data.completed; });
+    });
+    document.getElementById(`task-row-${taskId}`).classList.toggle("done", data.completed);
+    renderPlan(currentPlan); // re-render to refresh the progress counter
+  }catch(err){ toast("Couldn't save that — check your connection."); }
+}
+
 async function runRoutine(){
   const btn = document.getElementById("routineBtn");
   const out = document.getElementById("routineResult");
   btn.disabled = true; btn.textContent = "Generating…";
   out.innerHTML = `<div class="ring-loader"><svg viewBox="0 0 56 56" width="56" height="56"><circle class="r1" cx="28" cy="28" r="24"/><circle class="r2" cx="28" cy="28" r="16"/><circle class="r3" cx="28" cy="28" r="8"/></svg></div>`;
   try{
-    const { ok, data } = await apiCall("/assess-skin/7-day-plan", { method:"POST" });
-    if(!ok || !data.weekly_plan){ out.innerHTML = `Error: ${data.detail || "Run a scan first."}`; return; }
-    const badge = sourceBadgeHtml(data.source);
-    out.innerHTML = `<div>${badge}</div><div class="markdown-out">${typeof marked !== "undefined" ? marked.parse(data.weekly_plan) : data.weekly_plan}</div>`;
+    const form = new URLSearchParams();
+    form.append("plan_type", selectedPlanType);
+    const { ok, data } = await apiCall("/assess-skin/7-day-plan", { method:"POST", body: form });
+    if(!ok || !data.days){ out.innerHTML = `Error: ${data.detail || "Run a scan first."}`; return; }
+    renderPlan(data);
   }catch(err){
     out.innerHTML = `Network error: ${err.message}`;
   }finally{
     btn.disabled = false; btn.textContent = "Generate 7-day plan";
+  }
+}
+
+async function loadLatestPlanIfAny(){
+  try{
+    const { ok, data } = await apiCall("/plan/latest");
+    if(ok && data.days) renderPlan(data);
+  }catch(err){ /* no plan yet - fine, user hasn't generated one */ }
+}
+
+/* ============ COMBINED PLAN + CHAT ============ */
+function planChatBubble(role, text){
+  const log = document.getElementById("planChatLog");
+  const div = document.createElement("div");
+  div.className = `plan-chat-msg ${role}`;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+async function sendPlanChatMessage(){
+  const input = document.getElementById("planChatInput");
+  const question = input.value.trim();
+  if(!question) return;
+  planChatBubble("user", question);
+  input.value = "";
+
+  const form = new URLSearchParams();
+  form.append("question", question);
+  try{
+    const { ok, data } = await apiCall("/plan/chat", { method:"POST", body: form });
+    planChatBubble("assistant", ok ? data.answer : (data.detail || "Something went wrong."));
+  }catch(err){
+    planChatBubble("assistant", "Network error — is the server running?");
+  }
+}
+
+/* ============ PROFILE ============ */
+async function loadProfile(){
+  try{
+    const { ok, data } = await apiCall("/profile");
+    if(!ok) return;
+    document.getElementById("profAge").value = data.age_group || "";
+    document.getElementById("profSkinType").value = data.skin_type || "normal";
+    document.getElementById("profConcerns").value = (data.skin_concerns || []).join(", ");
+    document.getElementById("profAllergies").value = (data.allergies || []).join(", ");
+  }catch(err){ /* no profile yet - fine, defaults stay */ }
+}
+
+async function saveProfile(){
+  const btn = document.getElementById("profileSaveBtn");
+  const msg = document.getElementById("profileSaveMsg");
+  btn.disabled = true; btn.textContent = "Saving…";
+
+  const payload = {
+    age_group: document.getElementById("profAge").value,
+    skin_type: document.getElementById("profSkinType").value,
+    skin_concerns: document.getElementById("profConcerns").value.split(",").map(s=>s.trim()).filter(Boolean),
+    allergies: document.getElementById("profAllergies").value.split(",").map(s=>s.trim()).filter(Boolean),
+  };
+
+  try{
+    const { ok, data } = await apiCall("/profile", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload) });
+    msg.textContent = ok ? "Saved ✓" : (data.detail || "Couldn't save.");
+    if(ok) toast("Profile saved");
+  }catch(err){
+    msg.textContent = "Network error.";
+  }finally{
+    btn.disabled = false; btn.textContent = "Save profile";
   }
 }
 
