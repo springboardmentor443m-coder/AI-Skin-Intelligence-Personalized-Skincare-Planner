@@ -25,7 +25,7 @@ import Profile from "./pages/Profile";
  *
  *   Protected (require authentication):
  *     /dashboard          → Dashboard (with real history stats)
- *     /assessment         → Skin Assessment (upload + predict)
+ *     /assessment         → Skin Analysis (upload + predict)
  *     /history            → Assessment History list
  *     /history/:id        → Assessment Detail (single result)
  *     /recommendations/:id → Educational Recommendations

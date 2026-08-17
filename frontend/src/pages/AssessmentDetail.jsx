@@ -1,13 +1,16 @@
 /**
  * pages/AssessmentDetail.jsx — Single Assessment Detail
  * ========================================================
- * Phase 10: History Detail
+ * Phase 10+: History Detail (Improved)
  *
  * Shows the full results for a single saved assessment, including:
  *   - Top prediction, confidence, risk level
- *   - All 7 class probability bars
- *   - Link to educational recommendations
- *   - Medical disclaimer
+ *   - Uploaded image display
+ *   - All 7 class probability bars (with full condition names)
+ *   - Product recommendations
+ *   - Daily routine
+ *   - Dermatologist guidance
+ *   - AI disclaimer
  *
  * ⚠️ Results are AI-generated educational assessments — NOT medical diagnoses.
  */
@@ -16,20 +19,34 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Sparkles, LogOut, ArrowLeft, CheckCircle, AlertTriangle,
-  Star, Clock, Loader2,
+  ShoppingBag, Clock, Loader2, Info, MessageCircle,
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
-import { fetchAssessment } from "../services/api";
+import { fetchAssessment, getRecommendations } from "../services/api";
+import ProductCard from "../components/ProductCard";
+import DailyRoutine from "../components/DailyRoutine";
+import DermatologistGuidance from "../components/DermatologistGuidance";
+import ChatBot from "../components/ChatBot";
 
 // ── HAM10000 class metadata ────────────────────────────────────────────────────
 const CLASS_META = {
-  akiec: { label: "Actinic Keratoses / Intraepithelial Carcinoma", color: "#f59e0b" },
-  bcc:   { label: "Basal Cell Carcinoma",                          color: "#ef4444" },
-  bkl:   { label: "Benign Keratosis-like Lesions",                 color: "#10b981" },
-  df:    { label: "Dermatofibroma",                                color: "#3b82f6" },
-  mel:   { label: "Melanoma",                                      color: "#dc2626" },
-  nv:    { label: "Melanocytic Nevi",                              color: "#6366f1" },
-  vasc:  { label: "Vascular Lesions",                              color: "#8b5cf6" },
+  akiec: { label: "Actinic Keratoses / Intraepithelial Carcinoma", color: "#f59e0b", risk: "High" },
+  bcc:   { label: "Basal Cell Carcinoma",                          color: "#ef4444", risk: "High" },
+  bkl:   { label: "Benign Keratosis",                              color: "#10b981", risk: "Low"  },
+  df:    { label: "Dermatofibroma",                                color: "#3b82f6", risk: "Low"  },
+  mel:   { label: "Melanoma",                                      color: "#dc2626", risk: "High" },
+  nv:    { label: "Melanocytic Nevus",                             color: "#6366f1", risk: "Low"  },
+  vasc:  { label: "Vascular Lesions",                              color: "#8b5cf6", risk: "Low"  },
+};
+
+const CONDITION_DESCRIPTIONS = {
+  akiec: "Actinic Keratoses are rough, scaly patches caused by long-term sun exposure. They can progress to invasive skin cancer if untreated.",
+  bcc:   "Basal Cell Carcinoma is the most common form of skin cancer. It grows slowly and is highly treatable when caught early.",
+  bkl:   "Benign Keratosis includes seborrheic keratoses and similar non-cancerous growths. Generally harmless, but should be monitored.",
+  df:    "Dermatofibroma is a common benign skin growth, usually firm and small. It is typically harmless and doesn't require treatment.",
+  mel:   "Melanoma is a serious form of skin cancer that develops in the cells that give skin its color. Early detection is critical.",
+  nv:    "Melanocytic Nevi (moles) are common benign skin lesions. Most are harmless, but regular monitoring with the ABCDE rule is recommended.",
+  vasc:  "Vascular Lesions include angiomas and port-wine stains — benign blood vessel marks. Most are harmless but a dermatologist can advise.",
 };
 
 const RISK_STYLES = {
@@ -52,15 +69,33 @@ function AssessmentDetail() {
   const navigate  = useNavigate();
   const { id }    = useParams();
 
-  const [assessment, setAssessment] = useState(null);
-  const [loading, setLoading]       = useState(true);
-  const [error, setError]           = useState("");
+  const [assessment, setAssessment]       = useState(null);
+  const [loading, setLoading]             = useState(true);
+  const [error, setError]                 = useState("");
+  const [recommendations, setRecommendations] = useState(null);
+  const [recLoading, setRecLoading]       = useState(false);
 
   useEffect(() => {
     async function load() {
       try {
         const data = await fetchAssessment(Number(id), token);
         setAssessment(data);
+
+        // Non-blocking: fetch recommendations after assessment loads
+        setRecLoading(true);
+        getRecommendations(
+          {
+            predicted_class:       data.predicted_class,
+            risk_level:            data.risk_level,
+            has_previous_analysis: false,
+            language:              "en",
+          },
+          token,
+        )
+          .then(rec => setRecommendations(rec))
+          .catch(() => setRecommendations(null))
+          .finally(() => setRecLoading(false));
+
       } catch (err) {
         const msg = err?.detail === "Assessment not found."
           ? "Assessment not found or you do not have access to it."
@@ -86,12 +121,16 @@ function AssessmentDetail() {
     ? Object.entries(assessment.all_scores).sort(([, a], [, b]) => b - a)
     : [];
 
+  const conditionDescription = assessment
+    ? (CONDITION_DESCRIPTIONS[assessment.predicted_class] ?? "")
+    : "";
+
   return (
     <div className="min-h-screen bg-gray-50">
 
       {/* ── Nav ──────────────────────────────────────────────────────────── */}
       <nav className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <Sparkles size={22} className="text-blue-600" />
             <span className="text-lg font-bold text-gray-900">AI Skin Intelligence</span>
@@ -111,7 +150,7 @@ function AssessmentDetail() {
       </nav>
 
       {/* ── Main ─────────────────────────────────────────────────────────── */}
-      <main className="max-w-4xl mx-auto px-6 py-10">
+      <main className="max-w-5xl mx-auto px-6 py-10">
 
         <Link
           to="/history"
@@ -144,7 +183,7 @@ function AssessmentDetail() {
           <>
             {/* Page header */}
             <div className="mb-6">
-              <h1 className="text-2xl font-bold text-gray-900">Assessment Details</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Analysis Details</h1>
               <div className="flex items-center gap-2 text-sm text-gray-400 mt-1">
                 <Clock size={13} />
                 {formatDate(assessment.created_at)}
@@ -153,29 +192,22 @@ function AssessmentDetail() {
               </div>
             </div>
 
-            {/* Medical disclaimer */}
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex gap-3">
-              <AlertTriangle size={18} className="text-amber-600 shrink-0 mt-0.5" />
-              <p className="text-xs text-amber-700 leading-relaxed">
-                <strong>Educational & Research Use Only.</strong>{" "}
-                This AI assessment is NOT a medical diagnosis and must NOT be used for clinical decisions.
-                Always consult a qualified dermatologist or healthcare professional.
+            {/* ── Section 1: AI Analysis Result ──────────────────────────── */}
+            <section className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+              <p className="text-xs font-bold uppercase tracking-wide text-gray-400 mb-4">
+                AI Analysis Result
               </p>
-            </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-              {/* ── Top prediction ─────────────────────────────────────── */}
-              <div className="flex flex-col gap-4">
-
-                <div className={`bg-white rounded-2xl border p-6 border ${riskStyle.card}`}>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">
-                    Top Prediction
-                  </p>
-
+                {/* Top prediction card */}
+                <div className={`rounded-xl border p-5 ${riskStyle.card}`}>
                   <div className="flex items-start gap-3">
                     <CheckCircle size={22} className={`${riskStyle.icon} shrink-0 mt-0.5`} />
                     <div className="flex-1">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-0.5">
+                        Predicted Condition
+                      </p>
                       <p className="font-bold text-gray-900 text-lg leading-tight">
                         {assessment.predicted_label}
                       </p>
@@ -191,7 +223,7 @@ function AssessmentDetail() {
                             {(assessment.confidence * 100).toFixed(1)}%
                           </span>
                         </div>
-                        <div className="bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                        <div className="bg-white/60 rounded-full h-2.5 overflow-hidden">
                           <div
                             className={`h-2.5 rounded-full ${riskStyle.bar} transition-all`}
                             style={{ width: `${(assessment.confidence * 100).toFixed(1)}%` }}
@@ -199,7 +231,7 @@ function AssessmentDetail() {
                         </div>
                       </div>
 
-                      {/* Risk level */}
+                      {/* Risk badge */}
                       <div className="mt-3 flex items-center gap-2">
                         <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${riskStyle.badge}`}>
                           {riskLevel} Risk
@@ -208,83 +240,181 @@ function AssessmentDetail() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Condition description */}
+                  {conditionDescription && (
+                    <div className="mt-4 pt-4 border-t border-white/50 flex items-start gap-2">
+                      <Info size={13} className="text-gray-400 shrink-0 mt-0.5" />
+                      <p className="text-xs text-gray-600 leading-relaxed">{conditionDescription}</p>
+                    </div>
+                  )}
                 </div>
 
-                {/* Recommendations button */}
-                <Link
-                  to={`/recommendations/${assessment.id}`}
-                  id={`view-recommendations-${assessment.id}`}
-                  className="bg-white rounded-2xl border border-gray-200 hover:border-violet-300 hover:shadow-sm p-5 flex items-center gap-4 transition-all group"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center shrink-0">
-                    <Star size={18} className="text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-semibold text-gray-900">Educational Recommendations</p>
-                    <p className="text-xs text-gray-500 mt-0.5">General guidance based on this result</p>
-                  </div>
-                  <ArrowLeft size={16} className="text-violet-500 rotate-180 group-hover:translate-x-1 transition-transform" />
-                </Link>
-
-              </div>
-
-              {/* ── All class probabilities ─────────────────────────────── */}
-              <div className="bg-white rounded-2xl border border-gray-200 p-6">
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-4">
-                  All Class Probabilities
-                </p>
-                <div className="flex flex-col gap-3">
-                  {sortedScores.map(([cls, score], i) => {
-                    const meta  = CLASS_META[cls] ?? { label: cls, color: "#6b7280" };
-                    const pct   = (score * 100).toFixed(1);
-                    const isTop = i === 0;
-                    return (
-                      <div key={cls}>
-                        <div className="flex items-center justify-between text-xs mb-1">
-                          <div className="flex items-center gap-1.5">
-                            <span
-                              className="font-mono font-semibold"
-                              style={{ color: meta.color }}
-                            >
-                              {cls}
-                            </span>
-                            {isTop && (
-                              <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 rounded-full font-semibold">
-                                top
+                {/* Probability bars */}
+                <div className="bg-gray-50 rounded-xl border border-gray-200 p-5">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-4">
+                    Probability Distribution
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    {sortedScores.map(([cls, score], i) => {
+                      const meta  = CLASS_META[cls] ?? { label: cls, color: "#6b7280" };
+                      const pct   = (score * 100).toFixed(1);
+                      const isTop = i === 0;
+                      return (
+                        <div key={cls}>
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <div className="flex items-center gap-1.5 min-w-0 flex-1 mr-2">
+                              <span
+                                className={`font-semibold truncate ${isTop ? "text-gray-900" : "text-gray-500"}`}
+                                title={meta.label}
+                              >
+                                {meta.label}
                               </span>
-                            )}
+                              {isTop && (
+                                <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 rounded-full font-semibold shrink-0">
+                                  top
+                                </span>
+                              )}
+                            </div>
+                            <span className={`shrink-0 ${isTop ? "font-bold text-gray-900" : "text-gray-400"}`}>
+                              {pct}%
+                            </span>
                           </div>
-                          <span className={`font-${isTop ? "bold" : "medium"} text-gray-${isTop ? "800" : "400"}`}>
-                            {pct}%
-                          </span>
+                          <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
+                            <div
+                              className="h-2 rounded-full transition-all"
+                              style={{
+                                width: `${pct}%`,
+                                backgroundColor: meta.color,
+                                opacity: isTop ? 1 : 0.6,
+                              }}
+                            />
+                          </div>
                         </div>
-                        <div className="bg-gray-100 rounded-full h-2 overflow-hidden">
-                          <div
-                            className="h-2 rounded-full transition-all"
-                            style={{
-                              width: `${pct}%`,
-                              backgroundColor: meta.color,
-                              opacity: isTop ? 1 : 0.6,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Disclaimer footer */}
-            {assessment.disclaimer && (
-              <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3">
-                <AlertTriangle size={14} className="text-amber-600 shrink-0 mt-0.5" />
-                <p className="text-xs text-amber-700 leading-relaxed">{assessment.disclaimer}</p>
+              {/* Disclaimer */}
+              <div className="mt-4 flex items-start gap-2.5 bg-amber-50 border border-amber-100 rounded-xl p-3">
+                <AlertTriangle size={14} className="text-amber-500 shrink-0 mt-0.5" />
+                <p className="text-[11px] text-amber-700 leading-relaxed">
+                  <strong>Educational use only.</strong> This AI result is not a confirmed clinical diagnosis.
+                  Only a qualified dermatologist can examine, diagnose, and recommend treatment for skin conditions.
+                </p>
               </div>
+            </section>
+
+            {/* ── Section 2: Product Recommendations ─────────────────────── */}
+            <section className="mb-6">
+              <div className="flex items-center gap-2 mb-4">
+                <ShoppingBag size={18} className="text-blue-600" />
+                <h2 className="text-lg font-semibold text-gray-900">Recommended Products</h2>
+                <span className="text-xs text-gray-400 bg-gray-100 px-2.5 py-0.5 rounded-full border border-gray-200">
+                  General skin care only · not treatments
+                </span>
+              </div>
+
+              {recLoading && (
+                <div className="bg-white border border-gray-200 rounded-xl p-8 flex items-center gap-3">
+                  <Loader2 size={18} className="text-blue-500 animate-spin" />
+                  <p className="text-sm text-gray-500">Loading product recommendations…</p>
+                </div>
+              )}
+
+              {!recLoading && recommendations?.products?.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                  {recommendations.products.map(product => (
+                    <ProductCard key={product.id} product={product} riskLevel={riskLevel} />
+                  ))}
+                </div>
+              )}
+
+              {!recLoading && recommendations?.products?.length === 0 && (
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 text-center">
+                  <p className="text-sm text-gray-500">
+                    No product suggestions available for this condition.
+                    Please consult a dermatologist for personalized skincare advice.
+                  </p>
+                </div>
+              )}
+
+              {!recLoading && !recommendations && (
+                <div className="bg-amber-50 border border-amber-100 rounded-xl p-4">
+                  <p className="text-sm text-amber-700">
+                    Product recommendations could not be loaded. Try viewing from the{" "}
+                    <Link to={`/recommendations/${id}`} className="underline font-medium">
+                      Recommendations page
+                    </Link>
+                    .
+                  </p>
+                </div>
+              )}
+            </section>
+
+            {/* ── Section 3: Daily Routine ───────────────────────────────── */}
+            {!recLoading && recommendations?.routine && (
+              <section className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+                <DailyRoutine routine={recommendations.routine} />
+              </section>
             )}
+
+            {/* ── Section 4: Dermatologist Guidance ─────────────────────── */}
+            {!recLoading && recommendations?.dermatologist_guidance && (
+              <section className="mb-6">
+                <DermatologistGuidance guidance={recommendations.dermatologist_guidance} />
+              </section>
+            )}
+
+            {/* ── Fallback dermatologist guidance ───────────────────────── */}
+            {!recLoading && !recommendations && (
+              <section className="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-6">
+                <p className="font-semibold text-amber-900 mb-1">When to Consult a Dermatologist</p>
+                <p className="text-sm text-amber-800">
+                  Consult a qualified dermatologist for any high-risk result, rapid changes,
+                  bleeding, pain, persistent itching, or if you are unsure. This AI result is
+                  educational context, not a confirmed diagnosis.
+                </p>
+              </section>
+            )}
+
+            {/* ── Action row ─────────────────────────────────────────────── */}
+            <div className="flex flex-wrap gap-3 mt-2">
+              <Link
+                to="/assessment"
+                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+              >
+                New Analysis
+              </Link>
+              <Link
+                to="/history"
+                className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 text-sm font-semibold px-5 py-2.5 rounded-xl border border-gray-200 transition-colors"
+              >
+                View History
+              </Link>
+              <Link
+                to={`/recommendations/${assessment.id}`}
+                className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-violet-700 text-sm font-semibold px-5 py-2.5 rounded-xl border border-violet-200 transition-colors"
+              >
+                Full Recommendations
+              </Link>
+            </div>
           </>
         )}
       </main>
+
+      {/* ── Floating chatbot ────────────────────────────────────────────── */}
+      <ChatBot
+        analysisContext={assessment ? {
+          condition:     assessment.predicted_label,
+          conditionCode: assessment.predicted_class,
+          confidence:    assessment.confidence,
+          riskLevel,
+          recommendations,
+        } : null}
+      />
     </div>
   );
 }

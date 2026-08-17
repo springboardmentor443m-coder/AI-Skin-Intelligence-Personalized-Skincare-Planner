@@ -2,26 +2,7 @@
 schemas.py — Pydantic Request / Response Schemas
 ==================================================
 Phase 5: Database Integration & Authentication
-
-What this module does:
-  Defines the data shapes (schemas) for API requests and responses using
-  Pydantic. FastAPI uses these schemas to:
-    1. Validate incoming request bodies automatically.
-    2. Serialize outgoing response data.
-    3. Generate accurate Swagger / OpenAPI documentation.
-
-  Separating schemas from ORM models is a key best practice:
-    - ORM models (models.py) define the DATABASE structure.
-    - Pydantic schemas (this file) define the API contract.
-    - This prevents accidentally exposing database internals (e.g. hashed_password)
-      in API responses.
-
-Schema overview:
-  UserCreate     — body for POST /api/auth/register
-  LoginRequest   — body for POST /api/auth/login
-  UserResponse   — safe user data returned in responses (no password)
-  Token          — JWT access token returned after login
-  TokenData      — internal payload decoded from a JWT
+Phase 11: Personalized Skin Analysis schemas added
 """
 
 from datetime import datetime
@@ -32,17 +13,11 @@ from pydantic import BaseModel, EmailStr, field_validator
 # ── Registration ──────────────────────────────────────────────────────────────
 
 class UserCreate(BaseModel):
-    """
-    Request body for POST /api/auth/register.
-
-    Pydantic will reject the request automatically if any field is missing
-    or fails validation (e.g. invalid email format, password too short).
-    """
-
+    """Request body for POST /api/auth/register."""
     full_name: str
-    email: EmailStr           # Pydantic validates email format automatically
+    email: EmailStr
     password: str
-    role: str = "user"        # Defaults to "user" if not provided
+    role: str = "user"
 
     @field_validator("full_name")
     @classmethod
@@ -75,73 +50,45 @@ class UserCreate(BaseModel):
 # ── Login ─────────────────────────────────────────────────────────────────────
 
 class LoginRequest(BaseModel):
-    """
-    Request body for POST /api/auth/login.
-    """
-
+    """Request body for POST /api/auth/login."""
     email: EmailStr
     password: str
 
 
-# ── User responses (no password field) ───────────────────────────────────────
+# ── User responses ────────────────────────────────────────────────────────────
 
 class UserResponse(BaseModel):
     """
     The safe view of a User returned in API responses.
-
     IMPORTANT: hashed_password is intentionally excluded.
-    Never return password data — not even the hash — in an API response.
     """
-
     id: int
     email: str
     full_name: str
     role: str
     is_active: bool
     created_at: datetime
-
-    # Pydantic v2: tell Pydantic to read data from SQLAlchemy ORM attributes
     model_config = {"from_attributes": True}
 
 
 # ── JWT Token ─────────────────────────────────────────────────────────────────
 
 class Token(BaseModel):
-    """
-    Response body for POST /api/auth/login.
-
-    access_token: The signed JWT string the client stores and sends
-                  in the Authorization header for protected requests.
-    token_type:   Always "bearer" — part of the OAuth2 standard.
-    user:         The logged-in user's safe profile data.
-    """
-
+    """Response body for POST /api/auth/login."""
     access_token: str
     token_type: str = "bearer"
     user: UserResponse
 
 
 class TokenData(BaseModel):
-    """
-    The payload decoded from a JWT token.
-
-    sub (subject): The user's email address — used to look up the user
-                   in the database when validating protected requests.
-    """
-
+    """The payload decoded from a JWT token."""
     sub: Optional[str] = None
 
 
-# ── Assessment schemas (Phase 10) ──────────────────────────────────────────────────
+# ── Assessment schemas (Phase 10) ─────────────────────────────────────────────
 
 class AssessmentResponse(BaseModel):
-    """
-    Safe representation of a single Assessment returned in API responses.
-
-    Never includes the user_id or internal database fields that would
-    reveal information about other users or the database schema.
-    """
-
+    """Safe representation of a single Assessment."""
     id:              int
     predicted_class: str
     predicted_label: str
@@ -150,26 +97,17 @@ class AssessmentResponse(BaseModel):
     all_scores:      Dict[str, float]
     disclaimer:      Optional[str] = None
     created_at:      datetime
-
     model_config = {"from_attributes": True}
 
 
 class AssessmentListResponse(BaseModel):
-    """
-    Wrapper for a list of assessments returned by GET /api/assessments.
-
-    Includes a count field so the frontend knows the total without
-    having to count the items manually.
-    """
-
+    """Wrapper for a list of assessments."""
     total:       int
     assessments: List[AssessmentResponse]
 
 
 class RecommendationItem(BaseModel):
-    """
-    A single educational recommendation item.
-    """
+    """A single educational recommendation item."""
     title:       str
     description: str
 
@@ -177,15 +115,256 @@ class RecommendationItem(BaseModel):
 class RecommendationsResponse(BaseModel):
     """
     Educational recommendations based on an assessment result.
-
     IMPORTANT: These are NOT medical recommendations.
-    They are general educational guidance only.
     """
-
-    assessment_id:  int
-    risk_level:     str
+    assessment_id:   int
+    risk_level:      str
     predicted_class: str
     predicted_label: str
-    confidence:     float
+    confidence:      float
     recommendations: List[RecommendationItem]
-    disclaimer:     str
+    disclaimer:      str
+
+
+# ── SkinProfile schemas (Phase 11) ────────────────────────────────────────────
+
+class AllergyItem(BaseModel):
+    """A single allergy/sensitivity item."""
+    name:     str
+    reaction: Optional[str] = None
+    notes:    Optional[str] = None
+
+
+class SkinProfileRequest(BaseModel):
+    """
+    Request body for POST /api/skin-profile (create or update).
+    All fields optional to allow partial updates.
+    """
+    age:                  Optional[int]               = None
+    age_group:            Optional[str]               = None
+    gender:               Optional[str]               = None
+    skin_type:            Optional[str]               = None
+    skin_concerns:        Optional[List[str]]         = None
+    additional_concerns:  Optional[str]               = None
+    allergies_known:      Optional[str]               = None
+    allergy_list:         Optional[List[AllergyItem]] = None
+    sensitive_skin:       Optional[str]               = None
+    previous_irritation:  Optional[str]               = None
+    ingredients_to_avoid: Optional[List[str]]         = None
+    sleep_duration:       Optional[str]               = None
+    sleep_quality:        Optional[str]               = None
+    water_intake:         Optional[str]               = None
+    sun_exposure:         Optional[str]               = None
+    outdoor_activity:     Optional[str]               = None
+    stress_level:         Optional[str]               = None
+    location:             Optional[str]               = None
+    climate:              Optional[str]               = None
+    preferred_language:   Optional[str]               = "en"
+
+
+class SkinProfileResponse(BaseModel):
+    """Safe representation of a SkinProfile returned in API responses."""
+    id:                   int
+    age:                  Optional[int]       = None
+    age_group:            Optional[str]       = None
+    gender:               Optional[str]       = None
+    skin_type:            Optional[str]       = None
+    skin_concerns:        Optional[List[str]] = None
+    additional_concerns:  Optional[str]       = None
+    allergies_known:      Optional[str]       = None
+    allergy_list:         Optional[List[Any]] = None
+    sensitive_skin:       Optional[str]       = None
+    previous_irritation:  Optional[str]       = None
+    ingredients_to_avoid: Optional[List[str]] = None
+    sleep_duration:       Optional[str]       = None
+    sleep_quality:        Optional[str]       = None
+    water_intake:         Optional[str]       = None
+    sun_exposure:         Optional[str]       = None
+    outdoor_activity:     Optional[str]       = None
+    stress_level:         Optional[str]       = None
+    location:             Optional[str]       = None
+    climate:              Optional[str]       = None
+    preferred_language:   Optional[str]       = "en"
+    created_at:           datetime
+    updated_at:           datetime
+    model_config = {"from_attributes": True}
+
+
+# ── SkincareProduct schemas (Phase 11) ────────────────────────────────────────
+
+class SkincareProductRequest(BaseModel):
+    """Request body for POST/PUT /api/products."""
+    product_name:      str
+    brand:             Optional[str] = None
+    category:          Optional[str] = None
+    usage_time:        Optional[str] = None
+    usage_frequency:   Optional[str] = None
+    duration_of_use:   Optional[str] = None
+    caused_irritation: Optional[str] = None
+    notes:             Optional[str] = None
+
+    @field_validator("product_name")
+    @classmethod
+    def product_name_must_not_be_blank(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Product name must not be blank.")
+        return v.strip()
+
+
+class SkincareProductResponse(BaseModel):
+    """Safe representation of a SkincareProduct."""
+    id:                int
+    product_name:      str
+    brand:             Optional[str] = None
+    category:          Optional[str] = None
+    usage_time:        Optional[str] = None
+    usage_frequency:   Optional[str] = None
+    duration_of_use:   Optional[str] = None
+    caused_irritation: Optional[str] = None
+    notes:             Optional[str] = None
+    created_at:        datetime
+    model_config = {"from_attributes": True}
+
+
+class SkincareProductListResponse(BaseModel):
+    """Wrapper for a list of skincare products."""
+    total:    int
+    products: List[SkincareProductResponse]
+
+
+# ── MedicalReport schemas (Phase 11) ──────────────────────────────────────────
+
+class MedicalReportResponse(BaseModel):
+    """Safe representation of a MedicalReport (metadata only)."""
+    id:          int
+    file_name:   str
+    file_type:   str
+    file_size:   int
+    upload_date: datetime
+    model_config = {"from_attributes": True}
+
+
+class MedicalReportListResponse(BaseModel):
+    """Wrapper for a list of medical report metadata."""
+    total:   int
+    reports: List[MedicalReportResponse]
+
+
+# ── PreviousSkinHistory schemas (Phase 11) ────────────────────────────────────
+
+class PreviousProductItem(BaseModel):
+    """A single previous skincare product entry."""
+    name:              str
+    brand:             Optional[str] = None
+    category:          Optional[str] = None
+    usage:             Optional[str] = None
+    caused_irritation: Optional[str] = None
+    notes:             Optional[str] = None
+
+
+class PreviousSkinHistoryRequest(BaseModel):
+    """
+    Request body for POST /api/skin-history (create or update).
+    All fields are optional.
+    """
+    condition_name:          Optional[str]                      = None
+    previous_analysis_date:  Optional[str]                      = None
+    previous_diagnosis:      Optional[str]                      = None
+    previous_treatment:      Optional[str]                      = None
+    previous_symptoms:       Optional[str]                      = None
+    dermatologist_consulted: Optional[str]                      = None
+    notes:                   Optional[str]                      = None
+    previous_ai_result:      Optional[str]                      = None
+    previous_concerns:       Optional[str]                      = None
+    previous_products:       Optional[List[PreviousProductItem]] = None
+    skin_outcome:            Optional[str]                      = None
+    changes_since:           Optional[List[str]]                = None
+    changes_description:     Optional[str]                      = None
+
+
+class PreviousSkinHistoryResponse(BaseModel):
+    """Safe representation of PreviousSkinHistory."""
+    id:                      int
+    condition_name:          Optional[str]       = None
+    previous_analysis_date:  Optional[str]       = None
+    previous_diagnosis:      Optional[str]       = None
+    previous_treatment:      Optional[str]       = None
+    previous_symptoms:       Optional[str]       = None
+    dermatologist_consulted: Optional[str]       = None
+    notes:                   Optional[str]       = None
+    previous_ai_result:      Optional[str]       = None
+    previous_concerns:       Optional[str]       = None
+    previous_products:       Optional[List[Any]] = None
+    skin_outcome:            Optional[str]       = None
+    changes_since:           Optional[List[str]] = None
+    changes_description:     Optional[str]       = None
+    created_at:              datetime
+    updated_at:              datetime
+    model_config = {"from_attributes": True}
+
+
+# ── Recommendation schemas (Phase 12) ─────────────────────────────────────────
+
+class RecommendationRequest(BaseModel):
+    """Request body for POST /api/recommend."""
+    predicted_class:       str
+    risk_level:            str
+    skin_type:             Optional[str]  = None
+    has_previous_analysis: Optional[bool] = False
+    language:              Optional[str]  = "en"   # ISO 639-1 language code, e.g. "hi", "te"
+
+
+class ProductItem(BaseModel):
+    """A single skincare product recommendation."""
+    id:                  str
+    name:                str
+    category:            str
+    image_url:           Optional[str]       = None
+    description:         str
+    why_useful:          str
+    key_features:        List[str]
+    suitable_skin_types: List[str]
+    how_to_use:          str
+    precautions:         str
+    price_range:         Optional[str]       = None
+    product_link:        Optional[str]       = None
+
+
+class RoutineStep(BaseModel):
+    """A single step in a skincare routine."""
+    step:        int
+    title:       str
+    description: str
+
+
+class DaytimeSection(BaseModel):
+    """Daytime dos and avoids."""
+    do:    List[str]
+    avoid: List[str]
+
+
+class DailyRoutineData(BaseModel):
+    """Structured daily skincare routine."""
+    morning:      List[RoutineStep]
+    daytime:      DaytimeSection
+    night:        List[RoutineStep]
+    daily_habits: List[str]
+
+
+class DermatologistGuidanceData(BaseModel):
+    """Dermatologist consultation guidance."""
+    urgency:         str        # "routine" | "soon" | "urgent"
+    urgency_message: str
+    warning_signs:   List[str]
+    general_advice:  str
+
+
+class RecommendationResponse(BaseModel):
+    """Full recommendation API response."""
+    predicted_class:         str
+    risk_level:              str
+    products:                List[ProductItem]
+    routine:                 DailyRoutineData
+    dermatologist_guidance:  DermatologistGuidanceData
+    disclaimer:              str
+    safety_note:             Optional[str] = None

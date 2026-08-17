@@ -23,7 +23,7 @@ function CallToAction() {
 
         {/* Supporting text — no medical claims, honest framing */}
         <p className="mt-6 text-lg text-blue-100 max-w-2xl mx-auto leading-relaxed">
-          Take the free skin assessment and receive personalized insights powered
+          Take the free skin analysis and receive personalized insights powered
           by AI. No medical expertise required — just honest answers about your
           skin.
         </p>
@@ -35,7 +35,7 @@ function CallToAction() {
             to="/register"
             className="flex items-center justify-center gap-2 bg-white text-blue-700 font-semibold px-8 py-4 rounded-xl text-lg hover:bg-blue-50 transition-colors shadow-lg"
           >
-            Get Started — It&apos;s Free
+            Register — It&apos;s Free
             <ArrowRight size={20} />
           </Link>
 

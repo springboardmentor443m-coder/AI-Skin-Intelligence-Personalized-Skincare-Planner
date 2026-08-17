@@ -163,7 +163,7 @@ function Register() {
           <ul className="space-y-4 text-blue-100">
             <li className="flex items-center gap-3">
               <CheckCircle size={20} className="text-blue-300 shrink-0" />
-              <span>Free AI-powered skin assessment</span>
+              <span>Free AI-powered skin analysis</span>
             </li>
             <li className="flex items-center gap-3">
               <ShieldCheck size={20} className="text-blue-300 shrink-0" />

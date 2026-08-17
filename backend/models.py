@@ -3,8 +3,9 @@ models.py — SQLAlchemy ORM Models
 ====================================
 Phase 5: Database Integration
 Phase 10: Assessment history table added
+Phase 11: Personalized Skin Analysis — SkinProfile, SkincareProduct, MedicalReport, PreviousSkinHistory
 
-Defines the User table in PostgreSQL using SQLAlchemy's ORM.
+Defines all database tables in PostgreSQL using SQLAlchemy's ORM.
 
 Table: users
 ┌─────────────────┬──────────────────┬────────────────────────────────────────┐
@@ -114,8 +115,12 @@ class User(Base):
         nullable=False,
     )
 
-    # ── Relationship ──────────────────────────────────────────────────────────
-    assessments = relationship("Assessment", back_populates="user", cascade="all, delete-orphan")
+    # ── Relationships ──────────────────────────────────────────────────────────
+    assessments       = relationship("Assessment",          back_populates="user", cascade="all, delete-orphan")
+    skin_profile      = relationship("SkinProfile",         back_populates="user", uselist=False, cascade="all, delete-orphan")
+    skincare_products = relationship("SkincareProduct",     back_populates="user", cascade="all, delete-orphan")
+    medical_reports   = relationship("MedicalReport",       back_populates="user", cascade="all, delete-orphan")
+    skin_history      = relationship("PreviousSkinHistory", back_populates="user", uselist=False, cascade="all, delete-orphan")
 
 
 # ── Assessment ORM model ──────────────────────────────────────────────────────
@@ -182,3 +187,245 @@ class Assessment(Base):
     # ── Relationship back to user ─────────────────────────────────────────────
     user = relationship("User", back_populates="assessments")
 
+
+# ── SkinProfile ORM model ─────────────────────────────────────────────────────
+class SkinProfile(Base):
+    """
+    ORM model for the 'skin_profiles' table.
+
+    Stores the user's personal information, skin type, concerns,
+    allergies/sensitivities, lifestyle details, and language preference.
+    One record per user (upsert pattern).
+    """
+
+    __tablename__ = "skin_profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        unique=True,   # One profile per user
+        index=True,
+    )
+
+    # ── Personal information ──────────────────────────────────────────────────
+    age         = Column(Integer, nullable=True)
+    age_group   = Column(String(50), nullable=True)   # e.g. "18-25", "26-35"
+    gender      = Column(String(30), nullable=True)   # Optional
+
+    # ── Skin type ─────────────────────────────────────────────────────────────
+    # Values: "normal" | "dry" | "oily" | "combination" | "sensitive" | "not_sure"
+    skin_type   = Column(String(30), nullable=True)
+
+    # ── Skin concerns (JSON list) ─────────────────────────────────────────────
+    # e.g. ["acne", "dark_spots", "dryness"]
+    skin_concerns = Column(JSON, nullable=True, default=list)
+
+    # Additional free-text skin concerns
+    additional_concerns = Column(Text, nullable=True)
+
+    # ── Allergies & sensitivities ─────────────────────────────────────────────
+    # "yes" | "no" | "not_sure"
+    allergies_known      = Column(String(20), nullable=True)
+    # JSON list of allergy objects: [{name, reaction, notes}, ...]
+    allergy_list         = Column(JSON, nullable=True, default=list)
+    # "yes" | "no" | "not_sure"
+    sensitive_skin       = Column(String(20), nullable=True)
+    # "yes" | "no" | "not_sure"
+    previous_irritation  = Column(String(20), nullable=True)
+    # JSON list of ingredient strings to avoid
+    ingredients_to_avoid = Column(JSON, nullable=True, default=list)
+
+    # ── Lifestyle ─────────────────────────────────────────────────────────────
+    sleep_duration   = Column(String(20), nullable=True)   # e.g. "7-8 hours"
+    # "poor" | "average" | "good"
+    sleep_quality    = Column(String(20), nullable=True)
+    water_intake     = Column(String(50), nullable=True)   # e.g. "2 litres"
+    # "low" | "moderate" | "high"
+    sun_exposure     = Column(String(20), nullable=True)
+    # "rarely" | "sometimes" | "frequently"
+    outdoor_activity = Column(String(20), nullable=True)
+    # "low" | "moderate" | "high"
+    stress_level     = Column(String(20), nullable=True)
+    location         = Column(String(100), nullable=True)
+    climate          = Column(Text, nullable=True)
+
+    # ── Language preference ───────────────────────────────────────────────────
+    # ISO-style code: "en" | "te" | "hi" | "ta" | "kn" | "ml" | "mr" | "bn" | "gu" | "pa" | "ur"
+    preferred_language = Column(String(10), nullable=True, default="en")
+
+    # ── Timestamps ────────────────────────────────────────────────────────────
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+
+    # ── Relationship ──────────────────────────────────────────────────────────
+    user = relationship("User", back_populates="skin_profile")
+
+
+# ── SkincareProduct ORM model ─────────────────────────────────────────────────
+class SkincareProduct(Base):
+    """
+    ORM model for the 'skincare_products' table.
+
+    Stores the user's current skincare products. Multiple products per user.
+    """
+
+    __tablename__ = "skincare_products"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    # ── Product fields ────────────────────────────────────────────────────────
+    product_name     = Column(String(200), nullable=False)
+    brand            = Column(String(200), nullable=True)
+    # "cleanser" | "moisturizer" | "sunscreen" | "serum" | "toner" | "treatment" | "face_mask" | "other"
+    category         = Column(String(50), nullable=True)
+    # "morning" | "evening" | "both"
+    usage_time       = Column(String(20), nullable=True)
+    # "daily" | "several_times_per_week" | "occasionally"
+    usage_frequency  = Column(String(50), nullable=True)
+    duration_of_use  = Column(String(100), nullable=True)  # e.g. "3 months"
+    # "yes" | "no" | "not_sure"
+    caused_irritation = Column(String(20), nullable=True)
+    notes            = Column(Text, nullable=True)
+
+    # ── Timestamps ────────────────────────────────────────────────────────────
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+
+    # ── Relationship ──────────────────────────────────────────────────────────
+    user = relationship("User", back_populates="skincare_products")
+
+
+# ── MedicalReport ORM model ───────────────────────────────────────────────────
+class MedicalReport(Base):
+    """
+    ORM model for the 'medical_reports' table.
+
+    Stores metadata about uploaded previous medical/skin reports.
+    The actual file is stored on disk in backend/uploads/reports/{user_id}/.
+    Only the file metadata is stored in the database.
+
+    Security notes:
+      - No direct public URL is stored or exposed.
+      - Downloads are served only through a protected /api/medical-reports/{id}/download
+        endpoint that enforces user ownership.
+    """
+
+    __tablename__ = "medical_reports"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    # ── File metadata ─────────────────────────────────────────────────────────
+    file_name  = Column(String(255), nullable=False)     # Original filename from upload
+    file_type  = Column(String(50), nullable=False)      # MIME type e.g. "application/pdf"
+    file_path  = Column(String(500), nullable=False)     # Server-side path (never exposed)
+    file_size  = Column(Integer, nullable=False)         # Bytes
+
+    # ── Timestamps ────────────────────────────────────────────────────────────
+    upload_date = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+        index=True,
+    )
+
+    # ── Relationship ──────────────────────────────────────────────────────────
+    user = relationship("User", back_populates="medical_reports")
+
+
+# ── PreviousSkinHistory ORM model ─────────────────────────────────────────────
+class PreviousSkinHistory(Base):
+    """
+    ORM model for the 'previous_skin_history' table.
+
+    Stores the user's previous skin condition information, previous products,
+    previous treatment, and changes since the last skin analysis.
+    One record per user (upsert pattern).
+
+    IMPORTANT: This information is USER-PROVIDED medical history.
+    It is NOT clinically verified. The system treats it as context
+    for personalization only.
+    """
+
+    __tablename__ = "previous_skin_history"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        unique=True,   # One history record per user
+        index=True,
+    )
+
+    # ── Previous skin condition ───────────────────────────────────────────────
+    condition_name        = Column(String(200), nullable=True)
+    previous_analysis_date = Column(String(50), nullable=True)
+    previous_diagnosis    = Column(Text, nullable=True)   # User-reported only
+    previous_treatment    = Column(Text, nullable=True)
+    previous_symptoms     = Column(Text, nullable=True)
+    # "yes" | "no" | "not_sure"
+    dermatologist_consulted = Column(String(20), nullable=True)
+    notes                 = Column(Text, nullable=True)
+
+    # ── Previous AI result (if available) ─────────────────────────────────────
+    previous_ai_result    = Column(Text, nullable=True)   # Free text summary
+    previous_concerns     = Column(Text, nullable=True)
+
+    # ── Previous products (JSON list of product objects) ──────────────────────
+    # [{name, brand, category, usage, caused_irritation, notes}, ...]
+    previous_products     = Column(JSON, nullable=True, default=list)
+
+    # ── Outcome ───────────────────────────────────────────────────────────────
+    # "improved" | "worse" | "no_change"
+    skin_outcome          = Column(String(30), nullable=True)
+
+    # ── Changes since previous Skin Analysis ─────────────────────────────────
+    # JSON list of change tags
+    changes_since         = Column(JSON, nullable=True, default=list)
+    changes_description   = Column(Text, nullable=True)
+
+    # ── Timestamps ────────────────────────────────────────────────────────────
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+
+    # ── Relationship ──────────────────────────────────────────────────────────
+    user = relationship("User", back_populates="skin_history")

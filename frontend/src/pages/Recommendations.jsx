@@ -1,10 +1,12 @@
 /**
- * pages/Recommendations.jsx — Educational Recommendations
- * =========================================================
- * Phase 10: Recommendations
- *
- * Fetches educational guidance from GET /api/assessments/{id}/recommendations
- * and displays tier-appropriate guidance based on the assessment's risk level.
+ * pages/Recommendations.jsx — Educational Recommendations (Improved)
+ * ====================================================================
+ * Phase 10+: Now includes:
+ *   - Product recommendations (ProductCard grid)
+ *   - Daily skincare routine (DailyRoutine)
+ *   - Dermatologist guidance (DermatologistGuidance)
+ *   - Assessment summary card
+ *   - AI chatbot
  *
  * ⚠️ IMPORTANT — EDUCATIONAL USE ONLY:
  *   These recommendations are general educational information.
@@ -18,10 +20,14 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Sparkles, LogOut, ArrowLeft, Star, AlertTriangle,
-  CheckCircle, Loader2, ShieldAlert, ShieldCheck,
+  ShoppingBag, Loader2, ShieldAlert, ShieldCheck,
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
-import { fetchRecommendations } from "../services/api";
+import { fetchRecommendations, getRecommendations, fetchAssessment } from "../services/api";
+import ProductCard from "../components/ProductCard";
+import DailyRoutine from "../components/DailyRoutine";
+import DermatologistGuidance from "../components/DermatologistGuidance";
+import ChatBot from "../components/ChatBot";
 
 // ── Risk display config ────────────────────────────────────────────────────────
 const RISK_CONFIG = {
@@ -60,19 +66,49 @@ function Recommendations() {
   const navigate  = useNavigate();
   const { id }    = useParams();
 
+  // Basic recommendations (from /api/assessments/:id/recommendations)
   const [data, setData]       = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState("");
 
-  // If accessed without an ID (e.g. /recommendations directly), show helpful message
+  // Full product/routine/guidance recommendations (from /api/recommend)
+  const [fullRec, setFullRec]       = useState(null);
+  const [fullRecLoading, setFullRecLoading] = useState(false);
+
+  // Assessment details (for context)
+  const [assessment, setAssessment] = useState(null);
+
   const hasId = !!id;
 
   useEffect(() => {
     if (!hasId) { setLoading(false); return; }
     async function load() {
       try {
+        // Load basic recommendations from assessment endpoint
         const result = await fetchRecommendations(Number(id), token);
         setData(result);
+
+        // Also fetch the assessment for context
+        try {
+          const assessData = await fetchAssessment(Number(id), token);
+          setAssessment(assessData);
+        } catch { /* non-critical */ }
+
+        // Non-blocking: fetch full product/routine/guidance recommendations
+        setFullRecLoading(true);
+        getRecommendations(
+          {
+            predicted_class:       result.predicted_class,
+            risk_level:            result.risk_level,
+            has_previous_analysis: false,
+            language:              "en",
+          },
+          token,
+        )
+          .then(rec => setFullRec(rec))
+          .catch(() => setFullRec(null))
+          .finally(() => setFullRecLoading(false));
+
       } catch (err) {
         const msg = typeof err?.detail === "string"
           ? err.detail
@@ -99,7 +135,7 @@ function Recommendations() {
 
       {/* ── Nav ──────────────────────────────────────────────────────────── */}
       <nav className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <Sparkles size={22} className="text-blue-600" />
             <span className="text-lg font-bold text-gray-900">AI Skin Intelligence</span>
@@ -119,7 +155,7 @@ function Recommendations() {
       </nav>
 
       {/* ── Main ─────────────────────────────────────────────────────────── */}
-      <main className="max-w-4xl mx-auto px-6 py-10">
+      <main className="max-w-5xl mx-auto px-6 py-10">
 
         <Link
           to={id ? `/history/${id}` : "/history"}
@@ -136,24 +172,24 @@ function Recommendations() {
           </div>
         )}
 
-        {/* No ID — accessed directly at /recommendations */}
+        {/* No ID */}
         {!loading && !hasId && (
           <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center mx-auto mb-6">
               <Star size={28} className="text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Educational Recommendations</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Recommendations</h1>
             <p className="text-gray-500 mb-1">
-              Educational guidance appears here after you complete a skin assessment.
+              Product and routine recommendations appear here after you complete a skin analysis.
             </p>
             <p className="text-sm text-gray-400 mb-6">
-              Complete a skin assessment first, then view recommendations from the detail page.
+              Complete a skin analysis first, then view recommendations from the detail page.
             </p>
             <Link
               to="/assessment"
               className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
             >
-              Start Assessment
+              Start Analysis
             </Link>
           </div>
         )}
@@ -174,26 +210,10 @@ function Recommendations() {
           <>
             {/* Page header */}
             <div className="mb-6">
-              <h1 className="text-2xl font-bold text-gray-900">Educational Recommendations</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Recommendations</h1>
               <p className="text-gray-500 text-sm mt-1">
                 General educational guidance based on your AI assessment result.
               </p>
-            </div>
-
-            {/* IMPORTANT disclaimer — always shown first */}
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex gap-3">
-              <AlertTriangle size={18} className="text-amber-600 shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-semibold text-amber-800">
-                  AI-Generated Educational Guidance Only
-                </p>
-                <p className="text-xs text-amber-700 mt-0.5 leading-relaxed">
-                  These recommendations are general educational information.
-                  They are <strong>NOT medical advice</strong> and must NOT be used to make
-                  clinical decisions. Always consult a qualified dermatologist or healthcare
-                  professional for any skin concerns.
-                </p>
-              </div>
             </div>
 
             {/* Assessment summary card */}
@@ -202,7 +222,7 @@ function Recommendations() {
                 <RiskIcon size={22} className="text-white" />
               </div>
               <div className="flex-1">
-                <p className="text-xs text-gray-500 mb-0.5">Assessment Result</p>
+                <p className="text-xs text-gray-500 mb-0.5">Analysis Result</p>
                 <p className="font-bold text-gray-900">{data.predicted_label}</p>
                 <div className="flex items-center gap-2 mt-1">
                   <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${config.badge}`}>
@@ -223,8 +243,8 @@ function Recommendations() {
               </Link>
             </div>
 
-            {/* Recommendations list */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6">
+            {/* ── Section 1: Educational guidance from assessment endpoint ──── */}
+            <section className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-5">
                 General Educational Guidance
               </p>
@@ -235,7 +255,7 @@ function Recommendations() {
                     className={`flex items-start gap-4 p-4 rounded-xl border ${config.itemBorder} bg-gray-50`}
                   >
                     <div className={`w-6 h-6 rounded-full ${config.dotColor} flex items-center justify-center shrink-0 mt-0.5`}>
-                      <CheckCircle size={12} className="text-white" />
+                      <span className="text-white text-[10px] font-bold">{i + 1}</span>
                     </div>
                     <div>
                       <p className="font-semibold text-gray-900 text-sm mb-0.5">{rec.title}</p>
@@ -244,12 +264,71 @@ function Recommendations() {
                   </div>
                 ))}
               </div>
-            </div>
+            </section>
 
-            {/* Footer disclaimer */}
-            <div className="mt-6 bg-gray-50 border border-gray-200 rounded-xl p-4 flex gap-3">
+            {/* ── Section 2: Product Recommendations ─────────────────────── */}
+            <section className="mb-6">
+              <div className="flex items-center gap-2 mb-4 flex-wrap">
+                <ShoppingBag size={18} className="text-blue-600" />
+                <h2 className="text-lg font-semibold text-gray-900">Recommended Products</h2>
+                <span className="text-xs text-gray-400 bg-gray-100 px-2.5 py-0.5 rounded-full border border-gray-200">
+                  General skin care only · not treatments
+                </span>
+              </div>
+
+              {fullRecLoading && (
+                <div className="bg-white border border-gray-200 rounded-xl p-8 flex items-center gap-3">
+                  <Loader2 size={18} className="text-blue-500 animate-spin" />
+                  <p className="text-sm text-gray-500">Loading product suggestions…</p>
+                </div>
+              )}
+
+              {!fullRecLoading && fullRec?.products?.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                  {fullRec.products.map(product => (
+                    <ProductCard key={product.id} product={product} riskLevel={risk} />
+                  ))}
+                </div>
+              )}
+
+              {!fullRecLoading && fullRec?.products?.length === 0 && (
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 text-center">
+                  <p className="text-sm text-gray-500">
+                    No product suggestions are available for this condition.
+                    Please consult a dermatologist for personalized skincare advice.
+                  </p>
+                </div>
+              )}
+
+              {!fullRecLoading && !fullRec && (
+                <div className="bg-amber-50 border border-amber-100 rounded-xl p-4">
+                  <p className="text-sm text-amber-700">
+                    Product recommendations could not be loaded at this time.
+                  </p>
+                </div>
+              )}
+            </section>
+
+            {/* ── Section 3: Daily Routine ───────────────────────────────── */}
+            {!fullRecLoading && fullRec?.routine && (
+              <section className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+                <DailyRoutine routine={fullRec.routine} />
+              </section>
+            )}
+
+            {/* ── Section 4: Dermatologist Guidance ─────────────────────── */}
+            {!fullRecLoading && fullRec?.dermatologist_guidance && (
+              <section className="mb-6">
+                <DermatologistGuidance guidance={fullRec.dermatologist_guidance} />
+              </section>
+            )}
+
+            {/* Disclaimer */}
+            <div className="mt-4 flex items-start gap-2.5 bg-gray-50 border border-gray-200 rounded-xl p-4">
               <AlertTriangle size={14} className="text-gray-400 shrink-0 mt-0.5" />
-              <p className="text-xs text-gray-500 leading-relaxed">{data.disclaimer}</p>
+              <p className="text-xs text-gray-500 leading-relaxed">
+                {data.disclaimer}
+              </p>
             </div>
 
             {/* Action buttons */}
@@ -258,7 +337,7 @@ function Recommendations() {
                 to="/assessment"
                 className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
               >
-                New Assessment
+                New Analysis
               </Link>
               <Link
                 to="/history"
@@ -271,6 +350,17 @@ function Recommendations() {
         )}
 
       </main>
+
+      {/* Floating chatbot */}
+      <ChatBot
+        analysisContext={data ? {
+          condition:     data.predicted_label,
+          conditionCode: data.predicted_class,
+          confidence:    data.confidence,
+          riskLevel:     risk,
+          recommendations: fullRec,
+        } : null}
+      />
     </div>
   );
 }

@@ -27,16 +27,45 @@ import {
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { predictSkin } from "../services/api";
+import ChatBot from "../components/ChatBot";
 
 // ── HAM10000 class metadata (mirrors ml/src/config.py) ───────────────────────
 const CLASS_META = {
-  akiec: { label: "Actinic Keratoses / Intraepithelial Carcinoma", color: "#f59e0b", risk: "High"   },
-  bcc:   { label: "Basal Cell Carcinoma",                          color: "#ef4444", risk: "High"   },
-  bkl:   { label: "Benign Keratosis-like Lesions",                 color: "#10b981", risk: "Low"    },
-  df:    { label: "Dermatofibroma",                                color: "#3b82f6", risk: "Low"    },
-  mel:   { label: "Melanoma",                                      color: "#dc2626", risk: "High"   },
-  nv:    { label: "Melanocytic Nevi",                              color: "#6366f1", risk: "Low"    },
-  vasc:  { label: "Vascular Lesions",                              color: "#8b5cf6", risk: "Low"    },
+  akiec: {
+    label: "Actinic Keratoses / Intraepithelial Carcinoma",
+    color: "#f59e0b", risk: "High",
+    description: "Rough, scaly patches from long-term sun exposure. Can progress to invasive cancer if untreated. Professional evaluation is important.",
+  },
+  bcc: {
+    label: "Basal Cell Carcinoma",
+    color: "#ef4444", risk: "High",
+    description: "The most common form of skin cancer. Grows slowly and is highly treatable when caught early. Consult a dermatologist promptly.",
+  },
+  bkl: {
+    label: "Benign Keratosis",
+    color: "#10b981", risk: "Low",
+    description: "Non-cancerous growths including seborrheic keratoses. Common with age. Generally harmless but worth monitoring.",
+  },
+  df: {
+    label: "Dermatofibroma",
+    color: "#3b82f6", risk: "Low",
+    description: "A common benign skin growth, usually firm and small. Typically harmless — avoid scratching or traumatising the area.",
+  },
+  mel: {
+    label: "Melanoma",
+    color: "#dc2626", risk: "High",
+    description: "A serious form of skin cancer. Early detection is critical. Please consult a qualified dermatologist as soon as possible for proper evaluation.",
+  },
+  nv: {
+    label: "Melanocytic Nevus",
+    color: "#6366f1", risk: "Low",
+    description: "Common moles. Most are benign. Monitor regularly using the ABCDE rule — any changes should be evaluated by a dermatologist.",
+  },
+  vasc: {
+    label: "Vascular Lesions",
+    color: "#8b5cf6", risk: "Low",
+    description: "Benign blood-vessel related marks such as angiomas. Most are harmless. A dermatologist can assess if any action is needed.",
+  },
 };
 
 // Risk level display helpers
@@ -71,7 +100,6 @@ function SkinAssessment() {
   const [status, setStatus]                 = useState("idle"); // idle | analyzing | done | error
   const [result, setResult]                 = useState(null);   // API response
   const [errorMsg, setErrorMsg]             = useState("");
-  const [savedId, setSavedId]              = useState(null);   // assessment ID after save
 
   const fileInputRef = useRef(null);
 
@@ -133,7 +161,6 @@ function SkinAssessment() {
     setResult(null);
     setErrorMsg("");
     setStatus("idle");
-    setSavedId(null);
   }
 
   // ── Submit to backend ──────────────────────────────────────────────────────
@@ -212,27 +239,14 @@ function SkinAssessment() {
 
         {/* Page header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Skin Lesion Analysis</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Skin Analysis</h1>
           <p className="text-gray-500 mt-1 text-sm">
             Upload a skin lesion image for AI-powered classification using
             EfficientNetB0 trained on HAM10000.
           </p>
         </div>
 
-        {/* ── Medical disclaimer banner ────────────────────────────────────── */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 flex gap-3">
-          <AlertTriangle size={20} className="text-amber-600 shrink-0 mt-0.5" />
-          <div>
-            <p className="text-sm font-semibold text-amber-800">
-              Educational &amp; Research Use Only
-            </p>
-            <p className="text-xs text-amber-700 mt-0.5 leading-relaxed">
-              This AI prediction is <strong>NOT a medical diagnosis</strong> and must NOT be used
-              for clinical decisions. Always consult a qualified dermatologist or healthcare
-              professional for any skin concerns.
-            </p>
-          </div>
-        </div>
+
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
@@ -395,7 +409,7 @@ function SkinAssessment() {
                   />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-0.5">
-                      Top Prediction
+                      Predicted Condition
                     </p>
                     <p className="font-bold text-gray-900 leading-snug">
                       {result.label}
@@ -422,32 +436,44 @@ function SkinAssessment() {
                       {riskLevel} Risk
                     </span>
                     <p className="text-xs text-gray-400 mt-1">AI-generated educational assessment</p>
+
+                    {/* Condition description */}
+                    {topClass?.description && (
+                      <div className="mt-3 pt-3 border-t border-current border-opacity-20 flex items-start gap-2">
+                        <Info size={12} className="shrink-0 mt-0.5 opacity-60" />
+                        <p className="text-xs leading-relaxed opacity-80">{topClass.description}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                {/* All class probability bars */}
+                {/* All class probability bars with full names */}
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3">
-                    All Class Probabilities
+                    Probability Distribution
                   </p>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2.5">
                     {sortedScores.map(([cls, score], i) => {
                       const meta        = CLASS_META[cls] ?? { label: cls, color: "#6b7280" };
                       const pct         = (score * 100).toFixed(1);
                       const isTop       = i === 0;
                       return (
-                        <div key={cls} className="flex items-center gap-2">
-                          {/* Class short name */}
-                          <span
-                            className="text-xs font-mono w-10 shrink-0 font-semibold"
-                            style={{ color: meta.color }}
-                          >
-                            {cls}
-                          </span>
+                        <div key={cls}>
+                          <div className="flex items-center justify-between text-xs mb-0.5">
+                            <span
+                              className={`truncate max-w-[160px] ${isTop ? "font-bold text-gray-900" : "text-gray-500"}`}
+                              title={meta.label}
+                            >
+                              {meta.label}
+                            </span>
+                            <span className={`shrink-0 ml-2 ${isTop ? "font-bold text-gray-800" : "text-gray-400"}`}>
+                              {pct}%
+                            </span>
+                          </div>
                           {/* Bar */}
-                          <div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
+                          <div className="flex-1 bg-gray-100 rounded-full h-1.5 overflow-hidden">
                             <div
-                              className="h-2 rounded-full transition-all"
+                              className="h-1.5 rounded-full transition-all"
                               style={{
                                 width: `${pct}%`,
                                 backgroundColor: meta.color,
@@ -455,27 +481,22 @@ function SkinAssessment() {
                               }}
                             />
                           </div>
-                          {/* Percentage */}
-                          <span
-                            className={`text-xs w-10 text-right shrink-0 ${
-                              isTop ? "font-bold text-gray-800" : "text-gray-400"
-                            }`}
-                          >
-                            {pct}%
-                          </span>
                         </div>
                       );
                     })}
                   </div>
                 </div>
 
-                {/* Medical disclaimer (repeated in results) */}
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex gap-2">
-                  <AlertTriangle size={14} className="text-amber-600 shrink-0 mt-0.5" />
-                  <p className="text-xs text-amber-700 leading-relaxed">
-                    {result.disclaimer}
+                {/* AI Disclaimer */}
+                <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 flex items-start gap-2">
+                  <AlertTriangle size={13} className="text-amber-500 shrink-0 mt-0.5" />
+                  <p className="text-[11px] text-amber-700 leading-relaxed">
+                    This is an AI-assisted classification and should not be considered a definitive
+                    medical diagnosis. Always consult a qualified dermatologist.
                   </p>
                 </div>
+
+
 
                 {/* Re-analyse button */}
                 <div className="flex items-center justify-between flex-wrap gap-3">
@@ -527,6 +548,16 @@ function SkinAssessment() {
         </div>
 
       </main>
+
+      {/* Floating chatbot */}
+      <ChatBot
+        analysisContext={result ? {
+          condition:     result.label,
+          conditionCode: result.class,
+          confidence:    result.confidence,
+          riskLevel,
+        } : null}
+      />
     </div>
   );
 }

@@ -47,14 +47,21 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 async function apiFetch(path, options = {}) {
   let response;
 
+  // Destructure `headers` out of options so that `...rest` does NOT override
+  // the merged headers object below. Without this, `...options` would include
+  // `options.headers` which would completely replace the Content-Type we set.
+  const { headers: callerHeaders, ...rest } = options;
+
   try {
-    // Merge caller-provided headers with the default Content-Type
+    // Merge caller-provided headers with the default Content-Type.
+    // `callerHeaders` (e.g. Authorization) are merged IN to the headers object,
+    // and `rest` (method, body, etc.) are spread WITHOUT touching headers.
     response = await fetch(`${BASE_URL}${path}`, {
+      ...rest,
       headers: {
         "Content-Type": "application/json",
-        ...(options.headers || {}),
+        ...(callerHeaders || {}),
       },
-      ...options,
     });
   } catch {
     // fetch() itself throws only on network-level failures (server down, no internet, etc.)
@@ -66,6 +73,10 @@ async function apiFetch(path, options = {}) {
   }
 
   // Parse the response body as JSON (FastAPI always returns JSON)
+  if (response.status === 204) {
+    return null;
+  }
+
   let data;
   try {
     data = await response.json();
@@ -244,3 +255,131 @@ export async function fetchAssessment(id, token) {
 export async function fetchRecommendations(id, token) {
   return authFetch(`/api/assessments/${id}/recommendations`, token);
 }
+
+export async function getSkinProfile(token) {
+  return authFetch("/api/skin-profile", token);
+}
+
+export async function updateSkinProfile(payload, token) {
+  return authFetch("/api/skin-profile", token, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function getProducts(token) {
+  return authFetch("/api/products", token);
+}
+
+export async function addProduct(payload, token) {
+  return authFetch("/api/products", token, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function deleteProduct(id, token) {
+  return authFetch(`/api/products/${id}`, token, { method: "DELETE" });
+}
+
+export async function getMedicalReports(token) {
+  return authFetch("/api/medical-reports", token);
+}
+
+export async function getMedicalReport(id, token) {
+  let response;
+  try {
+    response = await fetch(`${BASE_URL}/api/medical-reports/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  } catch {
+    throw {
+      detail:
+        "Cannot connect to the server. Please make sure the backend is running and try again.",
+    };
+  }
+
+  if (!response.ok) {
+    let data;
+    try {
+      data = await response.json();
+    } catch {
+      data = { detail: `Unexpected server response (HTTP ${response.status}).` };
+    }
+    throw data;
+  }
+
+  return response.blob();
+}
+
+export async function uploadMedicalReport(file, token) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  let response;
+  try {
+    response = await fetch(`${BASE_URL}/api/medical-reports`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+  } catch {
+    throw {
+      detail:
+        "Cannot connect to the server. Please make sure the backend is running and try again.",
+    };
+  }
+
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    throw {
+      detail: `Unexpected server response (HTTP ${response.status}). Please try again.`,
+    };
+  }
+
+  if (!response.ok) throw data;
+  return data;
+}
+
+export async function deleteMedicalReport(id, token) {
+  return authFetch(`/api/medical-reports/${id}`, token, { method: "DELETE" });
+}
+
+export async function getSkinHistory(token) {
+  return authFetch("/api/skin-history", token);
+}
+
+export async function createSkinHistory(payload, token) {
+  return authFetch("/api/skin-history", token, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function updateSkinHistory(id, payload, token) {
+  return authFetch(`/api/skin-history/${id}`, token, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function deleteSkinHistory(id, token) {
+  return authFetch(`/api/skin-history/${id}`, token, { method: "DELETE" });
+}
+
+/**
+ * Fetch product recommendations and daily routine for a prediction result.
+ *
+ * @param {{ predicted_class: string, risk_level: string, skin_type?: string, has_previous_analysis?: boolean, language?: string }} payload
+ * @param {string} token - JWT access token
+ * @returns {Promise<RecommendationResponse>}
+ */
+export async function getRecommendations(payload, token) {
+  return authFetch("/api/recommend", token, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+

@@ -41,6 +41,11 @@ from routers.prediction_router import router as prediction_router
 
 # ── Phase 10: Assessment history & recommendations router ─────────────────────
 from routers.assessments_router import router as assessments_router
+from routers.skin_profile_router import router as skin_profile_router
+from routers.products_router import router as products_router
+from routers.medical_reports_router import router as medical_reports_router
+from routers.skin_history_router import router as skin_history_router
+from routers.recommendation_router import router as recommendation_router
 
 # ── Step 1: Load environment variables ───────────────────────────────────────
 load_dotenv()
@@ -139,6 +144,11 @@ app.add_middleware(
 app.include_router(auth_router, prefix="/api")
 app.include_router(prediction_router, prefix="/api")
 app.include_router(assessments_router, prefix="/api")
+app.include_router(skin_profile_router, prefix="/api")
+app.include_router(products_router, prefix="/api")
+app.include_router(medical_reports_router, prefix="/api")
+app.include_router(skin_history_router, prefix="/api")
+app.include_router(recommendation_router, prefix="/api")
 
 
 # ── General routes (Phase 4 — unchanged) ─────────────────────────────────────

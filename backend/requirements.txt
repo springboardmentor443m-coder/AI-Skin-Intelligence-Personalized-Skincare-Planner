@@ -47,3 +47,6 @@ Pillow
 
 # python-multipart — Required by FastAPI to handle multipart/form-data file uploads
 python-multipart
+
+# deep-translator — Free translation library using Google Translate (no API key needed)
+deep-translator

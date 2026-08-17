@@ -1,0 +1,298 @@
+{
+  "products": {
+    "nv": [
+      {
+        "id": "nv-1",
+        "name": "Broad-Spectrum SPF 50+ Sunscreen",
+        "category": "Sun Protection",
+        "image_url": "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80&fit=crop",
+        "description": "A lightweight, non-greasy daily sunscreen providing broad-spectrum UVA and UVB protection for all skin types.",
+        "why_useful": "Daily sun protection is important for melanocytic nevi (moles). UV exposure may influence existing moles over time. Sunscreen is one of the most evidence-backed protective measures for general skin health.",
+        "key_features": ["Broad-spectrum SPF 50+", "UVA + UVB protection", "Water-resistant (80 min)", "Fragrance-free", "Non-comedogenic"],
+        "suitable_skin_types": ["All skin types"],
+        "how_to_use": "Apply generously to all exposed areas 15–20 minutes before sun exposure. Reapply every 2 hours, or after swimming or sweating. Use daily, even on cloudy days.",
+        "precautions": "Not a substitute for medical evaluation. Keep out of eyes. Discontinue if rash or irritation develops. Consult a dermatologist if you have concerns about any mole.",
+        "price_range": "₹350 – ₹1,500",
+        "product_link": null
+      },
+      {
+        "id": "nv-2",
+        "name": "Gentle Hydrating Facial Cleanser",
+        "category": "Cleanser",
+        "image_url": "https://images.unsplash.com/photo-1596755389378-c31d21fd1e9?w=400&q=80&fit=crop",
+        "description": "A mild, soap-free cleanser that effectively removes impurities without stripping the skin's natural moisture barrier.",
+        "why_useful": "Gentle cleansing supports a healthy skin barrier and helps keep the skin around moles clean and free of irritants that could cause unnecessary inflammation.",
+        "key_features": ["Soap-free formula", "pH-balanced", "Fragrance-free", "Hypoallergenic", "Suitable for twice-daily use"],
+        "suitable_skin_types": ["Normal", "Dry", "Sensitive", "Combination"],
+        "how_to_use": "Apply a small amount to damp face, gently massage in circular motions for 30 seconds, then rinse thoroughly with lukewarm water. Use morning and evening.",
+        "precautions": "Avoid applying directly to any irritated or broken skin areas. Not for use near eyes. Do not scrub mole areas aggressively.",
+        "price_range": "₹200 – ₹800",
+        "product_link": null
+      },
+      {
+        "id": "nv-3",
+        "name": "Vitamin C Antioxidant Serum",
+        "category": "Serum",
+        "image_url": "https://images.unsplash.com/photo-1571781926291-c7a58d0ff7e6?w=400&q=80&fit=crop",
+        "description": "A stabilised vitamin C serum that provides antioxidant protection, helping to neutralise free radicals from UV exposure and environmental stressors.",
+        "why_useful": "Antioxidants like Vitamin C may support overall skin health and provide an added layer of protection against UV-induced oxidative damage. Suitable for general skin maintenance.",
+        "key_features": ["10–15% Vitamin C", "Antioxidant protection", "Brightening effect", "Lightweight texture", "Dermatologist-tested"],
+        "suitable_skin_types": ["Normal", "Oily", "Combination"],
+        "how_to_use": "Apply 3–5 drops to clean, dry skin each morning before moisturiser and sunscreen. Begin with every other day to assess tolerance.",
+        "precautions": "May cause mild tingling on first use. Do not apply directly to lesions. Avoid use on broken or irritated skin. Always follow with sunscreen during the day.",
+        "price_range": "₹500 – ₹2,000",
+        "product_link": null
+      },
+      {
+        "id": "nv-4",
+        "name": "Oil-Free Non-Comedogenic Moisturiser",
+        "category": "Moisturiser",
+        "image_url": "https://images.unsplash.com/photo-1609375272572-12bc5e9d20e1?w=400&q=80&fit=crop",
+        "description": "A lightweight, non-greasy daily moisturiser formulated to provide lasting hydration without clogging pores.",
+        "why_useful": "Adequate skin hydration supports the skin barrier. Keeping skin well-moisturised reduces dryness and potential irritation in areas with moles.",
+        "key_features": ["Oil-free", "Non-comedogenic", "Lightweight gel-cream texture", "Fragrance-free", "Suitable for daily use"],
+        "suitable_skin_types": ["Oily", "Combination", "Normal"],
+        "how_to_use": "Apply a pea-sized amount to clean face after cleansing and any serums. Use morning and evening.",
+        "precautions": "Discontinue if irritation occurs. Avoid direct application on any actively changing or irritated mole. Keep away from eyes.",
+        "price_range": "₹250 – ₹900",
+        "product_link": null
+      }
+    ],
+    "bkl": [
+      {
+        "id": "bkl-1",
+        "name": "Gentle BHA Exfoliating Cleanser",
+        "category": "Exfoliating Cleanser",
+        "image_url": "https://images.unsplash.com/photo-1596755389378-c31d21fd1e9?w=400&q=80&fit=crop",
+        "description": "A mild salicylic acid (BHA) cleanser that helps gently remove dead skin cells and support smoother skin texture.",
+        "why_useful": "For benign keratosis-like lesions, gentle exfoliation may help support skin surface texture and reduce surface buildup. This is for general skin care only — not a treatment for the lesion itself.",
+        "key_features": ["0.5–2% Salicylic acid", "Gentle formula", "Helps with texture", "Non-stripping"],
+        "suitable_skin_types": ["Oily", "Combination", "Acne-prone"],
+        "how_to_use": "Start with 2–3 times a week. Apply to wet skin, massage gently for 30–60 seconds, then rinse well. Always follow with moisturiser and sunscreen.",
+        "precautions": "Do not apply directly to inflamed or bleeding lesions. Stop use if skin becomes dry, red, or irritated. Avoid use if pregnant or nursing. Always use sunscreen when using BHA products.",
+        "price_range": "₹300 – ₹1,200",
+        "product_link": null
+      },
+      {
+        "id": "bkl-2",
+        "name": "Broad-Spectrum SPF 50+ Sunscreen",
+        "category": "Sun Protection",
+        "image_url": "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80&fit=crop",
+        "description": "Daily broad-spectrum sunscreen offering comprehensive UVA and UVB protection.",
+        "why_useful": "UV exposure can worsen keratosis-like lesions and increase overall skin damage. Daily sun protection is an important part of managing these areas.",
+        "key_features": ["SPF 50+", "Broad-spectrum", "Lightweight", "Non-sticky"],
+        "suitable_skin_types": ["All skin types"],
+        "how_to_use": "Apply generously to all exposed areas 15 minutes before going outdoors. Reapply every 2 hours.",
+        "precautions": "Not a treatment for keratosis. Consult a dermatologist if lesions change in size, shape, or colour.",
+        "price_range": "₹350 – ₹1,500",
+        "product_link": null
+      },
+      {
+        "id": "bkl-3",
+        "name": "Ceramide Barrier Repair Moisturiser",
+        "category": "Moisturiser",
+        "image_url": "https://images.unsplash.com/photo-1609375272572-12bc5e9d20e1?w=400&q=80&fit=crop",
+        "description": "A ceramide-rich cream that helps restore and maintain the skin's natural moisture barrier for long-lasting hydration.",
+        "why_useful": "Maintaining a healthy skin barrier is important for keratosis-prone skin. Ceramides help reduce water loss and soothe dry, flaky areas of skin.",
+        "key_features": ["Ceramides 1, 3, 6-II", "Hyaluronic acid", "Fragrance-free", "Dermatologist-tested", "Long-lasting hydration"],
+        "suitable_skin_types": ["Dry", "Normal", "Sensitive"],
+        "how_to_use": "Apply a generous layer to clean face and body after cleansing. Use morning and evening for best results.",
+        "precautions": "Not a treatment for keratosis. Consult a dermatologist for any worsening or changing lesions.",
+        "price_range": "₹400 – ₹1,800",
+        "product_link": null
+      },
+      {
+        "id": "bkl-4",
+        "name": "Niacinamide 10% + Zinc Brightening Serum",
+        "category": "Serum",
+        "image_url": "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&q=80&fit=crop",
+        "description": "A well-tolerated niacinamide serum that supports even skin tone, minimises pore appearance, and helps improve overall skin texture.",
+        "why_useful": "Niacinamide (Vitamin B3) may support even skin tone around benign keratosis areas for general skin maintenance. It is gentle and suitable for most skin types.",
+        "key_features": ["10% Niacinamide", "Zinc PCA", "Pore-minimising", "Fragrance-free", "Vegan-friendly"],
+        "suitable_skin_types": ["All skin types"],
+        "how_to_use": "Apply 2–3 drops to cleansed skin before moisturiser, morning and evening.",
+        "precautions": "For external use only. Not a treatment for skin conditions. Do not apply on open wounds or infected skin.",
+        "price_range": "₹400 – ₹1,500",
+        "product_link": null
+      }
+    ],
+    "df": [
+      {
+        "id": "df-1",
+        "name": "Broad-Spectrum SPF 50+ Sunscreen",
+        "category": "Sun Protection",
+        "image_url": "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80&fit=crop",
+        "description": "Everyday broad-spectrum sun protection against UVA and UVB radiation.",
+        "why_useful": "Protecting skin from UV exposure is important for all skin conditions. Sunscreen helps prevent further sun damage in areas around dermatofibromas.",
+        "key_features": ["SPF 50+", "UVA + UVB protection", "Lightweight", "Sweat-resistant"],
+        "suitable_skin_types": ["All skin types"],
+        "how_to_use": "Apply generously to all exposed areas 15 minutes before sun exposure. Reapply every 2 hours.",
+        "precautions": "Not a treatment for dermatofibroma. Consult a dermatologist if the lesion changes or becomes symptomatic.",
+        "price_range": "₹350 – ₹1,500",
+        "product_link": null
+      },
+      {
+        "id": "df-2",
+        "name": "Fragrance-Free Gentle Cleanser",
+        "category": "Cleanser",
+        "image_url": "https://images.unsplash.com/photo-1596755389378-c31d21fd1e9?w=400&q=80&fit=crop",
+        "description": "A mild, soap-free cleanser suitable for everyday gentle cleansing of sensitive skin.",
+        "why_useful": "Gentle cleansing avoids irritating dermatofibroma lesions and maintains overall skin hygiene without causing unnecessary inflammation.",
+        "key_features": ["Fragrance-free", "Soap-free", "pH-balanced", "Non-irritating"],
+        "suitable_skin_types": ["All skin types", "Sensitive skin"],
+        "how_to_use": "Use twice daily with lukewarm water. Pat the skin dry gently — do not rub lesion areas.",
+        "precautions": "Avoid scrubbing around lesion areas. Do not attempt to remove or scrape the lesion. Consult a dermatologist for any changes.",
+        "price_range": "₹200 – ₹800",
+        "product_link": null
+      },
+      {
+        "id": "df-3",
+        "name": "Hydrating Ceramide Moisturiser",
+        "category": "Moisturiser",
+        "image_url": "https://images.unsplash.com/photo-1609375272572-12bc5e9d20e1?w=400&q=80&fit=crop",
+        "description": "A ceramide-based moisturiser that strengthens the skin barrier and provides lasting hydration.",
+        "why_useful": "Keeping the skin around dermatofibromas well-hydrated reduces dryness and potential irritation in those areas.",
+        "key_features": ["Ceramides", "Fragrance-free", "Long-lasting hydration", "Dermatologist-tested", "Suitable for body use"],
+        "suitable_skin_types": ["Dry", "Normal", "Sensitive"],
+        "how_to_use": "Apply to clean face and body after cleansing. Use morning and evening.",
+        "precautions": "Avoid rubbing or pressing on the lesion. Do not attempt self-removal of dermatofibromas — consult a dermatologist.",
+        "price_range": "₹400 – ₹1,800",
+        "product_link": null
+      }
+    ],
+    "vasc": [
+      {
+        "id": "vasc-1",
+        "name": "Centella Asiatica Calming Moisturiser",
+        "category": "Moisturiser",
+        "image_url": "https://images.unsplash.com/photo-1609375272572-12bc5e9d20e1?w=400&q=80&fit=crop",
+        "description": "A calming, lightweight moisturiser enriched with Centella Asiatica (Cica) extract to soothe and strengthen reactive skin.",
+        "why_useful": "Centella Asiatica is known for its calming and skin-repair properties, which may help support skin comfort around vascular lesion areas.",
+        "key_features": ["Centella Asiatica extract", "Madecassoside", "Fragrance-free", "Hypoallergenic", "Soothing formula"],
+        "suitable_skin_types": ["Sensitive", "Dry", "Normal"],
+        "how_to_use": "Apply a thin layer to cleansed skin morning and evening. Gently pat — do not rub over any active lesions.",
+        "precautions": "For general skin care only. Not a treatment for vascular conditions. Avoid applying to broken skin. Consult a dermatologist for persistent vascular lesions.",
+        "price_range": "₹350 – ₹1,500",
+        "product_link": null
+      },
+      {
+        "id": "vasc-2",
+        "name": "Broad-Spectrum SPF 50+ Sunscreen",
+        "category": "Sun Protection",
+        "image_url": "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80&fit=crop",
+        "description": "Daily mineral or chemical sunscreen providing comprehensive UV protection for vascular-prone skin.",
+        "why_useful": "UV exposure can exacerbate vascular skin issues. Consistent sunscreen use is one of the most effective protective measures for vascular-prone skin.",
+        "key_features": ["SPF 50+", "Broad-spectrum", "Tinted option available", "Non-irritating formula"],
+        "suitable_skin_types": ["All skin types"],
+        "how_to_use": "Apply generously before going outdoors. Reapply every 2 hours and after sweating.",
+        "precautions": "Not a treatment. Seek medical evaluation for any growing or changing vascular lesions.",
+        "price_range": "₹350 – ₹1,500",
+        "product_link": null
+      },
+      {
+        "id": "vasc-3",
+        "name": "Green Tea Antioxidant Face Serum",
+        "category": "Serum",
+        "image_url": "https://images.unsplash.com/photo-1571781926291-c7a58d0ff7e6?w=400&q=80&fit=crop",
+        "description": "An antioxidant-rich serum featuring green tea extract (EGCG) and vitamin E to protect against environmental stressors.",
+        "why_useful": "Green tea antioxidants may help reduce oxidative stress on vascular-prone skin. Suitable for general skin maintenance and daily protection.",
+        "key_features": ["Green tea extract (EGCG)", "Vitamin E", "Anti-inflammatory properties", "Lightweight texture"],
+        "suitable_skin_types": ["All skin types", "Sensitive skin"],
+        "how_to_use": "Apply 3–4 drops to clean skin in the morning before moisturiser and sunscreen.",
+        "precautions": "Not a treatment for vascular lesions. Avoid open or bleeding areas. Consult a doctor for medical concerns.",
+        "price_range": "₹400 – ₹1,800",
+        "product_link": null
+      },
+      {
+        "id": "vasc-4",
+        "name": "Gentle Soothing Facial Cleanser",
+        "category": "Cleanser",
+        "image_url": "https://images.unsplash.com/photo-1596755389378-c31d21fd1e9?w=400&q=80&fit=crop",
+        "description": "A calming, low-irritation cleanser suitable for reactive and sensitive skin types with vascular concerns.",
+        "why_useful": "Gentle cleansing without harsh ingredients helps minimise irritation and redness in skin with vascular conditions.",
+        "key_features": ["Aloe vera", "No harsh surfactants", "pH-balanced", "Fragrance-free", "Anti-redness formula"],
+        "suitable_skin_types": ["Sensitive", "Normal", "Dry"],
+        "how_to_use": "Use twice daily with cool or lukewarm water. Avoid hot water, which may worsen vascular redness.",
+        "precautions": "Do not scrub over active lesions. Avoid very hot water on affected areas. Pat dry gently.",
+        "price_range": "₹200 – ₹700",
+        "product_link": null
+      }
+    ],
+    "akiec": [
+      {
+        "id": "akiec-1",
+        "name": "High-Protection SPF 50+ Broad-Spectrum Sunscreen",
+        "category": "Sun Protection",
+        "image_url": "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80&fit=crop",
+        "description": "Maximum-protection daily sunscreen with comprehensive UVA and UVB protection. Suitable for daily use on all sun-exposed areas.",
+        "why_useful": "UV exposure is a major contributing factor to actinic keratoses. Consistent, high-protection sunscreen use is strongly recommended by dermatologists as an important preventive measure during and after treatment.",
+        "key_features": ["SPF 50+", "Broad-spectrum UVA/UVB", "Water-resistant (80 min)", "Fragrance-free", "Face and body suitable"],
+        "suitable_skin_types": ["All skin types"],
+        "how_to_use": "Apply generously to all exposed skin 20 minutes before going outdoors. Reapply every 2 hours, or after swimming or sweating. Wear protective clothing and seek shade.",
+        "precautions": "⚠️ IMPORTANT: Sunscreen is NOT a treatment for actinic keratoses. This product is for general skin protection ONLY. You must consult a qualified dermatologist for evaluation and appropriate treatment of this condition.",
+        "price_range": "₹400 – ₹1,800",
+        "product_link": null
+      },
+      {
+        "id": "akiec-2",
+        "name": "Ultra-Gentle Sensitive Skin Cleanser",
+        "category": "Cleanser",
+        "image_url": "https://images.unsplash.com/photo-1596755389378-c31d21fd1e9?w=400&q=80&fit=crop",
+        "description": "A fragrance-free, soap-free cleanser specially formulated for sensitive and compromised skin.",
+        "why_useful": "Gentle, non-irritating cleansing helps maintain skin hygiene without aggravating sensitive or treated skin areas. Use only as directed by your dermatologist during any treatment.",
+        "key_features": ["Ultra-gentle formula", "No fragrance", "No soap", "Dermatologist-tested", "Hypoallergenic"],
+        "suitable_skin_types": ["Sensitive", "All skin types"],
+        "how_to_use": "Use once or twice daily with lukewarm water. Avoid scrubbing. Pat dry gently with a clean towel.",
+        "precautions": "⚠️ Avoid scrubbing or irritating lesion areas. Do NOT attempt to self-treat actinic keratoses with any over-the-counter product. Consult a dermatologist for professional evaluation and treatment options.",
+        "price_range": "₹200 – ₹800",
+        "product_link": null
+      }
+    ],
+    "bcc": [
+      {
+        "id": "bcc-1",
+        "name": "High-Protection SPF 50+ Broad-Spectrum Sunscreen",
+        "category": "Sun Protection",
+        "image_url": "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80&fit=crop",
+        "description": "Maximum-protection daily sunscreen for comprehensive UV protection during and after treatment.",
+        "why_useful": "Sun protection is important for all skin conditions. UV exposure should be minimised while awaiting or during medical treatment. This is for general skin care ONLY and is not a treatment.",
+        "key_features": ["SPF 50+", "Broad-spectrum", "Water-resistant", "Fragrance-free", "Gentle formula"],
+        "suitable_skin_types": ["All skin types"],
+        "how_to_use": "Apply generously before going outdoors. Reapply every 2 hours.",
+        "precautions": "⚠️ IMPORTANT: This product is NOT a treatment for basal cell carcinoma. You MUST consult a qualified dermatologist or healthcare professional promptly for evaluation. Do not delay medical consultation.",
+        "price_range": "₹400 – ₹1,800",
+        "product_link": null
+      },
+      {
+        "id": "bcc-2",
+        "name": "Ultra-Gentle Fragrance-Free Cleanser",
+        "category": "Cleanser",
+        "image_url": "https://images.unsplash.com/photo-1596755389378-c31d21fd1e9?w=400&q=80&fit=crop",
+        "description": "A mild, fragrance-free cleanser for sensitive or compromised skin during treatment periods.",
+        "why_useful": "Gentle skin hygiene supports overall skin health. This is general skin care only and is NOT a treatment for any skin condition.",
+        "key_features": ["Fragrance-free", "Gentle formula", "pH-balanced", "Non-irritating", "Dermatologist-recommended for sensitive skin"],
+        "suitable_skin_types": ["Sensitive", "All skin types"],
+        "how_to_use": "Use gently with lukewarm water. Pat dry — do not scrub or rub the affected area.",
+        "precautions": "⚠️ Do NOT apply any products directly to suspicious skin lesions without medical guidance. Consult a dermatologist without delay for evaluation.",
+        "price_range": "₹200 – ₹800",
+        "product_link": null
+      }
+    ],
+    "mel": [
+      {
+        "id": "mel-1",
+        "name": "High-Protection SPF 50+ Broad-Spectrum Sunscreen",
+        "category": "Sun Protection",
+        "image_url": "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80&fit=crop",
+        "description": "Maximum-protection daily sunscreen with broad-spectrum UVA and UVB protection.",
+        "why_useful": "Protecting all skin from UV exposure is universally important. While sunscreen is not a treatment, limiting UV exposure is universally recommended by dermatologists for overall skin health.",
+        "key_features": ["SPF 50+", "Broad-spectrum UVA/UVB", "Water-resistant (80 min)", "Fragrance-free", "Suitable for all skin types"],
+        "suitable_skin_types": ["All skin types"],
+        "how_to_use": "Apply generously to all exposed areas before going outdoors. Reapply every 2 hours.",
+        "precautions": "⚠️ CRITICAL: This product is NOT a treatment for melanoma or any other serious skin condition. If the AI result indicates a high-risk finding, please consult a qualified dermatologist or healthcare professional WITHOUT DELAY. Early professional evaluation is essential.",
+        "price_range": "₹400 – ₹1,800",
+        "product_link": null
+      }
+    ]
+  }
+}

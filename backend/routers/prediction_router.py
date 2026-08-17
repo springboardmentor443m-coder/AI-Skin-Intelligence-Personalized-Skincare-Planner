@@ -238,18 +238,37 @@ async def predict(
         )
 
     # ── Step 3: Open with Pillow (validates image integrity) ─────────────────
+    #
+    # IMPORTANT: Pillow's verify() must be called on a FRESH Image.open()
+    # BEFORE any .convert() or .load() call. Calling verify() after convert()
+    # causes a "RuntimeError: seek of closed file" in Pillow ≥ 9.x because
+    # convert() internally calls load(), which exhausts the BytesIO stream.
+    #
+    # Correct pattern:
+    #   1. Open a fresh Image for verify-only (no convert).
+    #   2. Call verify() — Pillow reads & validates internal headers.
+    #   3. Open a second fresh Image and convert("RGB") for actual inference.
     try:
-        pil_image = Image.open(io.BytesIO(file_bytes)).convert("RGB")
-        # Verify the image is not truncated/corrupted
-        pil_image.verify()
-        # Re-open after verify() — Pillow closes the image after verify
-        pil_image = Image.open(io.BytesIO(file_bytes)).convert("RGB")
+        # Step 3a: integrity check — must be on an unconverted image
+        Image.open(io.BytesIO(file_bytes)).verify()
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=(
                 f"Could not read the uploaded image. "
                 f"The file may be corrupted or is not a valid image. "
+                f"Details: {exc}"
+            ),
+        ) from exc
+
+    try:
+        # Step 3b: decode for inference — re-open after verify()
+        pil_image = Image.open(io.BytesIO(file_bytes)).convert("RGB")
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                f"Could not decode the uploaded image for processing. "
                 f"Details: {exc}"
             ),
         ) from exc

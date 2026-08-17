@@ -25,27 +25,18 @@ function Hero() {
           that truly works for you.
         </p>
 
-        {/* ── CTA Buttons ── */}
-        <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-          {/* Primary CTA: navigate to the registration/assessment flow */}
+        {/* ── CTA Button ── */}
+        <div className="mt-10 flex justify-center">
           <Link
             to="/register"
             className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors shadow-lg shadow-blue-200"
           >
-            Start Your Skin Assessment
+            Start Your Skin Analysis
             <ArrowRight size={20} />
           </Link>
-
-          {/* Secondary CTA: anchor scroll to the How It Works section */}
-          <a
-            href="#how-it-works"
-            className="flex items-center justify-center gap-2 border-2 border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-400 px-8 py-4 rounded-xl text-lg font-semibold transition-colors"
-          >
-            See How It Works
-          </a>
         </div>
 
-        {/* ── Trust Indicator Badges ── Build confidence without making medical claims */}
+        {/* ── Trust Indicator Badges ── */}
         <div className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-8 text-sm text-gray-400">
           <div className="flex items-center gap-2">
             <Shield size={18} className="text-blue-500" />
@@ -66,4 +57,4 @@ function Hero() {
   );
 }
 
-export default Hero;
+export default Hero;
