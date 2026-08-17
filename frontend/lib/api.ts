@@ -32,3 +32,14 @@ apiClient.interceptors.response.use(
 
 export default apiClient
 
+export async function compareAnalyses(
+  analysis1Id: string,
+  analysis2Id: string
+) {
+  const response = await apiClient.post('/compare', {
+    analysis1_id: Number(analysis1Id),
+    analysis2_id: Number(analysis2Id),
+  })
+
+  return response.data
+}

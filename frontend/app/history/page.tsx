@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { compareAnalyses } from '@/lib/api'
 import { ProtectedLayout } from '@/components/protected-layout'
 import { useAnalysisHistory } from '@/hooks/use-skin-analysis'
 import { motion } from 'framer-motion'
@@ -11,14 +12,45 @@ export default function HistoryPage() {
   const { history, isLoading } = useAnalysisHistory()
   const [selectedAnalysis, setSelectedAnalysis] = useState<string | null>(null)
   const [filterBy, setFilterBy] = useState<'all' | 'condition'>('all')
+  const [compareSelection, setCompareSelection] = useState<string[]>([])
+  const [comparison, setComparison] = useState<any>(null)
+  const [isComparing, setIsComparing] = useState(false)
+
+  const handleCompare = async () => {
+    if (compareSelection.length !== 2) return
+
+    try {
+      setIsComparing(true)
+
+      const result = await compareAnalyses(
+        compareSelection[0],
+        compareSelection[1]
+      )
+
+      setComparison(result)
+    } catch (error) {
+      console.error('Comparison failed:', error)
+    } finally {
+      setIsComparing(false)
+    }
+  }
 
   const sortedHistory = useMemo(() => {
-    const sorted = [...history].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    const sorted = [...history].sort(
+      (a, b) =>
+        new Date(b.timestamp).getTime() -
+        new Date(a.timestamp).getTime()
+    )
+
     if (filterBy === 'condition') {
-      return sorted.filter((analysis) => analysis.conditions?.length > 0)
+      return sorted.filter(
+        (analysis) => analysis.conditions?.length > 0
+      )
     }
+
     return sorted
   }, [history, filterBy])
+
 
   const container = {
     hidden: { opacity: 0 },
@@ -85,8 +117,47 @@ export default function HistoryPage() {
         ) : (
           <motion.div className="space-y-4" variants={container} initial="hidden" animate="show">
             {sortedHistory.map((analysis) => (
-              <motion.button key={analysis.id} variants={item} onClick={() => setSelectedAnalysis(selectedAnalysis === analysis.id ? null : analysis.id)} className="w-full rounded-[24px] border border-[#f3e3da] bg-white/80 p-5 text-left shadow-[0_16px_45px_rgba(59,47,47,0.04)] transition hover:border-[#d89c8b]/40 hover:shadow-[0_18px_50px_rgba(59,47,47,0.06)]">
+              <motion.div
+                key={analysis.id}
+                variants={item}
+                className={`w-full rounded-[24px] border bg-white/80 p-5 text-left shadow-[0_16px_45px_rgba(59,47,47,0.04)] transition ${
+                  compareSelection.includes(String(analysis.id))
+                    ? 'border-[#d89c8b] ring-2 ring-[#d89c8b]/20'
+                    : 'border-[#f3e3da]'
+                }`}
+              >
                 <div className="flex items-start justify-between gap-4">
+                  <div className="mb-4 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation()
+
+                        const id = String(analysis.id)
+
+                        setCompareSelection((current) => {
+                          if (current.includes(id)) {
+                            return current.filter((item) => item !== id)
+                          }
+
+                          if (current.length >= 2) {
+                            return current
+                          }
+
+                          return [...current, id]
+                        })
+                      }}
+                      className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
+                        compareSelection.includes(String(analysis.id))
+                          ? 'bg-[#d89c8b] text-white'
+                          : 'bg-[#fff2eb] text-[#c98b72] hover:bg-[#f8ede7]'
+                      }`}
+                    >
+                      {compareSelection.includes(String(analysis.id))
+                        ? '✓ Selected'
+                        : 'Select for comparison'}
+                    </button>
+                  </div>
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-[#fff2eb] text-[#d89c8b]">
@@ -155,15 +226,175 @@ export default function HistoryPage() {
                     )}
                   </motion.div>
                 )}
-              </motion.button>
+              </motion.div>
             ))}
           </motion.div>
         )}
 
         {sortedHistory.length >= 2 && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass-card p-6 text-center">
-            <p className="text-[#8a736f]">Want to compare your progress over time?</p>
-            <button className="premium-button mt-4">Compare results</button>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="glass-card p-6 text-center"
+          >
+            <p className="text-[#8a736f]">
+              Select two analyses to compare your progress.
+            </p>
+
+            <p className="mt-2 text-sm text-[#c98b72]">
+              {compareSelection.length}/2 selected
+            </p>
+
+            <button
+              type="button"
+              className="premium-button mt-4 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={compareSelection.length !== 2 || isComparing}
+              onClick={handleCompare}
+            >
+              {isComparing ? 'Comparing...' : 'Compare results'}
+            </button>
+
+            {comparison && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-6 rounded-[24px] border border-[#f3e3da] bg-white p-6 text-left shadow-[0_16px_45px_rgba(59,47,47,0.04)]"
+              >
+                <h2 className="text-xl font-semibold text-[#3b2f2f]">
+                  Comparison Results
+                </h2>
+
+                {/* Analysis 1 */}
+                <div className="mt-5 rounded-[18px] border border-[#f3e3da] bg-[#fffdfb] p-5">
+                  <p className="text-sm font-semibold text-[#8a736f]">
+                    Previous Analysis
+                  </p>
+
+                  <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-lg font-semibold text-[#3b2f2f]">
+                        {comparison.analysis1.skin_type}
+                      </p>
+
+                      <p className="text-sm text-[#8a736f]">
+                        {new Date(comparison.analysis1.timestamp).toLocaleDateString(
+                          'en-US',
+                          {
+                            weekday: 'short',
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          }
+                        )}
+                      </p>
+                    </div>
+
+                    <div className="rounded-full bg-[#fff2eb] px-4 py-2 text-sm font-semibold text-[#c98b72]">
+                      {comparison.analysis1.confidence.toFixed(2)}%
+                    </div>
+                  </div>
+                </div>
+
+                {/* Analysis 2 */}
+                <div className="mt-4 rounded-[18px] border border-[#f3e3da] bg-[#fffdfb] p-5">
+                  <p className="text-sm font-semibold text-[#8a736f]">
+                    Current Analysis
+                  </p>
+
+                  <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-lg font-semibold text-[#3b2f2f]">
+                        {comparison.analysis2.skin_type}
+                      </p>
+
+                      <p className="text-sm text-[#8a736f]">
+                        {new Date(comparison.analysis2.timestamp).toLocaleDateString(
+                          'en-US',
+                          {
+                            weekday: 'short',
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          }
+                        )}
+                      </p>
+                    </div>
+
+                    <div className="rounded-full bg-[#fff2eb] px-4 py-2 text-sm font-semibold text-[#c98b72]">
+                      {comparison.analysis2.confidence.toFixed(2)}%
+                    </div>
+                  </div>
+                </div>
+
+                {/* Comparison Summary */}
+                <div className="mt-4 rounded-[18px] border border-[#f3e3da] bg-[#fff8f3] p-5">
+                  <p className="text-sm font-semibold text-[#8a736f]">
+                    Progress
+                  </p>
+
+                  <div className="mt-3 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm text-[#8a736f]">
+                        Confidence change
+                      </p>
+
+                      <p className="mt-1 text-2xl font-semibold text-[#3b2f2f]">
+                        {comparison.comparison.confidence_change > 0 ? '+' : ''}
+                        {comparison.comparison.confidence_change.toFixed(2)}%
+                      </p>
+                    </div>
+
+                    <span className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#c98b72]">
+                      {comparison.comparison.confidence_status}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Conditions Added */}
+                {comparison.comparison.conditions_added?.length > 0 && (
+                  <div className="mt-4">
+                    <p className="mb-2 text-sm font-semibold text-[#3b2f2f]">
+                      Conditions added
+                    </p>
+
+                    <div className="flex flex-wrap gap-2">
+                      {comparison.comparison.conditions_added.map(
+                        (condition: string) => (
+                          <span
+                            key={condition}
+                            className="rounded-full bg-[#fff2eb] px-3 py-1.5 text-xs font-medium text-[#c98b72]"
+                          >
+                            {condition}
+                          </span>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Conditions Removed */}
+                {comparison.comparison.conditions_removed?.length > 0 && (
+                  <div className="mt-4">
+                    <p className="mb-2 text-sm font-semibold text-[#3b2f2f]">
+                      Conditions improved / removed
+                    </p>
+
+                    <div className="flex flex-wrap gap-2">
+                      {comparison.comparison.conditions_removed.map(
+                        (condition: string) => (
+                          <span
+                            key={condition}
+                            className="rounded-full bg-[#f8ede7] px-3 py-1.5 text-xs font-medium text-[#8a736f]"
+                          >
+                            {condition}
+                          </span>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            )}
           </motion.div>
         )}
       </div>

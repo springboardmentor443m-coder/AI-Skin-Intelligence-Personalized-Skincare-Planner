@@ -28,6 +28,10 @@ class ChatRequest(BaseModel):
     skin_type: Optional[str] = None
     recommendations: Optional[List[str]] = None
     weekly_plan: Optional[dict] = None
+
+class CompareRequest(BaseModel):
+    analysis1_id: int
+    analysis2_id: int
     
 app = FastAPI(
     title="AI Skin Intelligence API",
@@ -263,47 +267,78 @@ async def predict(
         "analysis": analysis,
     }
 @app.post("/compare")
-def compare_predictions():
+def compare_predictions(
+    request: CompareRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    prediction1 = (
+        db.query(Prediction)
+        .filter(
+            Prediction.id == request.analysis1_id,
+            Prediction.user_id == current_user.id
+        )
+        .first()
+    )
 
-    week1_file = Path("outputs/week1_prediction.json")
-    week2_file = Path("outputs/week2_prediction.json")
+    prediction2 = (
+        db.query(Prediction)
+        .filter(
+            Prediction.id == request.analysis2_id,
+            Prediction.user_id == current_user.id
+        )
+        .first()
+    )
 
-    if not week1_file.exists():
-        return {"error": "Week 1 prediction not found"}
+    if not prediction1 or not prediction2:
+        raise HTTPException(
+            status_code=404,
+            detail="One or both analyses were not found"
+        )
 
-    if not week2_file.exists():
-        return {"error": "Week 2 prediction not found"}
+    analysis1 = prediction1.analysis
+    analysis2 = prediction2.analysis
 
-    with open(week1_file, "r") as file:
-        week1 = json.load(file)
+    old_confidence = prediction1.confidence
+    new_confidence = prediction2.confidence
 
-    with open(week2_file, "r") as file:
-        week2 = json.load(file)
+    confidence_change = new_confidence - old_confidence
 
-    report = {}
+    if confidence_change < 0:
+        confidence_status = "Improved"
+    elif confidence_change > 0:
+        confidence_status = "Increased"
+    else:
+        confidence_status = "No Change"
 
-    for concern in week1["probabilities"]:
-
-        old_score = week1["probabilities"][concern]
-        new_score = week2["probabilities"][concern]
-
-        change = new_score - old_score
-
-        if change < 0:
-            status = "Improved"
-        elif change > 0:
-            status = "Increased"
-        else:
-            status = "No Change"
-
-        report[concern] = {
-            "week1": round(old_score, 2),
-            "week2": round(new_score, 2),
-            "change": round(change, 2),
-            "status": status
+    return {
+        "analysis1": {
+            "id": prediction1.id,
+            "skin_type": prediction1.predicted_class,
+            "confidence": round(prediction1.confidence, 2),
+            "timestamp": prediction1.created_at,
+            "conditions": analysis1.conditions if analysis1 else [],
+        },
+        "analysis2": {
+            "id": prediction2.id,
+            "skin_type": prediction2.predicted_class,
+            "confidence": round(prediction2.confidence, 2),
+            "timestamp": prediction2.created_at,
+            "conditions": analysis2.conditions if analysis2 else [],
+        },
+        "comparison": {
+            "confidence_change": round(confidence_change, 2),
+            "confidence_status": confidence_status,
+            "conditions_added": list(
+                set(analysis2.conditions if analysis2 else [])
+                - set(analysis1.conditions if analysis1 else [])
+            ),
+            "conditions_removed": list(
+                set(analysis1.conditions if analysis1 else [])
+                - set(analysis2.conditions if analysis2 else [])
+            ),
         }
-
-    return report
+    }
 @app.post("/register", response_model=UserResponse)
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
 
