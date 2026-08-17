@@ -3,3 +3,4 @@ Data sets/
 __pycache__/
 *.pyc
 *.pth
+backend/.env 
