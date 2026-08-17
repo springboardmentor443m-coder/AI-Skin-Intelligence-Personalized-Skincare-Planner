@@ -2162,8 +2162,9 @@ async def get_chat_greeting(
 # ============================================================
 # 24. GLOWAI CHATBOT
 # ============================================================
+
 #
-# GlowAI uses the user's latest scan as context.
+# GlowAI uses the user's latest and previous scans as context.
 #
 # Context includes:
 #   - Age
@@ -2174,10 +2175,12 @@ async def get_chat_greeting(
 #   - Model confidence
 #   - All class probabilities
 #   - Recommended products
+#   - Previous scan information when available
 #
 # This allows the chatbot to answer questions
-# specifically related to the user's analysis.
+# specifically related to the user's analysis and scan history.
 # ============================================================
+
 
 @app.post("/api/chat")
 async def chat_with_glowai(
@@ -2246,16 +2249,20 @@ async def chat_with_glowai(
 
         if user_scans:
 
+            # --------------------------------------------------
+            # LATEST SCAN
+            # --------------------------------------------------
+
             latest = user_scans[0]
 
 
-            cond = latest.get(
+            latest_cond = latest.get(
                 "predicted_class",
                 "None"
             )
 
 
-            conf = round(
+            latest_conf = round(
                 float(
                     latest.get(
                         "confidence",
@@ -2266,37 +2273,37 @@ async def chat_with_glowai(
             )
 
 
-            probs = latest.get(
+            latest_probs = latest.get(
                 "probabilities",
                 {}
             )
 
 
-            prob_str = ", ".join(
+            latest_prob_str = ", ".join(
 
                 [
                     f"{k}: {round(v * 100, 1)}%"
 
                     for k, v
-                    in probs.items()
+                    in latest_probs.items()
                 ]
             )
 
 
             # ==================================================
-            # PRODUCT CONTEXT
+            # LATEST SCAN PRODUCT CONTEXT
             # ==================================================
 
-            prods = latest.get(
+            latest_prods = latest.get(
                 "recommended_products",
                 []
             )
 
 
-            prod_details = []
+            latest_prod_details = []
 
 
-            for p in prods:
+            for p in latest_prods:
 
                 p_name = (
                     p.get("name")
@@ -2330,7 +2337,7 @@ async def chat_with_glowai(
                 )
 
 
-                prod_details.append(
+                latest_prod_details.append(
 
                     f"- {p_name} | "
                     f"Price: {p_price} | "
@@ -2339,13 +2346,13 @@ async def chat_with_glowai(
                 )
 
 
-            prod_summary = (
+            latest_prod_summary = (
 
                 "\n".join(
-                    prod_details
+                    latest_prod_details
                 )
 
-                if prod_details
+                if latest_prod_details
 
                 else
                     "None listed."
@@ -2355,7 +2362,7 @@ async def chat_with_glowai(
             context_parts.append(
 
                 f"""
-LATEST USER CONTEXT:
+LATEST SCAN:
 
 Age:
 {latest.get("age", "Not provided")}
@@ -2370,24 +2377,197 @@ Personal Query:
 {latest.get("personal_query", "Not provided")}
 
 Detected Condition:
-{cond}
+{latest_cond}
 
 Confidence:
-{conf}%
+{latest_conf}%
 
 Probability Breakdown:
-{prob_str}
+{latest_prob_str}
 
 Recommended Products:
-{prod_summary}
+{latest_prod_summary}
 """
             )
+
+
+            # --------------------------------------------------
+            # PREVIOUS SCAN
+            # --------------------------------------------------
+
+            if len(user_scans) >= 2:
+
+                previous = user_scans[1]
+
+
+                previous_cond = previous.get(
+                    "predicted_class",
+                    "None"
+                )
+
+
+                previous_conf = round(
+                    float(
+                        previous.get(
+                            "confidence",
+                            0.0
+                        )
+                    ) * 100,
+                    1
+                )
+
+
+                previous_probs = previous.get(
+                    "probabilities",
+                    {}
+                )
+
+
+                previous_prob_str = ", ".join(
+
+                    [
+                        f"{k}: {round(v * 100, 1)}%"
+
+                        for k, v
+                        in previous_probs.items()
+                    ]
+                )
+
+
+                # ==============================================
+                # PREVIOUS SCAN PRODUCT CONTEXT
+                # ==============================================
+
+                previous_prods = previous.get(
+                    "recommended_products",
+                    []
+                )
+
+
+                previous_prod_details = []
+
+
+                for p in previous_prods:
+
+                    p_name = (
+                        p.get("name")
+                        or p.get(
+                            "product_name"
+                        )
+                        or "Treatment"
+                    )
+
+
+                    p_price = p.get(
+                        "price",
+                        "N/A"
+                    )
+
+
+                    p_rating = p.get(
+                        "rating",
+                        "N/A"
+                    )
+
+
+                    p_ing = (
+                        p.get(
+                            "key_ingredients"
+                        )
+                        or p.get(
+                            "ingredients"
+                        )
+                        or "Key active ingredients"
+                    )
+
+
+                    previous_prod_details.append(
+
+                        f"- {p_name} | "
+                        f"Price: {p_price} | "
+                        f"Rating: {p_rating} | "
+                        f"Ingredients: {p_ing}"
+                    )
+
+
+                previous_prod_summary = (
+
+                    "\n".join(
+                        previous_prod_details
+                    )
+
+                    if previous_prod_details
+
+                    else
+                        "None listed."
+                )
+
+
+                context_parts.append(
+
+                    f"""
+PREVIOUS SCAN:
+
+Age:
+{previous.get("age", "Not provided")}
+
+Gender:
+{previous.get("gender", "Not provided")}
+
+Skin Type:
+{previous.get("skin_type", "Not provided")}
+
+Personal Query:
+{previous.get("personal_query", "Not provided")}
+
+Detected Condition:
+{previous_cond}
+
+Confidence:
+{previous_conf}%
+
+Probability Breakdown:
+{previous_prob_str}
+
+Recommended Products:
+{previous_prod_summary}
+"""
+                )
+
+
+            else:
+
+                # --------------------------------------------------
+                # NEW USER / ONLY ONE SCAN
+                # --------------------------------------------------
+
+                context_parts.append(
+
+                    """
+PREVIOUS SCAN:
+
+No previous scan is available.
+
+The user currently has only one scan in their history.
+This is their first/latest scan.
+Do not invent or assume any previous scan information.
+"""
+                )
 
 
         else:
 
             context_parts.append(
-                "No uploaded scans are available yet."
+
+                """
+LATEST SCAN:
+
+No uploaded scans are available yet.
+
+PREVIOUS SCAN:
+
+No previous scan is available.
+"""
             )
 
 
@@ -2399,13 +2579,98 @@ Recommended Products:
 
 
         # ======================================================
+        # 24.3.1 GLOWAI CONTEXT DEBUG
+        # ======================================================
+
+        print(
+            "\n================ GLOWAI CONTEXT ================"
+        )
+
+
+        print(
+            f"User: {current_user}"
+        )
+
+
+        print(
+            f"Scans found: {len(user_scans)}"
+        )
+
+
+        if user_scans:
+
+            latest_debug = user_scans[0]
+
+
+            print(
+                f"Latest condition: "
+                f"{latest_debug.get('predicted_class', 'None')}"
+            )
+
+
+            print(
+                f"Latest confidence: "
+                f"{latest_debug.get('confidence', 'None')}"
+            )
+
+
+            print(
+                f"Latest recommended products: "
+                f"{len(latest_debug.get('recommended_products', []))}"
+            )
+
+
+            if len(user_scans) >= 2:
+
+                previous_debug = user_scans[1]
+
+
+                print(
+                    f"Previous condition: "
+                    f"{previous_debug.get('predicted_class', 'None')}"
+                )
+
+
+                print(
+                    f"Previous confidence: "
+                    f"{previous_debug.get('confidence', 'None')}"
+                )
+
+
+                print(
+                    f"Previous recommended products: "
+                    f"{len(previous_debug.get('recommended_products', []))}"
+                )
+
+
+            else:
+
+                print(
+                    "Previous scan: None - first scan for this user"
+                )
+
+
+        else:
+
+            print(
+                "No scan context available."
+            )
+
+
+        print(
+            "=================================================\n"
+        )
+
+
+        # ======================================================
         # 24.4 GENERATE GLOWAI RESPONSE
         # ======================================================
 
         if groq_client:
 
             system_prompt = f"""
-You are GlowAI, an AI skincare assistant.
+You are GlowAI, an AI skincare assistant integrated into the
+AI Skin Intelligence & Personalized Skincare Planner application.
 
 USER:
 {current_user}
@@ -2413,25 +2678,124 @@ USER:
 USER'S SKIN CONTEXT:
 {full_context}
 
-INSTRUCTIONS:
+IMPORTANT CONTEXT RULES:
 
-1. Answer the user's actual question.
+1. The latest and previous scan information shown above has
+   ALREADY been retrieved from the user's MongoDB scan history.
 
-2. Use their age, gender, skin type, personal query,
-   detected concern and product information when relevant.
+2. DO NOT ask the user to upload, attach, or resend a skin scan
+   image when they ask about their latest or previous scan.
 
-3. Do not simply repeat the detected condition.
+3. When the user asks about their latest scan, use ONLY the
+   LATEST SCAN section for the latest scan information.
 
-4. Give practical next steps.
+4. When the user asks about their previous scan, use ONLY the
+   PREVIOUS SCAN section for the previous scan information.
 
-5. If the user reports irritation or a previous reaction,
-   take that into account.
+5. "Previous scan" means the scan immediately before the latest
+   scan in the user's scan history.
 
-6. Do not invent products that are not available in context.
+6. If the PREVIOUS SCAN section says that no previous scan is
+   available, clearly explain that the user currently has only
+   one scan and therefore there is no previous scan yet.
 
-7. Keep answers concise and structured.
+7. Never invent, assume, or fabricate a previous scan.
 
-8. Do not claim to provide a medical diagnosis.
+8. Do NOT automatically compare the latest and previous scans
+   when the user only asks for their previous scan result.
+
+9. Only compare the latest and previous scans when the user
+   explicitly asks for a comparison.
+
+10. If the user asks:
+    "What was my previous scan?"
+    answer with the previous scan's detected condition,
+    confidence, and other relevant information available in
+    the PREVIOUS SCAN section.
+
+11. If the user asks:
+    "What was my latest scan?"
+    answer using the LATEST SCAN section.
+
+12. If the user asks about scan history, explain the available
+    scan history based only on the information provided above.
+
+13. Use the following scan information when relevant:
+    - Detected Condition
+    - Model Confidence
+    - Probability Breakdown
+    - Age
+    - Gender
+    - Skin Type
+    - Personal Query
+
+14. The Probability Breakdown represents AI model probabilities.
+    Do not present these probabilities as a medical diagnosis.
+
+15. When the user asks about recommended products for the latest
+    scan, use the products listed under the LATEST SCAN section.
+
+16. When the user asks about recommended products for the
+    previous scan, use the products listed under the PREVIOUS
+    SCAN section.
+
+17. When the user asks for product ingredients, prices, ratings,
+    or product recommendations, directly provide the corresponding
+    information from the appropriate scan context.
+
+18. DO NOT ask the user to provide product names when the
+    recommended products are already available in the context.
+
+19. DO NOT invent products, ingredients, prices, ratings, or other
+    product information that is not present in the context.
+
+20. If no recommended products are available for the requested
+    scan, clearly say that product recommendations are not
+    currently available.
+
+21. If no skin scan is available in the context, explain that the
+    user needs to perform a skin scan first.
+
+22. Answer the user's actual question instead of giving a generic
+    skincare response.
+
+23. Use the user's skin type and personal query when relevant.
+
+24. If the user mentions irritation, sensitivity, dryness, or a
+    previous reaction, take that information into account.
+
+25. Do not simply repeat the detected condition. Explain the
+    relevant information and practical next steps.
+
+26. Keep responses concise, clear, and structured.
+
+27. Do not claim to provide a medical diagnosis.
+
+28. Do not claim that AI probability changes prove medical
+    improvement.
+
+29. If discussing products, clearly identify the product name,
+    ingredients, price, and rating when those values are available.
+
+30. If the user asks for a skincare routine, use the relevant
+    detected concern, skin type, and recommended products from
+    the requested scan context.
+
+31. If the user asks about the previous scan and only one scan
+    exists, respond naturally with a message such as:
+
+    "Oops! We don't have a previous scan yet because this is your
+    first scan. Currently, I only have your latest scan available.
+    You can ask me about your latest scan, detected concern,
+    recommended products, or skincare routine."
+
+32. Do not claim that a scan is attached to the chat. The scan
+    information is provided through the application's saved
+    MongoDB scan context.
+
+The user's current message is:
+
+{user_msg}
 """
 
 
