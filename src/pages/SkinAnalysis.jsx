@@ -32,7 +32,9 @@ import { useAuth } from '../auth/useAuth'
 
 const ACCEPTED_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp']
 const MAX_SIZE = 10 * 1024 * 1024
-const API_URL = import.meta.env.DEV ? '/api/predict' : 'http://127.0.0.1:8000/predict'
+const RAW_API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+const BASE_API_URL = RAW_API_URL.replace(/\/+$/, '')
+const API_URL = BASE_API_URL.endsWith('/predict') ? BASE_API_URL : `${BASE_API_URL}/predict`
 
 export default function SkinAnalysis() {
   const { user } = useAuth()

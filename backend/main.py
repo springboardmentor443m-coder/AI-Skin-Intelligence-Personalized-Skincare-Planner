@@ -2,6 +2,11 @@ from typing import Optional
 import json
 import os
 import uuid
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
 # pyrefly: ignore [missing-import]
 import jwt
 from fastapi import FastAPI, File, UploadFile, Header, Depends

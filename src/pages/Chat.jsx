@@ -18,6 +18,8 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../auth/useAuth'
 
+import { getLatestAnalysis } from '../utils/skincareStorage'
+
 const API_BASE_URL = 'http://localhost:8000'
 
 const SUGGESTION_CHIPS = [
@@ -161,7 +163,9 @@ export default function Chat() {
   const [isFetchingHistory, setIsFetchingHistory] = useState(true)
   const [copiedIndex, setCopiedIndex] = useState(null)
   const [error, setError] = useState('')
-  const [activeAnalysis, setActiveAnalysis] = useState(location.state?.analysis || null)
+  const [activeAnalysis, setActiveAnalysis] = useState(
+    location.state?.analysis || getLatestAnalysis() || null
+  )
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })

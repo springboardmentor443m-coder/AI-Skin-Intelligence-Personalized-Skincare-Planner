@@ -1,20 +1,21 @@
 import os
 import logging
 import numpy as np
+import tensorflow as tf
 
 logger = logging.getLogger("uvicorn.error")
 
 # Path to the trained TensorFlow model
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "models", "skin_disease_model.keras")
 
-# Class names for the trained model
+# Class names for the trained model (Alphabetical Keras dataset order)
 CLASS_NAMES = [
-    "Normal",
     "Acne",
-    "Wrinkles",
-    "Eczema",
-    "Rosacea",
     "Dark Spots",
+    "Eczema",
+    "Normal",
+    "Rosacea",
+    "Wrinkles",
 ]
 
 # Configurable OOD and Confidence Thresholds
@@ -32,7 +33,6 @@ def get_model():
             raise FileNotFoundError(f"Skin disease model file missing: {MODEL_PATH}")
 
         logger.info(f"Loading TensorFlow model from: {MODEL_PATH} (size: {os.path.getsize(MODEL_PATH)} bytes)...")
-        import tensorflow as tf
         _model = tf.keras.models.load_model(MODEL_PATH)
         logger.info("TensorFlow model loaded successfully.")
 
@@ -59,8 +59,9 @@ def predict_image(image_path: str):
         image = Image.open(image_path).convert("RGB")
         image = image.resize((224, 224))
         image_array = np.array(image, dtype=np.float32)
+        # Note: skin_disease_model.keras includes an internal Rescaling(1/255.0) layer
+        # so raw [0, 255] float32 image array must be passed to avoid double scaling.
         image_array = np.expand_dims(image_array, axis=0)
-        image_array = image_array / 255.0
         t_prep = (time.perf_counter() - t_prep_start) * 1000
 
         t_infer_start = time.perf_counter()

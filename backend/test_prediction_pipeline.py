@@ -198,7 +198,9 @@ def test_case_g_ambiguous_low_confidence_rejection():
     assert response.status_code == 200
     data = response.json()
     assert data["valid_image"] is True
-    if data["is_ambiguous"] or data["prediction"] is None:
-        assert data["prediction"] is None
-        assert "Unable to confidently identify" in data["message"]
+    if data.get("is_ambiguous", False):
+        assert data.get("disease") is None or data.get("prediction") is None
+        assert "Unable to confidently identify" in data.get("message", "")
         assert data["recommendation"] is None
+    else:
+        assert data.get("disease") is not None or data.get("prediction") is not None
