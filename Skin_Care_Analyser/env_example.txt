@@ -1,0 +1,18 @@
+# OpenRouter API Configuration
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+OPENROUTER_API_URL=https://openrouter.ai/api/v1/chat/completions
+
+# Backup API Keys (Optional)
+OPENROUTER_BACKUP_KEY_1=backup_key_1_here
+OPENROUTER_BACKUP_KEY_2=backup_key_2_here
+
+# Model Configuration
+PRIMARY_MODEL=deepseek/deepseek-r1-0528:free
+BACKUP_MODEL_1=google/gemini-2.5-flash
+BACKUP_MODEL_2=anthropic/claude-3.5-sonnet
+
+# Application Settings
+MAX_IMAGE_SIZE=10485760  # 10MB
+MAX_IMAGE_RESOLUTION=4096
+MIN_IMAGE_RESOLUTION=800
+COMPRESSION_QUALITY=85

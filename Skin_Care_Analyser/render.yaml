@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: skinai-analyzer
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app.py --server.port $PORT --server.address 0.0.0.0
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_API_URL
+        value: https://openrouter.ai/api/v1/chat/completions
+      - key: PRIMARY_MODEL
+        value: deepseek/deepseek-r1-0528:free
+      - key: BACKUP_MODEL_1
+        value: google/gemini-2.5-flash
+      - key: BACKUP_MODEL_2
+        value: anthropic/claude-3.5-sonnet
+      - key: MAX_IMAGE_SIZE
+        value: 10485760
+      - key: MAX_IMAGE_RESOLUTION
+        value: 4096
+      - key: MIN_IMAGE_RESOLUTION
+        value: 800
+      - key: COMPRESSION_QUALITY
+        value: 85
