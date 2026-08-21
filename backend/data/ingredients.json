@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Retinol",
+    "category": "Retinoid",
+    "description": "Vitamin A derivative that speeds cell turnover, fades fine lines and evens tone.",
+    "benefits": ["anti_aging", "reduces_fine_lines", "evens_tone", "unclogs_pores"],
+    "suitable_skin_types": ["normal", "oily", "combination"],
+    "concerns_treated": ["wrinkles", "fine_lines", "acne", "uneven_skin_tone"],
+    "conflicts_with": ["Vitamin C", "AHA", "BHA", "Benzoyl Peroxide"],
+    "common_allergen": false
+  },
+  {
+    "name": "Niacinamide",
+    "category": "Vitamin",
+    "description": "Vitamin B3 - calms redness, regulates oil, strengthens skin barrier.",
+    "benefits": ["reduces_redness", "controls_oil", "strengthens_barrier"],
+    "suitable_skin_types": ["oily", "combination", "sensitive", "normal", "dry"],
+    "concerns_treated": ["redness", "oily_skin", "uneven_skin_tone", "enlarged_pores"],
+    "conflicts_with": [],
+    "common_allergen": false
+  },
+  {
+    "name": "Vitamin C",
+    "category": "Antioxidant",
+    "description": "Brightens skin, fights free-radical damage, boosts collagen.",
+    "benefits": ["brightening", "antioxidant", "collagen_boost"],
+    "suitable_skin_types": ["normal", "dry", "combination", "oily"],
+    "concerns_treated": ["dark_spots", "hyperpigmentation", "dull_skin"],
+    "conflicts_with": ["Retinol", "Benzoyl Peroxide"],
+    "common_allergen": false
+  },
+  {
+    "name": "Hyaluronic Acid",
+    "category": "Humectant",
+    "description": "Draws water into the skin for deep, non-greasy hydration.",
+    "benefits": ["hydration", "plumping"],
+    "suitable_skin_types": ["dry", "normal", "oily", "combination", "sensitive"],
+    "concerns_treated": ["dry_skin", "fine_lines"],
+    "conflicts_with": [],
+    "common_allergen": false
+  },
+  {
+    "name": "Salicylic Acid",
+    "category": "BHA",
+    "description": "Oil-soluble exfoliant that penetrates pores to clear acne and blackheads.",
+    "benefits": ["unclogs_pores", "exfoliates", "reduces_acne"],
+    "suitable_skin_types": ["oily", "combination"],
+    "concerns_treated": ["acne", "oily_skin", "uneven_skin_tone"],
+    "conflicts_with": ["Retinol", "AHA", "Benzoyl Peroxide"],
+    "common_allergen": false
+  },
+  {
+    "name": "Ceramides",
+    "category": "Barrier Repair",
+    "description": "Lipids that rebuild and protect the skin's natural moisture barrier.",
+    "benefits": ["strengthens_barrier", "hydration", "reduces_sensitivity"],
+    "suitable_skin_types": ["dry", "sensitive", "normal", "combination"],
+    "concerns_treated": ["dry_skin", "redness", "sensitive_skin"],
+    "conflicts_with": [],
+    "common_allergen": false
+  },
+  {
+    "name": "Peptides",
+    "category": "Anti-aging",
+    "description": "Amino-acid chains that signal skin to produce more collagen.",
+    "benefits": ["anti_aging", "firming"],
+    "suitable_skin_types": ["normal", "dry", "combination", "oily"],
+    "concerns_treated": ["wrinkles", "fine_lines"],
+    "conflicts_with": [],
+    "common_allergen": false
+  },
+  {
+    "name": "AHA",
+    "category": "Exfoliant",
+    "description": "Glycolic/lactic acid - water-soluble exfoliant for surface skin renewal and brightening.",
+    "benefits": ["exfoliates", "brightening", "smooths_texture"],
+    "suitable_skin_types": ["normal", "dry", "combination"],
+    "concerns_treated": ["dull_skin", "uneven_skin_tone", "fine_lines"],
+    "conflicts_with": ["Retinol", "Salicylic Acid", "Vitamin C"],
+    "common_allergen": false
+  },
+  {
+    "name": "Benzoyl Peroxide",
+    "category": "Antibacterial",
+    "description": "Kills acne-causing bacteria; can be drying and bleach fabric.",
+    "benefits": ["reduces_acne", "antibacterial"],
+    "suitable_skin_types": ["oily", "combination"],
+    "concerns_treated": ["acne"],
+    "conflicts_with": ["Retinol", "Vitamin C", "Salicylic Acid"],
+    "common_allergen": true
+  },
+  {
+    "name": "Fragrance",
+    "category": "Additive",
+    "description": "Common additive for scent - a frequent cause of irritation and allergic reaction.",
+    "benefits": [],
+    "suitable_skin_types": ["normal", "oily"],
+    "concerns_treated": [],
+    "conflicts_with": [],
+    "common_allergen": true
+  },
+  {
+    "name": "Zinc Oxide",
+    "category": "Mineral SPF",
+    "description": "Physical sunscreen filter, broad-spectrum, gentle on sensitive skin.",
+    "benefits": ["sun_protection", "soothing"],
+    "suitable_skin_types": ["sensitive", "normal", "dry", "oily", "combination"],
+    "concerns_treated": ["sun_damage", "redness"],
+    "conflicts_with": [],
+    "common_allergen": false
+  },
+  {
+    "name": "Centella Asiatica",
+    "category": "Botanical",
+    "description": "Calming plant extract that soothes irritation and supports healing.",
+    "benefits": ["soothing", "reduces_redness", "healing"],
+    "suitable_skin_types": ["sensitive", "normal", "oily", "combination", "dry"],
+    "concerns_treated": ["redness", "sensitive_skin", "acne"],
+    "conflicts_with": [],
+    "common_allergen": false
+  }
+]

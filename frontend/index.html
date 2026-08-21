@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skin Intelligence &amp; Personalized Skincare Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ===================== AUTH SCREEN ===================== -->
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <span class="auth-brand-mark">SI</span>
+      <div>
+        <h1>Skin Intelligence</h1>
+        <p>Personalized Skincare Planner</p>
+      </div>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="login">Log in</button>
+      <button class="auth-tab" data-tab="register">Register</button>
+    </div>
+
+    <form id="login-form" class="auth-form">
+      <label>Email
+        <input type="email" id="login-email" required placeholder="you@example.com">
+      </label>
+      <label>Password
+        <input type="password" id="login-password" required placeholder="••••••••">
+      </label>
+      <button type="submit" class="btn btn-primary btn-block">Log in</button>
+      <p class="auth-error" id="login-error"></p>
+    </form>
+
+    <form id="register-form" class="auth-form hidden">
+      <label>Full name
+        <input type="text" id="register-name" required placeholder="Asha Rao">
+      </label>
+      <label>Email
+        <input type="email" id="register-email" required placeholder="you@example.com">
+      </label>
+      <label>Password
+        <input type="password" id="register-password" required placeholder="At least 6 characters" minlength="6">
+      </label>
+      <label>I am a
+        <select id="register-role">
+          <option value="user">Skincare consumer</option>
+          <option value="consultant">Skincare consultant</option>
+          <option value="dermatologist">Dermatologist</option>
+          <option value="admin">Administrator</option>
+        </select>
+      </label>
+      <button type="submit" class="btn btn-primary btn-block">Create account</button>
+      <p class="auth-error" id="register-error"></p>
+    </form>
+
+    <p class="auth-hint">Demo logins: user@demo.com / consultant@demo.com / dermatologist@demo.com / admin@demo.com — password <strong>password123</strong> (run <code>python seed_data.py</code> first)</p>
+  </div>
+</div>
+
+<!-- ===================== APP SHELL ===================== -->
+<div id="app-shell" class="app-shell hidden">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="auth-brand-mark small">SI</span>
+      <span>Skin Intelligence</span>
+    </div>
+    <nav id="sidebar-nav" class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-user-name" id="sidebar-user-name">—</div>
+        <div class="sidebar-user-role" id="sidebar-user-role">—</div>
+      </div>
+      <button id="logout-btn" class="btn btn-ghost btn-block">Log out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div id="view-content" class="view-content"></div>
+  </main>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

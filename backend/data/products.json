@@ -1,0 +1,5204 @@
+[
+  {
+    "name": "Soy Hydrating Gentle Face Cleanser",
+    "brand": "fresh",
+    "category": "Face Wash",
+    "price": 39.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Alpha Beta Extra Strength Daily Peel Pads",
+    "brand": "Dr. Dennis Gross Skincare",
+    "category": "Treatment",
+    "price": 92.0,
+    "key_ingredients": [
+      "Retinol",
+      "Salicylic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Ultra Repair Cream Intense Hydration",
+    "brand": "First Aid Beauty",
+    "category": "Moisturizer",
+    "price": 38.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "dry"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "The True Cream Aqua Bomb",
+    "brand": "belif",
+    "category": "Moisturizer",
+    "price": 38.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Green Clean Makeup Meltaway Cleansing Balm Limited Edition Jumbo",
+    "brand": "Farmacy",
+    "category": "Face Wash",
+    "price": 60.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Good Genes All-In-One AHA Lactic Acid Treatment",
+    "brand": "Sunday Riley",
+    "category": "Serum",
+    "price": 122.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Niacinamide 10% + Zinc 1% Oil Control Serum",
+    "brand": "The Ordinary",
+    "category": "Serum",
+    "price": 6.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "The True Cream Moisturizing Bomb",
+    "brand": "belif",
+    "category": "Moisturizer",
+    "price": 38.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Superfood Antioxidant Cleanser",
+    "brand": "Youth To The People",
+    "category": "Face Wash",
+    "price": 39.0,
+    "key_ingredients": [
+      "Vitamin C",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Take The Day Off Cleansing Balm Makeup Remover",
+    "brand": "CLINIQUE",
+    "category": "Face Wash",
+    "price": 38.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Greek Yoghurt Foaming Cream Cleanser",
+    "brand": "KORRES",
+    "category": "Face Wash",
+    "price": 28.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "redness"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Pure Skin Face Cleanser",
+    "brand": "First Aid Beauty",
+    "category": "Face Wash",
+    "price": 24.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "redness"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Clear Improvement Active Charcoal Mask to Clear Pores",
+    "brand": "Origins",
+    "category": "Face Masks",
+    "price": 17.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Protini Polypeptide Firming Refillable Moisturizer",
+    "brand": "Drunk Elephant",
+    "category": "Moisturizer",
+    "price": 68.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Dramatically Different Moisturizing Gel",
+    "brand": "CLINIQUE",
+    "category": "Moisturizer",
+    "price": 32.5,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "oily"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Vitamin Enriched Face Base Priming Moisturizer",
+    "brand": "Bobbi Brown",
+    "category": "Moisturizer",
+    "price": 66.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Salicylic Acid Acne Healing Dots",
+    "brand": "Peace Out",
+    "category": "Treatment",
+    "price": 19.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "redness"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Skinlongevity Long Life Herb Anti-Aging Face Serum",
+    "brand": "bareMinerals",
+    "category": "Serum",
+    "price": 65.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "AHA 30% + BHA 2% Exfoliating Peeling Solution",
+    "brand": "The Ordinary",
+    "category": "Treatment",
+    "price": 9.5,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Magic Cream Moisturizer with Hyaluronic Acid",
+    "brand": "Charlotte Tilbury",
+    "category": "Moisturizer",
+    "price": 100.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "dry"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "T.L.C. Framboos Glycolic Resurfacing Night Serum",
+    "brand": "Drunk Elephant",
+    "category": "Serum",
+    "price": 90.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Mini Jet Lag Mask",
+    "brand": "Summer Fridays",
+    "category": "Face Masks",
+    "price": 26.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Jet Lag Mask",
+    "brand": "Summer Fridays",
+    "category": "Face Masks",
+    "price": 49.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Hyaluronic Acid 2% + B5 Hydrating Serum",
+    "brand": "The Ordinary",
+    "category": "Serum",
+    "price": 15.7,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Watermelon Glow PHA + BHA Pore-Tight Toner",
+    "brand": "Glow Recipe",
+    "category": "Toner",
+    "price": 34.0,
+    "key_ingredients": [
+      "Hyaluronic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Santorini Grape Poreless Skin Cream",
+    "brand": "KORRES",
+    "category": "Moisturizer",
+    "price": 38.5,
+    "key_ingredients": [
+      "Salicylic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "GinZing Ultra-Hydrating Energy-Boosting Cream",
+    "brand": "Origins",
+    "category": "Moisturizer",
+    "price": 36.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Ultimate Sun Protector Lotion SPF 50+ Sunscreen",
+    "brand": "Shiseido",
+    "category": "Sunscreen",
+    "price": 50.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "The Water Cream Oil-Free Pore Minimizing Moisturizer",
+    "brand": "Tatcha",
+    "category": "Moisturizer",
+    "price": 70.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Checks and Balances Frothy Face Wash",
+    "brand": "Origins",
+    "category": "Face Wash",
+    "price": 27.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Greek Yoghurt Nourishing Probiotic Gel-Cream",
+    "brand": "KORRES",
+    "category": "Moisturizer",
+    "price": 38.5,
+    "key_ingredients": [
+      "Salicylic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Unseen Sunscreen SPF 40 PA+++",
+    "brand": "Supergoop!",
+    "category": "Sunscreen",
+    "price": 48.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Confidence in a Cream Anti-Aging Hydrating Moisturizer",
+    "brand": "IT Cosmetics",
+    "category": "Moisturizer",
+    "price": 20.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "wrinkles"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "C-Rush Vitamin C Gel Moisturizer",
+    "brand": "OLEHENRIKSEN",
+    "category": "Moisturizer",
+    "price": 51.0,
+    "key_ingredients": [
+      "Vitamin C",
+      "Hyaluronic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Glycolic Acid 7% Exfoliating Toning Solution",
+    "brand": "The Ordinary",
+    "category": "Toner",
+    "price": 13.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "EradiKate Acne Treatment",
+    "brand": "Kate Somerville",
+    "category": "Treatment",
+    "price": 28.0,
+    "key_ingredients": [
+      "Salicylic Acid",
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "The Rice Wash Skin-Softening Cleanser",
+    "brand": "Tatcha",
+    "category": "Face Wash",
+    "price": 40.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Mini Revitalizing Supreme+ Youth Power Creme Moisturizer",
+    "brand": "Est\u00e9e Lauder",
+    "category": "Moisturizer",
+    "price": 64.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Revitalizing Supreme+ Youth Power Creme Moisturizer",
+    "brand": "Est\u00e9e Lauder",
+    "category": "Moisturizer",
+    "price": 98.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Ultra Facial Moisturizing Cream with Squalane",
+    "brand": "Kiehl's Since 1851",
+    "category": "Moisturizer",
+    "price": 78.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Vinoperfect Radiance Dark Spot Serum Vitamin C Alternative",
+    "brand": "Caudalie",
+    "category": "Serum",
+    "price": 82.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Glow2OH Dark Spot Toner",
+    "brand": "OLEHENRIKSEN",
+    "category": "Toner",
+    "price": 35.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "The Dewy Skin Cream Plumping & Hydrating Moisturizer",
+    "brand": "Tatcha",
+    "category": "Moisturizer",
+    "price": 70.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Tea Elixir Niacinamide & Hyaluronic Acid Anti-Aging Serum",
+    "brand": "fresh",
+    "category": "Serum",
+    "price": 80.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Hyaluronic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "T.L.C. Sukari Babyfacial AHA + BHA Mask",
+    "brand": "Drunk Elephant",
+    "category": "Face Masks",
+    "price": 80.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Facial Radiance Pads",
+    "brand": "First Aid Beauty",
+    "category": "Treatment",
+    "price": 36.0,
+    "key_ingredients": [
+      "Hyaluronic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Original Skin Matte Moisturizer with Willowherb",
+    "brand": "Origins",
+    "category": "Moisturizer",
+    "price": 40.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Double Serum Firming & Smoothing Anti-Aging Concentrate",
+    "brand": "Clarins",
+    "category": "Serum",
+    "price": 90.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Acne Control Clarifying Cleanser",
+    "brand": "Murad",
+    "category": "Face Wash",
+    "price": 36.0,
+    "key_ingredients": [
+      "Salicylic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Barrier+ Triple Lipid-Peptide Face Cream",
+    "brand": "Skinfix",
+    "category": "Moisturizer",
+    "price": 54.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Mini Barrier+ Triple Lipid-Peptide Face Cream",
+    "brand": "Skinfix",
+    "category": "Moisturizer",
+    "price": 20.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Superberry Hydrate + Glow Dream Night Mask with Vitamin C",
+    "brand": "Youth To The People",
+    "category": "Face Masks",
+    "price": 52.0,
+    "key_ingredients": [
+      "Vitamin C",
+      "Hyaluronic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "B-Hydra Intensive Hydration Serum with Hyaluronic Acid",
+    "brand": "Drunk Elephant",
+    "category": "Serum",
+    "price": 49.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "All About Clean Liquid Facial Soap",
+    "brand": "CLINIQUE",
+    "category": "Face Wash",
+    "price": 23.5,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Watermelon Glow Niacinamide Dew Drops",
+    "brand": "Glow Recipe",
+    "category": "Serum",
+    "price": 35.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "D-Bronzi Anti-Pollution Bronzing Drops with Peptides",
+    "brand": "Drunk Elephant",
+    "category": "Serum",
+    "price": 38.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Original Skin Retexturizing Mask with Rose Clay",
+    "brand": "Origins",
+    "category": "Face Masks",
+    "price": 32.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Rose & Hyaluronic Acid Deep Hydration Moisturizer",
+    "brand": "fresh",
+    "category": "Moisturizer",
+    "price": 46.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Rose Face Mask",
+    "brand": "fresh",
+    "category": "Face Masks",
+    "price": 64.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Adaptogen Deep Moisturizing Cream with Ashwagandha + Reishi",
+    "brand": "Youth To The People",
+    "category": "Moisturizer",
+    "price": 58.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "dry"
+    ],
+    "suitable_concerns": [
+      "redness"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Hyaluronic Acid Hydrating Serum",
+    "brand": "The INKEY List",
+    "category": "Serum",
+    "price": 9.99,
+    "key_ingredients": [
+      "Hyaluronic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Plum Plump Hyaluronic Acid Serum",
+    "brand": "Glow Recipe",
+    "category": "Serum",
+    "price": 45.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "The Camellia Oil 2-in-1 Makeup Remover & Cleanser",
+    "brand": "Tatcha",
+    "category": "Face Wash",
+    "price": 50.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "The Deep Cleanse Gentle Exfoliating Cleanser",
+    "brand": "Tatcha",
+    "category": "Face Wash",
+    "price": 40.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Cream Skin Toner & Moisturizer",
+    "brand": "LANEIGE",
+    "category": "Moisturizer",
+    "price": 33.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "dry"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Black Tea Anti-Aging Moisturizer with Retinol-Alternative BT Matrix",
+    "brand": "fresh",
+    "category": "Moisturizer",
+    "price": 95.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Beste No. 9 Jelly Cleanser",
+    "brand": "Drunk Elephant",
+    "category": "Face Wash",
+    "price": 34.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "FIRMx Exfoliating Peel Gel",
+    "brand": "Peter Thomas Roth",
+    "category": "Treatment",
+    "price": 49.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Clear Sunscreen Stick SPF 50+",
+    "brand": "Shiseido",
+    "category": "Sunscreen",
+    "price": 30.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Estee Lauder Advanced Night Repair Synchronized Multi-Recovery Complex Serum",
+    "brand": "Est\u00e9e Lauder",
+    "category": "Serum",
+    "price": 115.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Advanced Night Repair Synchronized Multi-Recovery Complex Duo",
+    "brand": "Est\u00e9e Lauder",
+    "category": "Serum",
+    "price": 195.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Honeymoon Glow AHA Resurfacing Night Serum",
+    "brand": "Farmacy",
+    "category": "Moisturizer",
+    "price": 60.0,
+    "key_ingredients": [
+      "Hyaluronic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Squalane + Omega Repair Deep Hydration Moisturizer",
+    "brand": "Biossance",
+    "category": "Moisturizer",
+    "price": 60.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Lotus Anti-Aging Night Moisturizer",
+    "brand": "fresh",
+    "category": "Moisturizer",
+    "price": 56.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Tonique Confort Re-Hydrating Comforting Toner with Acacia Honey",
+    "brand": "Lanc\u00f4me",
+    "category": "Toner",
+    "price": 39.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "PHAT Glow Facial Mask",
+    "brand": "OLEHENRIKSEN",
+    "category": "Face Masks",
+    "price": 52.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Hyaluronic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Drink Up Intensive Overnight Hydrating Mask with Avocado & Swiss Glacier Water",
+    "brand": "Origins",
+    "category": "Face Masks",
+    "price": 32.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Blue Tansy BHA and Enzyme Pore Refining Mask",
+    "brand": "Herbivore",
+    "category": "Face Masks",
+    "price": 50.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Vinosource-Hydra Moisturizing Sorbet",
+    "brand": "Caudalie",
+    "category": "Moisturizer",
+    "price": 38.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "redness"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Glowscreen Sunscreen SPF 40 PA+++ with Hyaluronic Acid + Niacinamide",
+    "brand": "Supergoop!",
+    "category": "Sunscreen",
+    "price": 38.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Natural Moisturizing Factors + HA",
+    "brand": "The Ordinary",
+    "category": "Serum",
+    "price": 6.5,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Cold Plunge Pore Mask",
+    "brand": "OLEHENRIKSEN",
+    "category": "Face Masks",
+    "price": 41.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "The Dewy Serum Resurfacing and Plumping Treatment",
+    "brand": "Tatcha",
+    "category": "Serum",
+    "price": 89.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Dewtopia 20% Acid Night Treatment",
+    "brand": "OLEHENRIKSEN",
+    "category": "Treatment",
+    "price": 60.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Water Drench Hyaluronic Acid Moisturizer",
+    "brand": "Peter Thomas Roth",
+    "category": "Moisturizer",
+    "price": 54.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Lala Retro Whipped Refillable Moisturizer with Ceramides",
+    "brand": "Drunk Elephant",
+    "category": "Moisturizer",
+    "price": 62.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Daily UV Defense Invisible Broad Spectrum SPF 36 Sunscreen",
+    "brand": "innisfree",
+    "category": "Sunscreen",
+    "price": 16.0,
+    "key_ingredients": [
+      "Fragrance",
+      "Centella Asiatica"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Advanced G\u00e9nifique Radiance Boosting Face Serum",
+    "brand": "Lanc\u00f4me",
+    "category": "Serum",
+    "price": 132.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Smart Clinical Repair Wrinkle Correcting Cream",
+    "brand": "CLINIQUE",
+    "category": "Moisturizer",
+    "price": 68.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Alpha Beta Pore Perfecting & Refining Serum",
+    "brand": "Dr. Dennis Gross Skincare",
+    "category": "Serum",
+    "price": 68.0,
+    "key_ingredients": [
+      "Retinol",
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Anti-Aging Cleansing Gel",
+    "brand": "Peter Thomas Roth",
+    "category": "Face Wash",
+    "price": 39.0,
+    "key_ingredients": [
+      "Salicylic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Hello FAB Coconut Skin Smoothie Priming Moisturizer",
+    "brand": "First Aid Beauty",
+    "category": "Moisturizer",
+    "price": 32.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Balancing Force Oil Control Toner",
+    "brand": "OLEHENRIKSEN",
+    "category": "Toner",
+    "price": 35.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Goodbye Acne  Max Complexion Correction Pads",
+    "brand": "Peter Thomas Roth",
+    "category": "Treatment",
+    "price": 48.0,
+    "key_ingredients": [
+      "Salicylic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Moisture Surge 100H Auto-Replenishing Hydrator Moisturizer",
+    "brand": "CLINIQUE",
+    "category": "Moisturizer",
+    "price": 82.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "SEA drink of H2O hydrating boost moisturizer",
+    "brand": "tarte",
+    "category": "Moisturizer",
+    "price": 39.0,
+    "key_ingredients": [
+      "Hyaluronic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Mini Oat Cleansing Balm",
+    "brand": "The INKEY List",
+    "category": "Face Wash",
+    "price": 5.99,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "redness"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Oat Cleansing Balm",
+    "brand": "The INKEY List",
+    "category": "Face Wash",
+    "price": 11.99,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "redness"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Hydra Zen Glow Liquid Lightweight Moisturizer with Hyaluronic Acid",
+    "brand": "Lanc\u00f4me",
+    "category": "Moisturizer",
+    "price": 54.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Salicylic Acid Acne + Pore Cleanser",
+    "brand": "The INKEY List",
+    "category": "Face Wash",
+    "price": 11.99,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Plum Plump Hyaluronic Acid Moisturizer",
+    "brand": "Glow Recipe",
+    "category": "Moisturizer",
+    "price": 39.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Hyaluronic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "dry"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Floral Recovery Overnight Mask with Squalane",
+    "brand": "fresh",
+    "category": "Face Masks",
+    "price": 69.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Avocado Soothing Skin Barrier Serum with Ceramides",
+    "brand": "Glow Recipe",
+    "category": "Serum",
+    "price": 45.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "redness",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Find Your Balance Oil Control Cleanser",
+    "brand": "OLEHENRIKSEN",
+    "category": "Face Wash",
+    "price": 33.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Alpha Beta Universal Daily Peel Pads",
+    "brand": "Dr. Dennis Gross Skincare",
+    "category": "Treatment",
+    "price": 92.0,
+    "key_ingredients": [
+      "Retinol",
+      "Salicylic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "GENIUS Sleeping Collagen Moisturizer",
+    "brand": "Algenist",
+    "category": "Moisturizer",
+    "price": 98.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Vegan Milk Moisturizer",
+    "brand": "MILK MAKEUP",
+    "category": "Moisturizer",
+    "price": 38.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Dramatically Different Moisturizing Lotion+",
+    "brand": "CLINIQUE",
+    "category": "Moisturizer",
+    "price": 32.5,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "dry"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Smart Clinical Repair Wrinkle Correcting Serum",
+    "brand": "CLINIQUE",
+    "category": "Serum",
+    "price": 71.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Hydra Zen Gel-Cream Oil-Free Moisturizer with Salicylic Acid",
+    "brand": "Lanc\u00f4me",
+    "category": "Moisturizer",
+    "price": 48.0,
+    "key_ingredients": [
+      "Salicylic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "redness",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "C.E.O. 15% Vitamin C Brightening Serum",
+    "brand": "Sunday Riley",
+    "category": "Serum",
+    "price": 85.0,
+    "key_ingredients": [
+      "Vitamin C"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Urban Environment Fresh-Moisture Sunscreen Broad-Spectrum SPF 42",
+    "brand": "Shiseido",
+    "category": "Sunscreen",
+    "price": 38.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Volcanic AHA Pore Clearing Clay Mask",
+    "brand": "innisfree",
+    "category": "Face Masks",
+    "price": 16.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Lactic Acid 10% + HA 2% Exfoliating Serum",
+    "brand": "The Ordinary",
+    "category": "Serum",
+    "price": 8.9,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Aqua Bomb Cleansing Balm",
+    "brand": "belif",
+    "category": "Face Wash",
+    "price": 38.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Violet-C Brightening Serum 20% Vitamin C + 10% AHA",
+    "brand": "Tatcha",
+    "category": "Serum",
+    "price": 89.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Urban Environment Oil-Free Sunscreen Broad-Spectrum SPF 42",
+    "brand": "Shiseido",
+    "category": "Sunscreen",
+    "price": 50.0,
+    "key_ingredients": [
+      "Fragrance",
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Precleanse Cleansing Oil",
+    "brand": "Dermalogica",
+    "category": "Face Wash",
+    "price": 49.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Clarifying Lotion 2",
+    "brand": "CLINIQUE",
+    "category": "Toner",
+    "price": 20.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Hydro Biotic Recovery Sleeping Mask",
+    "brand": "Dr. Brandt Skincare",
+    "category": "Face Masks",
+    "price": 54.0,
+    "key_ingredients": [
+      "Peptides"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "C-Firma Fresh Vitamin-C Day Serum",
+    "brand": "Drunk Elephant",
+    "category": "Serum",
+    "price": 78.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "The Serum Stick: Treatment & Touch Up Balm",
+    "brand": "Tatcha",
+    "category": "Serum",
+    "price": 49.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Therapeutic Sulfur Acne Treatment Mask",
+    "brand": "Peter Thomas Roth",
+    "category": "Face Masks",
+    "price": 52.0,
+    "key_ingredients": [
+      "Fragrance",
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Multi-Peptide + HA Serum",
+    "brand": "The Ordinary",
+    "category": "Serum",
+    "price": 30.8,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Vinopure Natural Salicylic Acid Pore Minimizing Serum",
+    "brand": "Caudalie",
+    "category": "Serum",
+    "price": 52.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Rose Deep Hydration Sleeping Mask",
+    "brand": "fresh",
+    "category": "Face Masks",
+    "price": 29.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Clear Improvement Charcoal Honey Mask to Purify and Nourish",
+    "brand": "Origins",
+    "category": "Face Masks",
+    "price": 37.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Glycol Lactic Radiance Renewal Mask",
+    "brand": "REN Clean Skincare",
+    "category": "Face Masks",
+    "price": 58.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Caffeine 5% + EGCG Depuffing Eye Serum",
+    "brand": "The Ordinary",
+    "category": "Serum",
+    "price": 8.9,
+    "key_ingredients": [
+      "Hyaluronic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Papaya Sorbet Smoothing Enzyme Cleansing Balm & Makeup Remover",
+    "brand": "Glow Recipe",
+    "category": "Face Wash",
+    "price": 32.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Ultra Glow Serum: Glow + Strengthen Vitamin C Serum",
+    "brand": "SEPHORA COLLECTION",
+    "category": "Serum",
+    "price": 20.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Retinol Youth Renewal Serum",
+    "brand": "Murad",
+    "category": "Serum",
+    "price": 92.0,
+    "key_ingredients": [
+      "Retinol",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Super Spot Remover Acne Treatment Gel",
+    "brand": "Origins",
+    "category": "Serum",
+    "price": 20.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Cica Sleeping Mask",
+    "brand": "LANEIGE",
+    "category": "Face Masks",
+    "price": 34.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "redness"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Strawberry Smooth BHA + AHA Salicylic Acid Serum",
+    "brand": "Glow Recipe",
+    "category": "Serum",
+    "price": 42.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Salicylic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Glow Cycle Retin-ALT Power Serum",
+    "brand": "OLEHENRIKSEN",
+    "category": "Serum",
+    "price": 60.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Barrier+ Foaming Oil Hydrating Cleanser",
+    "brand": "Skinfix",
+    "category": "Face Wash",
+    "price": 30.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Watermelon Glow Hyaluronic Clay Pore-Tight Facial Mask",
+    "brand": "Glow Recipe",
+    "category": "Face Masks",
+    "price": 40.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "enlarged_pores"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Rose & Hyaluronic Acid Deep Hydration Toner",
+    "brand": "fresh",
+    "category": "Toner",
+    "price": 46.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Retinol Anti-Aging Serum",
+    "brand": "The INKEY List",
+    "category": "Serum",
+    "price": 12.99,
+    "key_ingredients": [
+      "Retinol",
+      "Hyaluronic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Rose & Squalane Deep Hydration Oil-Infused Serum",
+    "brand": "fresh",
+    "category": "Serum",
+    "price": 60.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Oil-Absorbing Pore Treatment Strips",
+    "brand": "Peace Out",
+    "category": "Treatment",
+    "price": 19.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Pore Minimizing Instant Detox Mask",
+    "brand": "Caudalie",
+    "category": "Face Masks",
+    "price": 42.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Anti-Aging First Care Activating Serum",
+    "brand": "Sulwhasoo",
+    "category": "Serum",
+    "price": 89.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "dry"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "10% Niacinamide Night Mask",
+    "brand": "Farmacy",
+    "category": "Face Masks",
+    "price": 44.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "First Care Activating Serum 25th Anniversary Limited Edition",
+    "brand": "Sulwhasoo",
+    "category": "Serum",
+    "price": 110.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "dry"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "A-Passioni Retinol Cream",
+    "brand": "Drunk Elephant",
+    "category": "Serum",
+    "price": 74.0,
+    "key_ingredients": [
+      "Retinol",
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "SEA Deep Dive Cleansing Gel",
+    "brand": "tarte",
+    "category": "Face Wash",
+    "price": 12.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Benefiance Wrinkle Smoothing Retinol Serum",
+    "brand": "Shiseido",
+    "category": "Serum",
+    "price": 75.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "GOOPGLOW 15% Glycolic Acid Overnight Glow Peel",
+    "brand": "goop",
+    "category": "Treatment",
+    "price": 125.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "SEA FRXXXTION Stick Exfoliating Cleanser",
+    "brand": "tarte",
+    "category": "Face Wash",
+    "price": 22.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Sugar Strawberry Exfoliating Face Wash",
+    "brand": "fresh",
+    "category": "Face Wash",
+    "price": 33.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Aqua Bomb Hydrating Toner",
+    "brand": "belif",
+    "category": "Toner",
+    "price": 30.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Mini Glowscreen Sunscreen SPF 40 PA+++ with Hyaluronic Acid + Niacinamide",
+    "brand": "Supergoop!",
+    "category": "Sunscreen",
+    "price": 22.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Mini Ready Steady Glow Daily AHA Tonic",
+    "brand": "REN Clean Skincare",
+    "category": "Toner",
+    "price": 22.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Ready Steady Glow Daily AHA Tonic",
+    "brand": "REN Clean Skincare",
+    "category": "Toner",
+    "price": 40.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Acne Solutions Clarifying Lotion",
+    "brand": "CLINIQUE",
+    "category": "Toner",
+    "price": 20.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Out of Trouble 10 Minute Mask to Rescue Problem Skin",
+    "brand": "Origins",
+    "category": "Face Masks",
+    "price": 32.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "oily"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Vinopure Pore Purifying Gel Cleanser",
+    "brand": "Caudalie",
+    "category": "Face Wash",
+    "price": 30.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "ExfoliKate Cleanser Daily Foaming Wash",
+    "brand": "Kate Somerville",
+    "category": "Face Wash",
+    "price": 44.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Deep Cleanser with Red Clay",
+    "brand": "First Aid Beauty",
+    "category": "Face Wash",
+    "price": 24.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Acne Solutions Clinical Clearing Gel",
+    "brand": "CLINIQUE",
+    "category": "Treatment",
+    "price": 32.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "F-Balm Electrolyte Waterfacial Mask",
+    "brand": "Drunk Elephant",
+    "category": "Face Masks",
+    "price": 54.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "The POREfessional Deep Retreat Pore-Clearing Clay Mask",
+    "brand": "Benefit Cosmetics",
+    "category": "Face Masks",
+    "price": 39.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Slaai  Makeup-Melting Butter Cleanser",
+    "brand": "Drunk Elephant",
+    "category": "Face Wash",
+    "price": 36.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Watermelon Glow AHA Night Treatment",
+    "brand": "Glow Recipe",
+    "category": "Treatment",
+    "price": 40.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Rinse-Off Foaming Cleanser",
+    "brand": "CLINIQUE",
+    "category": "Face Wash",
+    "price": 23.5,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Pumpkin Enzyme Mask Enzymatic Dermal Resurfacer",
+    "brand": "Peter Thomas Roth",
+    "category": "Face Masks",
+    "price": 60.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Deep Sweep 2% BHA Pore Cleaning Toner with Moringa + Papaya",
+    "brand": "Farmacy",
+    "category": "Toner",
+    "price": 32.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Mini Deep Sweep 2% BHA Pore Cleaning Toner with Moringa + Papaya",
+    "brand": "Farmacy",
+    "category": "Toner",
+    "price": 16.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Acne Control Clarifying Cream Cleanser",
+    "brand": "Murad",
+    "category": "Face Wash",
+    "price": 39.0,
+    "key_ingredients": [
+      "Retinol",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Acne Solutions Cleansing Foam",
+    "brand": "CLINIQUE",
+    "category": "Face Wash",
+    "price": 23.5,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Clarifying Lotion 3",
+    "brand": "CLINIQUE",
+    "category": "Toner",
+    "price": 20.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "AHA/BHA Exfoliating Cleanser",
+    "brand": "Murad",
+    "category": "Face Wash",
+    "price": 46.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Ultra Facial Cleanser",
+    "brand": "Kiehl's Since 1851",
+    "category": "Face Wash",
+    "price": 30.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Clarifying Toner",
+    "brand": "Murad",
+    "category": "Toner",
+    "price": 30.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Black Tea Instant Perfecting Mask",
+    "brand": "fresh",
+    "category": "Face Masks",
+    "price": 96.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "high"
+  },
+  {
+    "name": "PLAY Everyday Sunscreen Lotion SPF 50 PA++++",
+    "brand": "Supergoop!",
+    "category": "Sunscreen",
+    "price": 34.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Cicapair Tiger Grass Sleepair Intensive Mask",
+    "brand": "Dr. Jart+",
+    "category": "Face Masks",
+    "price": 42.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Centella Asiatica"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Resurfacing BHA Glow Mask",
+    "brand": "Tata Harper",
+    "category": "Face Masks",
+    "price": 68.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Full Spectrum 360\u00b0 Sun Silk Drops Organic Sunscreen SPF 30",
+    "brand": "COOLA",
+    "category": "Sunscreen",
+    "price": 48.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "The POREfessional Tight \u2019n Toned Pore-Refining AHA+PHA Toner",
+    "brand": "Benefit Cosmetics",
+    "category": "Toner",
+    "price": 34.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Vegan Milk Cleanser",
+    "brand": "MILK MAKEUP",
+    "category": "Face Wash",
+    "price": 30.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Facial Treatment Clear Lotion Toner",
+    "brand": "SK-II",
+    "category": "Toner",
+    "price": 80.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Special Cleansing Gel",
+    "brand": "Dermalogica",
+    "category": "Face Wash",
+    "price": 42.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Watermelon Glow Niacinamide Sunscreen SPF 50",
+    "brand": "Glow Recipe",
+    "category": "Sunscreen",
+    "price": 35.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Fragrance",
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Abeille Royale Anti-Aging Fortifying Lotion Toner",
+    "brand": "GUERLAIN",
+    "category": "Toner",
+    "price": 85.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Rose Floral Toner",
+    "brand": "fresh",
+    "category": "Toner",
+    "price": 15.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Facial Treatment Cleanser",
+    "brand": "SK-II",
+    "category": "Face Wash",
+    "price": 75.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Clearly Clean Makeup Removing Cleansing Balm",
+    "brand": "Farmacy",
+    "category": "Face Wash",
+    "price": 36.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Regenerating Exfoliating Cleanser",
+    "brand": "Tata Harper",
+    "category": "Face Wash",
+    "price": 88.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Kombucha 2-in-1 No-Rinse Cleanser & Prebiotic Treatment",
+    "brand": "fresh",
+    "category": "Face Wash",
+    "price": 44.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Mini Mandelic Acid + Superfood Unity Exfoliant",
+    "brand": "Youth To The People",
+    "category": "Toner",
+    "price": 16.0,
+    "key_ingredients": [
+      "Vitamin C",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Peptide 21 Amino Acid Exfoliating Peel Pads",
+    "brand": "Peter Thomas Roth",
+    "category": "Treatment",
+    "price": 55.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Urban Environment Vita-Clear Sunscreen SPF 42",
+    "brand": "Shiseido",
+    "category": "Sunscreen",
+    "price": 38.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "dry_skin",
+      "enlarged_pores"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Deep Relief Acne Treatment with Salicylic Acid",
+    "brand": "Murad",
+    "category": "Treatment",
+    "price": 45.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Salicylic Acid 2% Masque",
+    "brand": "The Ordinary",
+    "category": "Face Masks",
+    "price": 13.3,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Squalane + BHA Pore-Minimizing Toner",
+    "brand": "Biossance",
+    "category": "Toner",
+    "price": 30.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Correct & Protect Broad Spectrum SPF 45| PA++++",
+    "brand": "Murad",
+    "category": "Sunscreen",
+    "price": 69.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dark_spots"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "The POREfessional Speedy Smooth Mask",
+    "brand": "Benefit Cosmetics",
+    "category": "Face Masks",
+    "price": 39.0,
+    "key_ingredients": [
+      "Hyaluronic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Succinic Acid Acne Treatment",
+    "brand": "The INKEY List",
+    "category": "Treatment",
+    "price": 9.99,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Acne Control Clarifying Body Spray",
+    "brand": "Murad",
+    "category": "Treatment",
+    "price": 48.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Rare Earth Deep Pore Minimizing Cleansing Clay Mask",
+    "brand": "Kiehl's Since 1851",
+    "category": "Face Masks",
+    "price": 45.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "SATOCANE Pore Purifying Scrub Mask",
+    "brand": "WASO",
+    "category": "Face Masks",
+    "price": 38.0,
+    "key_ingredients": [
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Ultra Repair Wild Oat Hydrating Toner",
+    "brand": "First Aid Beauty",
+    "category": "Toner",
+    "price": 24.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "dry_skin"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "YUZU-C Beauty Sleeping Mask",
+    "brand": "WASO",
+    "category": "Face Masks",
+    "price": 38.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Evercalm Ultra Comforting Rescue Mask",
+    "brand": "REN Clean Skincare",
+    "category": "Face Masks",
+    "price": 52.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "redness",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Greek Yoghurt Probiotic Superdose Face Mask",
+    "brand": "KORRES",
+    "category": "Face Masks",
+    "price": 52.0,
+    "key_ingredients": [
+      "Salicylic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "EradiKate Daily Cleanser Acne Treatment",
+    "brand": "Kate Somerville",
+    "category": "Treatment",
+    "price": 44.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Ultimate Sun Protector Cream SPF 50+ Face Sunscreen",
+    "brand": "Shiseido",
+    "category": "Sunscreen",
+    "price": 40.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Overtime Mask",
+    "brand": "Summer Fridays",
+    "category": "Face Masks",
+    "price": 49.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Acne Solutions All-Over Clearing Treatment Oil-Free",
+    "brand": "CLINIQUE",
+    "category": "Treatment",
+    "price": 26.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Cryo Rubber Masks",
+    "brand": "Dr. Jart+",
+    "category": "Face Masks",
+    "price": 15.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Hyaluronic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "dry_skin",
+      "redness"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Irish Moor Mud Purifying Black Mask",
+    "brand": "Peter Thomas Roth",
+    "category": "Face Masks",
+    "price": 60.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Umbra Sheer Physical Daily Defense SPF 30",
+    "brand": "Drunk Elephant",
+    "category": "Sunscreen",
+    "price": 34.0,
+    "key_ingredients": [
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "SUBLIME DEFENSE Ultra Lightweight UV Defense Fluid SPF 50",
+    "brand": "Algenist",
+    "category": "Sunscreen",
+    "price": 28.0,
+    "key_ingredients": [
+      "Fragrance",
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Even Smoother Glycolic Retinol Resurfacing Peel Pads",
+    "brand": "Peter Thomas Roth",
+    "category": "Treatment",
+    "price": 52.0,
+    "key_ingredients": [
+      "Retinol",
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Acne+ 2% BHA and Azelaic Acid Acne Spot Treatment",
+    "brand": "Skinfix",
+    "category": "Treatment",
+    "price": 30.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "redness"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "The Sunscreen - 100% Mineral, Broad Spectrum SPF 30 with 20% Non-Nano Zinc, Hyaluronic Acid and Niacinamide",
+    "brand": "N\u00e9cessaire",
+    "category": "Sunscreen",
+    "price": 25.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "wrinkles"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Every Sun Day Mineral Sunscreen SPF 50+",
+    "brand": "Dr. Jart+",
+    "category": "Sunscreen",
+    "price": 40.0,
+    "key_ingredients": [
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Violet-C Radiance Mask",
+    "brand": "Tatcha",
+    "category": "Face Masks",
+    "price": 70.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Resurface+ AHA/BHA Niacinamide Exfoliating Pads for Face and Targeted Body",
+    "brand": "Skinfix",
+    "category": "Treatment",
+    "price": 50.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "The True Cream - Aqua Bomb Sunscreen Broad Spectrum SPF 50",
+    "brand": "belif",
+    "category": "Sunscreen",
+    "price": 38.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Vitamin C Triple Exfoliating Facial",
+    "brand": "Murad",
+    "category": "Treatment",
+    "price": 85.0,
+    "key_ingredients": [
+      "Salicylic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Urban Environment Oil-Free Mineral Sunscreen Broad-Spectrum SPF 42",
+    "brand": "Shiseido",
+    "category": "Sunscreen",
+    "price": 38.0,
+    "key_ingredients": [
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Acid Potion AHA + BHA Resurfacing Exfoliator",
+    "brand": "Moon Juice",
+    "category": "Treatment",
+    "price": 42.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "AHA/BHA/Retinoid Daily Clarifying Peel",
+    "brand": "Murad",
+    "category": "Treatment",
+    "price": 44.0,
+    "key_ingredients": [
+      "Salicylic Acid",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "PRO Strength 10% PHA Exfoliating Clarifying Liquid",
+    "brand": "Peter Thomas Roth",
+    "category": "Treatment",
+    "price": 58.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Squalane + Zinc Sheer Mineral Sunscreen SPF 30 PA +++",
+    "brand": "Biossance",
+    "category": "Sunscreen",
+    "price": 34.0,
+    "key_ingredients": [
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "wrinkles"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Teatreement Toner",
+    "brand": "Dr. Jart+",
+    "category": "Toner",
+    "price": 30.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "dark_spots",
+      "redness"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Targeted Pores Serum with BHA + PHA",
+    "brand": "SEPHORA COLLECTION",
+    "category": "Treatment",
+    "price": 20.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Replenishing Multi-Acid Peel",
+    "brand": "Murad",
+    "category": "Treatment",
+    "price": 79.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Salicylic Acid Acne Day Dots",
+    "brand": "Peace Out",
+    "category": "Treatment",
+    "price": 19.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Ceramidin Skin Barrier Serum Toner",
+    "brand": "Dr. Jart+",
+    "category": "Toner",
+    "price": 39.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Isle Glow Face Moisturizer SPF 45 with Sea Moss and Niacinamide",
+    "brand": "CAY SKIN",
+    "category": "Sunscreen",
+    "price": 34.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Polyhydroxy Acid (PHA) Gentle Exfoliating Toner",
+    "brand": "The INKEY List",
+    "category": "Toner",
+    "price": 12.99,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Cicapair  Tiger Grass Camo Drops Color Corrector SPF 35",
+    "brand": "Dr. Jart+",
+    "category": "Treatment",
+    "price": 48.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Zinc Oxide",
+      "Centella Asiatica"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "redness"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "KOSHIRICE Acne Calming Spot Treatment",
+    "brand": "WASO",
+    "category": "Treatment",
+    "price": 25.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Fat Water Niacinamide Pore-Refining Toner Serum with Barbados Cherry",
+    "brand": "Fenty Skin",
+    "category": "Toner",
+    "price": 34.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Luxury Sun Ritual Pore Smoothing Sunscreen SPF 30",
+    "brand": "Saint Jane Beauty",
+    "category": "Sunscreen",
+    "price": 38.0,
+    "key_ingredients": [
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "City Block Sheer Oil-Free Daily Face Protector Broad Spectrum SPF 25 Primer",
+    "brand": "CLINIQUE",
+    "category": "Sunscreen",
+    "price": 30.0,
+    "key_ingredients": [
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Invisible Physical Defense Mineral Sunscreen SPF30",
+    "brand": "Dermalogica",
+    "category": "Sunscreen",
+    "price": 48.0,
+    "key_ingredients": [
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "redness"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Milk-Peel Gentle Exfoliating Toner",
+    "brand": "Kiehl's Since 1851",
+    "category": "Toner",
+    "price": 60.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "RESIST Youth-Extending Daily Hydrating Fluid SPF 50",
+    "brand": "Paula's Choice",
+    "category": "Sunscreen",
+    "price": 37.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Dynamic Skin Recovery SPF50 Moisturizer",
+    "brand": "Dermalogica",
+    "category": "Sunscreen",
+    "price": 79.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Argan Daily Moisturizer Tinted SPF 47 Protect + Perfect",
+    "brand": "Josie Maran",
+    "category": "Sunscreen",
+    "price": 38.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Vinopure Natural Salicylic Acid Pore Minimizing Toner",
+    "brand": "Caudalie",
+    "category": "Toner",
+    "price": 30.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "C Beyond Triple Serum SPF 40 Mineral Sunscreen with Vitamin C 10% + Niacinamide",
+    "brand": "ILIA",
+    "category": "Sunscreen",
+    "price": 64.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "City Skin Age Defense Broad Spectrum SPF 50 PA++++",
+    "brand": "Murad",
+    "category": "Sunscreen",
+    "price": 69.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Every Sun Day Sun Fluid SPF 50+",
+    "brand": "Dr. Jart+",
+    "category": "Sunscreen",
+    "price": 42.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Get Even Sun Milk SPF 33",
+    "brand": "Josie Maran",
+    "category": "Sunscreen",
+    "price": 46.0,
+    "key_ingredients": [
+      "Fragrance",
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Resurfacing Peel Mask",
+    "brand": "SEPHORA COLLECTION",
+    "category": "Treatment",
+    "price": 18.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Glow Peel Pads",
+    "brand": "SEPHORA COLLECTION",
+    "category": "Treatment",
+    "price": 15.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Pep-Start Daily UV Protector Broad Spectrum SPF 50",
+    "brand": "CLINIQUE",
+    "category": "Sunscreen",
+    "price": 23.0,
+    "key_ingredients": [
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Umbra Tinte Physical Daily Defense SPF 30",
+    "brand": "Drunk Elephant",
+    "category": "Sunscreen",
+    "price": 36.0,
+    "key_ingredients": [
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Every. Single. Face. Watery Lotion SPF 50",
+    "brand": "Supergoop!",
+    "category": "Sunscreen",
+    "price": 34.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Mini Mineral Sheerscreen Sunscreen SPF 30 PA+++",
+    "brand": "Supergoop!",
+    "category": "Sunscreen",
+    "price": 22.0,
+    "key_ingredients": [
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Mineral Sheerscreen Sunscreen SPF 30 PA+++",
+    "brand": "Supergoop!",
+    "category": "Sunscreen",
+    "price": 38.0,
+    "key_ingredients": [
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Multi-Active Toner",
+    "brand": "Dermalogica",
+    "category": "Toner",
+    "price": 43.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Daily Dose Vitamin C + SPF 40 Sunscreen Serum PA+++",
+    "brand": "Supergoop!",
+    "category": "Sunscreen",
+    "price": 46.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Drying Lotion",
+    "brand": "Mario Badescu",
+    "category": "Treatment",
+    "price": 17.0,
+    "key_ingredients": [
+      "Salicylic Acid",
+      "Zinc Oxide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Radiance Resurfacing Foam",
+    "brand": "Dr. Brandt Skincare",
+    "category": "Treatment",
+    "price": 72.0,
+    "key_ingredients": [
+      "Hyaluronic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Full Spectrum 360\u00ba Refreshing Water Cream Organic Face Sunscreen SPF 50",
+    "brand": "COOLA",
+    "category": "Sunscreen",
+    "price": 48.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "dry_skin"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Potent-C Vitamin C Targeted Spot Brightener",
+    "brand": "Peter Thomas Roth",
+    "category": "Treatment",
+    "price": 62.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "high"
+  },
+  {
+    "name": "RESIST Advanced Replenishing Toner with Hyaluronic Acid",
+    "brand": "Paula's Choice",
+    "category": "Toner",
+    "price": 26.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "dry_skin",
+      "wrinkles"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Hydrating Toner",
+    "brand": "Murad",
+    "category": "Toner",
+    "price": 42.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Max Clear Invisible Priming Sunscreen Broad Spectrum SPF 45",
+    "brand": "Peter Thomas Roth",
+    "category": "Sunscreen",
+    "price": 38.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Get Even Cold-Pressed Peel Pads",
+    "brand": "Naturally Serious",
+    "category": "Treatment",
+    "price": 32.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "dry",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Glycolic Acid Exfoliating Toner",
+    "brand": "The INKEY List",
+    "category": "Toner",
+    "price": 12.99,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Liquid ExfoliKate Triple Acid Resurfacing Treatment",
+    "brand": "Kate Somerville",
+    "category": "Treatment",
+    "price": 72.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Prism AHA + BHA Exfoliating Glow Facial",
+    "brand": "Herbivore",
+    "category": "Treatment",
+    "price": 58.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "dark_spots",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "The Texture Tonic AHA Liquid Exfoliating Treatment",
+    "brand": "Tatcha",
+    "category": "Treatment",
+    "price": 62.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "enlarged_pores",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "high"
+  },
+  {
+    "name": "Essential-C Toner",
+    "brand": "Murad",
+    "category": "Toner",
+    "price": 42.0,
+    "key_ingredients": [
+      "Fragrance"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Jasmine Green Tea Oil Control Toner",
+    "brand": "Herbivore",
+    "category": "Toner",
+    "price": 39.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "acne"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Cactus Water Cleansing Lactic Acid Toner",
+    "brand": "Freck Beauty",
+    "category": "Toner",
+    "price": 32.0,
+    "key_ingredients": [],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "uneven_skin_tone"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Skin Resolution Clean Exfoliating Acid Toner",
+    "brand": "ROSE INC",
+    "category": "Toner",
+    "price": 32.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Mini Skin Resolution Clarifying Acid Toner",
+    "brand": "ROSE INC",
+    "category": "Toner",
+    "price": 15.0,
+    "key_ingredients": [
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [
+      "acne",
+      "enlarged_pores"
+    ],
+    "budget_tier": "low"
+  },
+  {
+    "name": "Clarifying Lotion 4",
+    "brand": "CLINIQUE",
+    "category": "Toner",
+    "price": 20.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  },
+  {
+    "name": "GENIUS Liquid Skin Resurfacing 2% BHA Toner",
+    "brand": "Algenist",
+    "category": "Toner",
+    "price": 40.0,
+    "key_ingredients": [
+      "Niacinamide",
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "combination",
+      "normal",
+      "oily"
+    ],
+    "suitable_concerns": [
+      "uneven_skin_tone",
+      "wrinkles"
+    ],
+    "budget_tier": "mid"
+  },
+  {
+    "name": "Clarifying Lotion 1",
+    "brand": "CLINIQUE",
+    "category": "Toner",
+    "price": 20.0,
+    "key_ingredients": [
+      "Salicylic Acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "oily",
+      "combination",
+      "sensitive"
+    ],
+    "suitable_concerns": [],
+    "budget_tier": "low"
+  }
+]
