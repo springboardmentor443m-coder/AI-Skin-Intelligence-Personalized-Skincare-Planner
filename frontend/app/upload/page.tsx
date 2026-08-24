@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { ProtectedLayout } from '@/components/protected-layout'
 import { useAuthStore } from '@/lib/auth-store'
 import { uploadImageForAnalysis, useAnalysisHistory, askDermatologist } from '@/hooks/use-skin-analysis'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Upload, X, CheckCircle, AlertCircle, Loader, Sparkles, ChevronDown, SunMedium, MoonStar, Lightbulb, Droplets } from 'lucide-react'
+import { Upload, Camera, X, CheckCircle, AlertCircle, Loader, Sparkles, ChevronDown, SunMedium, MoonStar, Lightbulb, Droplets } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import AIChat from '@/components/AIChat'
@@ -13,6 +13,10 @@ import AIChat from '@/components/AIChat'
 export default function UploadPage() {
   const { user } = useAuthStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [isCameraOpen, setIsCameraOpen] = useState(false)
+  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -29,6 +33,12 @@ export default function UploadPage() {
   const [budget, setBudget] = useState('')
   const [skinGoals, setSkinGoals] = useState<string[]>([])
   const [additionalDetails, setAdditionalDetails] = useState('')
+
+  useEffect(() => {
+    if (cameraStream && videoRef.current) {
+      videoRef.current.srcObject = cameraStream
+    }
+  }, [cameraStream])
 
   const skinGoalOptions = [
     'Acne & breakouts',
@@ -84,6 +94,85 @@ export default function UploadPage() {
     if (file) handleFileSelect(file)
   }
 
+  const startCamera = async () => {
+    try {
+      setError('')
+
+      if (!navigator.mediaDevices?.getUserMedia) {
+        setError('Camera access is not supported by this browser.')
+        return
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: 'user',
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+        audio: false,
+      })
+
+            setCameraStream(stream)
+            setIsCameraOpen(true)
+          } catch (err: any) {
+      console.error('Camera error:', err)
+
+      if (err?.name === 'NotAllowedError') {
+        setError('Camera permission was denied. Please allow camera access and try again.')
+      } else if (err?.name === 'NotFoundError') {
+        setError('No camera was found on this device.')
+      } else {
+        setError('Unable to access the camera. Please check your browser permissions.')
+      }
+    }
+  }
+
+  const stopCamera = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach((track) => track.stop())
+    }
+
+    setCameraStream(null)
+    setIsCameraOpen(false)
+  }
+
+  const capturePhoto = () => {
+    const video = videoRef.current
+    const canvas = canvasRef.current
+
+    if (!video || !canvas) return
+
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+
+    const context = canvas.getContext('2d')
+
+    if (!context) {
+      setError('Unable to capture photo.')
+      return
+    }
+
+    context.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        setError('Unable to create image from camera.')
+        return
+      }
+
+      const file = new File(
+        [blob],
+        `camera-capture-${Date.now()}.jpg`,
+        {
+          type: 'image/jpeg',
+        }
+      )
+
+      handleFileSelect(file)
+      stopCamera()
+    }, 'image/jpeg', 0.92)
+  }
+
   const handleSubmit = async () => {
     if (!selectedFile) return
 
@@ -120,6 +209,8 @@ export default function UploadPage() {
   }
 
   const reset = () => {
+    stopCamera()
+
     setPreview(null)
     setSelectedFile(null)
     setResult(null)
@@ -209,43 +300,133 @@ export default function UploadPage() {
                   className="hidden"
                 />
 
-                {preview ? (
-                  <div className="space-y-5">
-                    <div className="relative mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-[20px] border border-[#f3e3da] shadow-sm">
-                      <Image src={preview} alt="Preview" fill className="object-cover" />
-                    </div>
-                    <div className="space-y-2">
-                      <p className="font-semibold text-[#3b2f2f]">{selectedFile?.name}</p>
-                      <p className="text-sm text-[#8a736f]">
-                        {(selectedFile?.size || 0) / 1024 / 1024 < 1
-                          ? `${Math.round((selectedFile?.size || 0) / 1024)} KB`
-                          : `${((selectedFile?.size || 0) / 1024 / 1024).toFixed(2)} MB`}
-                      </p>
-                    </div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        reset()
-                      }}
-                      className="inline-flex items-center gap-2 rounded-full border border-[#f3e3da] bg-[#fff8f3] px-4 py-2 text-sm font-medium text-[#3b2f2f] transition hover:bg-[#f8ede7]"
-                    >
-                      <X className="h-4 w-4" />
-                      Choose Different Image
-                    </button>
-                  </div>
-                ) : (
+                {!preview ? (
                   <div className="space-y-5">
                     <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[18px] bg-[#fff2eb] text-[#d89c8b]">
                       <Upload className="h-8 w-8" />
                     </div>
+
                     <div>
-                      <p className="mb-1 text-lg font-semibold text-[#3b2f2f]">Drag and drop your image here</p>
-                      <p className="text-sm text-[#8a736f]">or click to select from your computer</p>
+                      <p className="mb-1 text-lg font-semibold text-[#3b2f2f]">
+                        Upload or capture your skin photo
+                      </p>
+
+                      <p className="text-sm text-[#8a736f]">
+                        Choose an existing image or take a fresh photo
+                      </p>
                     </div>
-                    <p className="text-xs text-[#8a736f]">Supported formats: JPG, PNG, WebP • Max 10MB</p>
+
+                    <div
+                      className="flex flex-col justify-center gap-3 sm:flex-row"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="inline-flex items-center justify-center gap-2 rounded-full border border-[#f3e3da] bg-[#fff8f3] px-5 py-3 text-sm font-semibold text-[#3b2f2f] transition hover:bg-[#f8ede7]"
+                      >
+                        <Upload className="h-4 w-4" />
+                        Upload Image
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={startCamera}
+                        className="inline-flex items-center justify-center gap-2 rounded-full bg-[#d89c8b] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#c98b72]"
+                      >
+                        <Camera className="h-4 w-4" />
+                        Use Camera
+                      </button>
+                    </div>
+
+                    <p className="text-xs text-[#8a736f]">
+                      Supported formats: JPG, PNG, WebP • Max 10MB
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-5">
+                    <div className="mx-auto h-32 w-32 overflow-hidden rounded-[18px] border border-[#f3e3da]">
+                      <img src={preview} alt="Selected preview" className="h-full w-full object-cover" />
+                    </div>
+                    <div>
+                      <p className="mb-1 text-lg font-semibold text-[#3b2f2f]">Photo ready</p>
+                      <p className="text-sm text-[#8a736f]">Click below to choose a different image</p>
+                    </div>
+                    <div
+                      className="flex justify-center"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => { setPreview(null); setSelectedFile(null); }}
+                        className="inline-flex items-center justify-center gap-2 rounded-full border border-[#f3e3da] bg-white px-5 py-3 text-sm font-semibold text-[#3b2f2f] transition hover:bg-[#fff8f3]"
+                      >
+                        <X className="h-4 w-4" />
+                        Remove & choose again
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
+
+              {isCameraOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="glass-card p-6 sm:p-8"
+                >
+                  <div className="mb-5 text-center">
+                    <span className="section-kicker">Camera capture</span>
+
+                    <h3 className="mt-3 text-2xl font-semibold text-[#3b2f2f]">
+                      Position your face clearly
+                    </h3>
+
+                    <p className="mt-2 text-sm text-[#8a736f]">
+                      Use good lighting and keep your face centered.
+                    </p>
+                  </div>
+
+                  <div className="relative mx-auto max-w-xl overflow-hidden rounded-[24px] border border-[#f3e3da] bg-black shadow-lg">
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
+                      muted
+                      className="aspect-video w-full object-cover"
+                    />
+
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                      <div className="h-[70%] w-[55%] rounded-[45%] border-2 border-white/70" />
+                    </div>
+                  </div>
+
+                  <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                    <button
+                      type="button"
+                      onClick={capturePhoto}
+                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-[16px] bg-[#d89c8b] px-5 py-3 font-semibold text-white transition hover:bg-[#c98b72]"
+                    >
+                      <Camera className="h-5 w-5" />
+                      Capture Photo
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={stopCamera}
+                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-[16px] border border-[#f3e3da] bg-white px-5 py-3 font-semibold text-[#3b2f2f] transition hover:bg-[#fff8f3]"
+                    >
+                      <X className="h-5 w-5" />
+                      Cancel
+                    </button>
+                  </div>
+
+                  <canvas
+                    ref={canvasRef}
+                    className="hidden"
+                  />
+                </motion.div>
+              )}
 
               {error && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-start gap-3 rounded-[16px] border border-[#f3e3da] bg-[#fff8f3] p-4 text-[#d66a5a]">
