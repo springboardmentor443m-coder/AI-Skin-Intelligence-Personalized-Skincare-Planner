@@ -264,44 +264,41 @@ avoid
 
     client = get_groq_client()
 
-    response = client.chat.completions.create(
-        model="openai/gpt-oss-20b",
-        temperature=0.45,
-        max_completion_tokens=4000,
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are a warm, honest and friendly "
-                    "skincare assistant. "
-                    "Return valid JSON only. "
-                    "Never invent product names."
-                ),
-            },
-            {
-                "role": "user",
-                "content": prompt,
-            },
-        ],
-        response_format={
-            "type": "json_object"
-        },
-    )
-
-    content = response.choices[0].message.content
-
-    if not content:
-        return {
-            "error": "Weekly plan generation returned an empty response"
-        }
+    plan = {}
 
     try:
-        plan = json.loads(content)
-    except json.JSONDecodeError:
-        return {
-            "error": "Weekly plan generation returned invalid JSON",
-            "raw": content,
-        }
+        response = client.chat.completions.create(
+            model="openai/gpt-oss-20b",
+            temperature=0.45,
+            max_completion_tokens=4000,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a warm, honest and friendly "
+                        "skincare assistant. "
+                        "Return valid JSON only. "
+                        "Never invent product names."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": prompt,
+                },
+            ],
+            response_format={
+                "type": "json_object"
+            },
+        )
+
+        content = response.choices[0].message.content
+
+        if content:
+            plan = json.loads(content)
+
+    except Exception as exc:
+        print(f"Weekly plan generation failed, using fallback: {exc}")
+        plan = {}
 
     required_days = [
         "Monday",
@@ -477,7 +474,7 @@ IMPORTANT RULES:
     client = get_groq_client()
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-20b",
         temperature=0.5,
         max_completion_tokens=500,
         messages=[
@@ -511,7 +508,7 @@ def test_groq():
     client = get_groq_client()
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-20b",
         temperature=0.2,
         max_completion_tokens=50,
         messages=[
