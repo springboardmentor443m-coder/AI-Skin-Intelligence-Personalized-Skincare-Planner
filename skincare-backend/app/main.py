@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.core.database import Base, engine, auto_migrate
+from app.core.database import Base, engine, auto_migrate, auto_seed_products
 from app.models import *  # noqa: F401,F403
 from app.routes import auth, skin_profile, skin_analysis, products, rag
 
@@ -24,6 +24,7 @@ app.add_middleware(
 
 Base.metadata.create_all(bind=engine)
 auto_migrate()
+auto_seed_products()
 
 app.include_router(auth.router)
 app.include_router(skin_profile.router)

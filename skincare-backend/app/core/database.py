@@ -4,14 +4,18 @@ from sqlalchemy.orm import sessionmaker
 
 from app.core.config import settings
 
+db_url = settings.DATABASE_URL
+if db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
 try:
-    engine = create_engine(settings.DATABASE_URL)
+    engine = create_engine(db_url)
     # Test connection
     with engine.connect() as conn:
         pass
-except Exception:
+except Exception as e:
     # Auto-fallback to local SQLite if PostgreSQL is not running locally
-    print("PostgreSQL connection failed. Falling back to local SQLite database (skincare.db).")
+    print(f"PostgreSQL connection failed ({e}). Falling back to local SQLite database (skincare.db).")
     engine = create_engine("sqlite:///./skincare.db", connect_args={"check_same_thread": False})
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -45,5 +49,22 @@ def auto_migrate():
                             print(f"Auto-migrated: Added missing column '{col.name}' to '{table.name}' table.")
     except Exception as e:
         print(f"Auto-migration warning: {e}")
+
+
+def auto_seed_products():
+    """Seed product catalog if the database table is empty on startup."""
+    try:
+        from app.models.product import Product
+        from app.import_products import import_products
+        db = SessionLocal()
+        try:
+            count = db.query(Product).count()
+            if count == 0:
+                print("Database initialized with 0 products. Auto-seeding catalog...")
+                import_products()
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"Auto-seed warning: {e}")
 
 
